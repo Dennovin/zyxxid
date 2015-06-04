@@ -38,7 +38,6 @@
 
     \def\attrac{0}
     \def\attrhp{0}
-    \def\attrhd{0}
 
     \def\profstrsave{0}
     \def\profdexsave{0}
@@ -139,8 +138,6 @@
         \hline
         \rowcolor{yellow} Armor Class & \textbf{\numprint{\attrac}} \\
         \hline
-        \rowcolor{yellow} Hit Dice & \textbf{\attrhd} \\
-        \hline
         \multicolumn{2}{c}{} \\
         \hline
         \rowcolor{oddrow} Strength & \textbf{\abilityscore{\attrstr}} (\attrstr) \\
@@ -211,9 +208,9 @@
 
       \ifdefempty{\resources}{}{
         \section*{Resources}
-        \noindent\begin{tabularx}{\textwidth}{ |X|Sr|Sc| }
+        \noindent\begin{tabularx}{\textwidth}{ |X|Sl|Sc| }
           \hline
-          \rowcolor{gray} & & \textbf{Restored After} \\
+          \rowcolor{gray} \textbf{Resource Type} & & \textbf{Restored After} \\
           \hline
           \resources
         \end{tabularx}
