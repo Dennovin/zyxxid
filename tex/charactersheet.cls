@@ -3,7 +3,7 @@
 
 \LoadClass{article}
 
-\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox}
+\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb}
 \usepackage[margin=0.5in]{geometry}
 
 \setmainfont{PT Sans}
@@ -66,6 +66,8 @@
     \def\profperformance{0}
     \def\profpersuasion{0}
 
+    \newcounter{ct}
+
     \newcommand{\givencharactername}{John Doe}
     \newcommand{\charclasses}{}
     \newcommand{\charrace}{}
@@ -88,7 +90,7 @@
     \newcommand{\addtrait}[1]{\expandafter\def\expandafter\traits\expandafter{\traits{} & \small{\hspace{0.25em} \textbullet \hspace{0.25em} ##1} \\ }}
     \newcommand{\addability}[1]{\expandafter\def\expandafter\abilities\expandafter{\abilities{} \item ##1}}
     \newcommand{\addlang}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
-    \newcommand{\addresource}[2]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & ##2 \\ \hline}}
+    \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
     \newcommand{\addspell}[7]{\expandafter\def\expandafter\spells\expandafter{\spells{}
         \adjustbox{left=\textwidth,fbox,bgcolor=spellname}{\large\textbf{##1}}
         \par\vspace{0.5em}
@@ -207,12 +209,16 @@
       \end{tabularx}
       \vspace{1em}
 
-      \section*{Resources}
-      \noindent\begin{tabularx}{\textwidth}{ |X|Sc|Sc| }
-        \hline
-        \resources
-      \end{tabularx}
-      \vspace{1em}
+      \ifdefempty{\resources}{}{
+        \section*{Resources}
+        \noindent\begin{tabularx}{\textwidth}{ |X|Sr|Sc| }
+          \hline
+          \rowcolor{gray} & & \textbf{Restored After} \\
+          \hline
+          \resources
+        \end{tabularx}
+        \vspace{1em}
+      }
 
       \ifdefempty{\abilities}{}{
         \section*{Abilities}
