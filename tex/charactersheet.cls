@@ -66,17 +66,27 @@
     \def\profpersuasion{0}
 
     \newcommand{\givencharactername}{John Doe}
-    \newcommand{\characterinfo}{}
+    \newcommand{\charclasses}{}
+    \newcommand{\charrace}{}
+    \newcommand{\charalignment}{}
+    \newcommand{\charbg}{}
     \newcommand{\attacks}{\hline}
     \newcommand{\traits}{}
     \newcommand{\abilities}{}
+    \newcommand{\languages}{}
+    \newcommand{\resources}{}
     \newcommand{\skills}{}
     \newcommand{\spells}{}
     \newcommand{\charactername}[1]{\renewcommand{\givencharactername}{##1}}
-    \newcommand{\addinfo}[2]{\expandafter\def\expandafter\characterinfo\expandafter{\characterinfo{} {\sectiontt ##1} & \small{##2} \\ \\}}
-    \newcommand{\addattack}[4]{\expandafter\def\expandafter\attacks\expandafter{\attacks{} ##1 & \textbf{##2} & \textbf{##3} & ##4 \\ \hline}}
+    \newcommand{\setrace}[1]{\renewcommand{\charrace}{##1}}
+    \newcommand{\setalignment}[1]{\renewcommand{\charalignment}{##1}}
+    \newcommand{\setbg}[1]{\renewcommand{\charbg}{##1}}
+    \newcommand{\addclass}[2]{\expandafter\def\expandafter\charclasses\expandafter{\charclasses{}\ifdefempty{\charclasses}{}{,} \textbf{##1} (##2)}}
+    \newcommand{\addattack}[5]{\expandafter\def\expandafter\attacks\expandafter{\attacks{} ##1 & \textbf{##2} & \textbf{##3} & ##4 & ##5 \\ \hline}}
     \newcommand{\addtrait}[1]{\expandafter\def\expandafter\traits\expandafter{\traits{} & \small{\hspace{0.25em} \textbullet \hspace{0.25em} ##1} \\ }}
     \newcommand{\addability}[1]{\expandafter\def\expandafter\abilities\expandafter{\abilities{} \item ##1}}
+    \newcommand{\addlanguage}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
+    \newcommand{\addresource}[2]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & ##2 \\ \hline}}
     \newcommand{\addspell}[3]{\expandafter\def\expandafter\spells\expandafter{\spells{} \item \textbf{##1} (##2): ##3 }}
     \newcommand{\setattr}[2]{\@namedef{attr##1}{##2}}
     \newcommand{\setprof}[2]{\@namedef{prof##1}{##2}}
@@ -91,7 +101,11 @@
     \rule{\textwidth}{0.4pt}
     \vspace{1em}
     \noindent\begin{tabulary}{\linewidth}{LJ}
-      \characterinfo
+      \ifdefempty{\charrace}{}{{\sectiontt Race} & \charrace \\}
+      \ifdefempty{\charclasses}{}{{\sectiontt Class} & \charclasses \\}
+      \ifdefempty{\charbg}{}{{\sectiontt Background} & \charbg \\}
+      \ifdefempty{\charalignment}{}{{\sectiontt Alignment} & \charalignment \\}
+      \\
       \ifdefempty{\traits}{}{\sectiontt Your Traits} \traits
     \end{tabulary}
 
@@ -110,17 +124,17 @@
         \hline
         \multicolumn{2}{c}{} \\
         \hline
-        \rowcolor{oddrow} Strength & \abilityscore{\attrstr} \\
+        \rowcolor{oddrow} Strength & \textbf{\abilityscore{\attrstr}} (\attrstr) \\
         \hline
-        \rowcolor{evenrow} Dexterity & \abilityscore{\attrdex} \\
+        \rowcolor{evenrow} Dexterity & \textbf{\abilityscore{\attrdex}} (\attrdex) \\
         \hline
-        \rowcolor{oddrow} Constitution & \abilityscore{\attrcon} \\
+        \rowcolor{oddrow} Constitution & \textbf{\abilityscore{\attrcon}} (\attrcon) \\
         \hline
-        \rowcolor{evenrow} Intelligence & \abilityscore{\attrint} \\
+        \rowcolor{evenrow} Intelligence & \textbf{\abilityscore{\attrint}} (\attrint) \\
         \hline
-        \rowcolor{oddrow} Wisdom & \abilityscore{\attrwis} \\
+        \rowcolor{oddrow} Wisdom & \textbf{\abilityscore{\attrwis}} (\attrwis) \\
         \hline
-        \rowcolor{evenrow} Charisma & \abilityscore{\attrcha} \\
+        \rowcolor{evenrow} Charisma & \textbf{\abilityscore{\attrcha}} (\attrcha) \\
         \hline
         \multicolumn{2}{c}{} \\
         \hline
@@ -169,10 +183,17 @@
     \begin{minipage}[t]{0.65\textwidth}
 
       \section*{Attacks}
-      \noindent\begin{tabularx}{\textwidth}{ |X|Sc|Sc|Sc| }
+      \noindent\begin{tabularx}{\textwidth}{ |X|Sc|Sc|Sc|Sc| }
         \hline
-        \rowcolor{gray} \textbf{Attack} & \textbf{Hit Bonus} & \textbf{Damage} & \textbf{Range} \\
+        \rowcolor{gray} \textbf{Attack} & \textbf{Hit Bonus} & \textbf{Damage} & \textbf{Type} & \textbf{Range} \\
         \attacks
+      \end{tabularx}
+      \vspace{1em}
+
+      \section*{Resources}
+      \noindent\begin{tabularx}{\textwidth}{ |X|Sc|Sc| }
+        \hline
+        \resources
       \end{tabularx}
       \vspace{1em}
 
@@ -180,6 +201,13 @@
         \section*{Abilities}
         \begin{itemize}[noitemsep]
           \small\abilities
+        \end{itemize}
+      }
+
+      \ifdefempty{\languages}{}{
+        \section*{Languages}
+        \begin{itemize}[noitemsep]
+          \small\languages
         \end{itemize}
       }
 
