@@ -81,11 +81,11 @@
     \newcommand{\setrace}[1]{\renewcommand{\charrace}{##1}}
     \newcommand{\setalignment}[1]{\renewcommand{\charalignment}{##1}}
     \newcommand{\setbg}[1]{\renewcommand{\charbg}{##1}}
-    \newcommand{\addclass}[2]{\expandafter\def\expandafter\charclasses\expandafter{\charclasses{}\ifdefempty{\charclasses}{}{,} \textbf{##1} (##2)}}
+    \newcommand{\addclass}[2]{\expandafter\def\expandafter\charclasses\expandafter{\charclasses{} ##1 (##2)}}
     \newcommand{\addattack}[5]{\expandafter\def\expandafter\attacks\expandafter{\attacks{} ##1 & \textbf{##2} & \textbf{##3} & ##4 & ##5 \\ \hline}}
     \newcommand{\addtrait}[1]{\expandafter\def\expandafter\traits\expandafter{\traits{} & \small{\hspace{0.25em} \textbullet \hspace{0.25em} ##1} \\ }}
     \newcommand{\addability}[1]{\expandafter\def\expandafter\abilities\expandafter{\abilities{} \item ##1}}
-    \newcommand{\addlanguage}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
+    \newcommand{\addlang}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
     \newcommand{\addresource}[2]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & ##2 \\ \hline}}
     \newcommand{\addspell}[3]{\expandafter\def\expandafter\spells\expandafter{\spells{} \item \textbf{##1} (##2): ##3 }}
     \newcommand{\setattr}[2]{\@namedef{attr##1}{##2}}
