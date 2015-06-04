@@ -3,7 +3,7 @@
 
 \LoadClass{article}
 
-\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec}
+\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox}
 \usepackage[margin=0.5in]{geometry}
 
 \setmainfont{PT Sans}
@@ -23,6 +23,7 @@
 \definecolor{yellow}{rgb}{1.00,1.00,0.75}
 \definecolor{oddrow}{rgb}{0.90,0.90,1.00}
 \definecolor{evenrow}{rgb}{0.80,0.80,0.90}
+\definecolor{spellname}{rgb}{0.70,0.70,0.90}
 
 \newenvironment{charactersheet}
   {
@@ -77,6 +78,7 @@
     \newcommand{\resources}{}
     \newcommand{\skills}{}
     \newcommand{\spells}{}
+    \newcommand{\equipment}{}
     \newcommand{\charactername}[1]{\renewcommand{\givencharactername}{##1}}
     \newcommand{\setrace}[1]{\renewcommand{\charrace}{##1}}
     \newcommand{\setalignment}[1]{\renewcommand{\charalignment}{##1}}
@@ -87,7 +89,22 @@
     \newcommand{\addability}[1]{\expandafter\def\expandafter\abilities\expandafter{\abilities{} \item ##1}}
     \newcommand{\addlang}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
     \newcommand{\addresource}[2]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & ##2 \\ \hline}}
-    \newcommand{\addspell}[3]{\expandafter\def\expandafter\spells\expandafter{\spells{} \item \textbf{##1} (##2): ##3 }}
+    \newcommand{\addspell}[7]{\expandafter\def\expandafter\spells\expandafter{\spells{}
+        \adjustbox{left=\textwidth,fbox,bgcolor=spellname}{\large\textbf{##1}}
+        \par\vspace{0.5em}
+        \begin{tabularx}{\textwidth}{ X X }
+          \small\textit{##2} & \small\textit{##5} \\
+        \end{tabularx}
+        \par\vspace{0.5em}
+        \par\noindent\small{##7}
+        \par\vspace{0.5em}
+        \begin{tabularx}{\textwidth}{ X X X }
+          \small\textit{Range: ##4} & \small\textit{Casting Time: ##3} & \small\textit{Duration: ##6} \\
+        \end{tabularx}
+        \vspace{1em} \\
+    }}
+
+    \newcommand{\additem}[2]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 & ##2 \\ \hline }}
     \newcommand{\setattr}[2]{\@namedef{attr##1}{##2}}
     \newcommand{\setprof}[2]{\@namedef{prof##1}{##2}}
     \newcommand{\setprofbonus}[1]{\def\profbonus{##1}}
@@ -210,12 +227,30 @@
           \small\languages
         \end{itemize}
       }
+    \end{minipage}
+
+    \pagebreak
+
+    \begin{minipage}[t]{0.60\textwidth}
 
       \ifdefempty{\spells}{}{
         \section*{Spells}
-        \begin{itemize}[noitemsep]
-          \small\spells
-        \end{itemize}
+        \spells
+      }
+
+    \end{minipage}
+    \begin{minipage}[t]{0.05\textwidth}
+      \hspace{0.05\textwidth}
+    \end{minipage}
+    \begin{minipage}[t]{0.35\textwidth}
+
+      \ifdefempty{\equipment}{}{
+        \section*{Equipment}
+        \noindent\begin{tabularx}{\textwidth}{ |X|Sc| }
+          \hline
+          \equipment
+        \end{tabularx}
+        \vspace{1em}
       }
 
     \end{minipage}
