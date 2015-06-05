@@ -20,6 +20,7 @@
 \cellspacebottomlimit 3pt
 \setlength{\parindent}{0pt}
 \setlength{\columnsep}{0.5cm}
+\setlength{\multicolsep}{0pt}
 
 \definecolor{gray}{rgb}{0.75,0.75,0.75}
 \definecolor{yellow}{rgb}{1.00,1.00,0.75}
@@ -93,6 +94,7 @@
     \newcommand{\addtrait}[1]{\expandafter\def\expandafter\traits\expandafter{\traits{} & \small{\hspace{0.25em} \textbullet \hspace{0.25em} ##1} \\ }}
     \newcommand{\addability}[1]{\expandafter\def\expandafter\abilities\expandafter{\abilities{} \item ##1}}
     \newcommand{\addlang}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
+    \newcommand{\addequip}[1]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 }}
     \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
     \newcommand{\addspell}[7]{\expandafter\def\expandafter\spells\expandafter{\spells{}
         \begin{minipage}{\linewidth}
@@ -111,7 +113,6 @@
         \end{minipage}
     }}
 
-    \newcommand{\additem}[2]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 & ##2 \\ \hline }}
     \newcommand{\setattr}[2]{\@namedef{attr##1}{##2}}
     \newcommand{\setprof}[2]{\@namedef{prof##1}{##2}}
     \newcommand{\setprofbonus}[1]{\def\profbonus{##1}}
@@ -197,6 +198,14 @@
         \rowcolor{evenrow} Survival & \skillvalue{\attrwis}{\profsurvival} \\
         \hline
       \end{tabularx}
+      \vspace{2em}
+
+      \ifdefempty{\languages}{}{
+        \section*{Languages}
+        \begin{itemize}[noitemsep]
+          \small\languages
+        \end{itemize}
+      }
 
     \end{minipage}
     \begin{minipage}[t]{0.05\textwidth}
@@ -230,11 +239,12 @@
         \end{itemize}
       }
 
-      \ifdefempty{\languages}{}{
-        \section*{Languages}
-        \begin{itemize}[noitemsep]
-          \small\languages
-        \end{itemize}
+      \ifdefempty{\equipment}{}{
+        \begin{multicols*}{3}[\section*{Equipment}]
+          \begin{itemize}[noitemsep]
+            \small\equipment
+          \end{itemize}
+        \end{multicols*}
       }
     \end{minipage}
 
