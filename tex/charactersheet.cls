@@ -1,14 +1,15 @@
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{charactersheet} [2015/04/01 D&D 5e Newbie Character Sheet]
+\ProvidesClass{charactersheet} [2015/06/01 D&D 5e Character Sheet]
 
 \LoadClass{article}
 
-\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb}
+\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb,setspace}
 \usepackage[margin=0.5in]{geometry}
 
 \setmainfont{PT Sans}
 \newfontfamily\titlett{Aniron}
 \newfontfamily\sectiontt[UprightFont={* Bold}]{PT Sans}
+\newfontfamily\spelldesctt[Scale=0.8]{PT Sans}
 \titleformat{\section}{\titlett}{}{}{}{}
 
 \pagestyle{empty}
@@ -91,18 +92,18 @@
     \newcommand{\addlang}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
     \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
     \newcommand{\addspell}[7]{\expandafter\def\expandafter\spells\expandafter{\spells{}
-        \adjustbox{left=\textwidth,fbox,bgcolor=spellname}{\large\textbf{##1}}
+        \adjustbox{left=0.98\textwidth,fbox,bgcolor=spellname}{\textbf{##1}}
         \par\vspace{0.5em}
         \begin{tabularx}{\textwidth}{ X X }
-          \small\textit{##2} & \small\textit{##5} \\
+          \spelldesctt \setstretch{0.8} \textit{##2} & \spelldesctt \setstretch{0.8} \textit{##5} \\
         \end{tabularx}
         \par\vspace{0.5em}
-        \par\noindent\small{##7}
+        \par\noindent{\spelldesctt \setstretch{0.8} ##7 \par}
         \par\vspace{0.5em}
         \begin{tabularx}{\textwidth}{ X X X }
-          \small\textit{Range: ##4} & \small\textit{Casting Time: ##3} & \small\textit{Duration: ##6} \\
+          \spelldesctt \setstretch{0.8} \textit{Range: ##4} & \spelldesctt \setstretch{0.8} \textit{Casting Time: ##3} & \spelldesctt \setstretch{0.8} \textit{Duration: ##6} \\
         \end{tabularx}
-        \vspace{1em} \\
+        \par\vspace{1em}
     }}
 
     \newcommand{\additem}[2]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 & ##2 \\ \hline }}
