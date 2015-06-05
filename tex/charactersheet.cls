@@ -92,16 +92,18 @@
     \newcommand{\addlang}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
     \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
     \newcommand{\addspell}[7]{\expandafter\def\expandafter\spells\expandafter{\spells{}
-        \adjustbox{left=0.98\textwidth,fbox,bgcolor=spellname}{\textbf{##1}}
+        \adjustbox{left=0.98\textwidth,fbox,bgcolor=spellname}{
+          \begin{tabularx}{0.8\textwidth}{ X X }
+            \textbf{##1} & {\spelldesctt \setstretch{0.8} ##2}
+          \end{tabularx}
+        }
         \par\vspace{0.5em}
-        \begin{tabularx}{\textwidth}{ X X }
-          \spelldesctt \setstretch{0.8} \textit{##2} & \spelldesctt \setstretch{0.8} \textit{##5} \\
-        \end{tabularx}
-        \par\vspace{0.5em}
+        \par\noindent{\spelldesctt \setstretch{0.8} \textit{##5} $\cdot$ \spelldesctt \setstretch{0.8} \textit{##3}} \\
+        \par\vspace{-0.5em}
         \par\noindent{\spelldesctt \setstretch{0.8} ##7 \par}
         \par\vspace{0.5em}
-        \begin{tabularx}{\textwidth}{ X X X }
-          \spelldesctt \setstretch{0.8} \textit{Range: ##4} & \spelldesctt \setstretch{0.8} \textit{Casting Time: ##3} & \spelldesctt \setstretch{0.8} \textit{Duration: ##6} \\
+        \begin{tabularx}{\textwidth}{ X X }
+          \spelldesctt \setstretch{0.8} \textit{Range: ##4} & \spelldesctt \setstretch{0.8} \textit{Duration: ##6} \\
         \end{tabularx}
         \par\vspace{1em}
     }}
