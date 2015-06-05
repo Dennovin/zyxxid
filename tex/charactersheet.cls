@@ -9,7 +9,7 @@
 \setmainfont{PT Sans}
 \newfontfamily\titlett{Aniron}
 \newfontfamily\sectiontt[UprightFont={* Bold}]{PT Sans}
-\newfontfamily\spelldesctt[Scale=0.8]{PT Sans}
+\newfontfamily\spelldesctt[Scale=0.75]{PT Sans}
 \titleformat{\section}{\titlett}{}{}{}{}
 
 \pagestyle{empty}
@@ -26,7 +26,16 @@
 \definecolor{yellow}{rgb}{1.00,1.00,0.75}
 \definecolor{oddrow}{rgb}{0.90,0.90,1.00}
 \definecolor{evenrow}{rgb}{0.80,0.80,0.90}
-\definecolor{spellname}{rgb}{0.70,0.70,0.90}
+\definecolor{spellcolor0}{rgb}{0.90,0.90,0.90}
+\definecolor{spellcolor1}{rgb}{1.00,0.60,0.60}
+\definecolor{spellcolor2}{rgb}{1.00,0.80,0.60}
+\definecolor{spellcolor3}{rgb}{0.90,0.90,0.60}
+\definecolor{spellcolor4}{rgb}{0.70,1.00,0.60}
+\definecolor{spellcolor5}{rgb}{0.60,1.00,0.80}
+\definecolor{spellcolor6}{rgb}{0.60,0.90,0.90}
+\definecolor{spellcolor7}{rgb}{0.60,0.70,1.00}
+\definecolor{spellcolor8}{rgb}{0.70,0.60,1.00}
+\definecolor{spellcolor9}{rgb}{0.90,0.60,0.90}
 
 \newenvironment{charactersheet}
   {
@@ -96,19 +105,17 @@
     \newcommand{\addlang}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
     \newcommand{\addequip}[1]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 }}
     \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
-    \newcommand{\addspell}[7]{\expandafter\def\expandafter\spells\expandafter{\spells{}
+    \newcommand{\addspell}[8]{\expandafter\def\expandafter\spells\expandafter{\spells{}
         \begin{minipage}{\linewidth}
-          \adjustbox{left=\linewidth,fbox,bgcolor=spellname}{
-            \begin{tabularx}{\linewidth}{ X X }
-              \textbf{##1} & {\spelldesctt \setstretch{0.8} ##2}
-            \end{tabularx}
+          \adjustbox{left=\linewidth,fbox,bgcolor=spellcolor##3}{
+            \textbf{##1} \hfill {\spelldesctt \setstretch{0.7} ##2}
           }
           \par\vspace{0.5em}
-          \par\noindent{\spelldesctt \setstretch{0.8} \textit{##5} $\cdot$ \spelldesctt \setstretch{0.8} \textit{##3}} \\
+          \par\noindent{\spelldesctt \setstretch{0.7} \textit{##6} $\cdot$ \textit{##4}} \\
           \par\vspace{-0.5em}
-          \par\noindent{\spelldesctt \setstretch{0.8} ##7 \par}
+          \par\noindent{\spelldesctt \setstretch{0.7} ##8 \par}
           \par\vspace{0.5em}
-          \par\noindent{\spelldesctt \setstretch{0.8} \textit{Range: ##4} $\cdot$ \spelldesctt \setstretch{0.8} \textit{Duration: ##6}} \\
+          \par\noindent{\spelldesctt \setstretch{0.7} \textit{Range: ##5} $\cdot$ \textit{Duration: ##7}} \\
           \par\vspace{1em}
         \end{minipage}
     }}
