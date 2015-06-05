@@ -81,6 +81,8 @@
 
     \def\numspellcols{3}
 
+    \def\classlabel{Class}
+
     \newcounter{ct}
 
     \newcommand{\givencharactername}{John Doe}
@@ -100,7 +102,7 @@
     \newcommand{\setrace}[1]{\renewcommand{\charrace}{##1}}
     \newcommand{\setalignment}[1]{\renewcommand{\charalignment}{##1}}
     \newcommand{\setbg}[1]{\renewcommand{\charbg}{##1}}
-    \newcommand{\addclass}[2]{\expandafter\def\expandafter\charclasses\expandafter{\charclasses{} ##1 (##2)}}
+    \newcommand{\addclass}[2]{\ifdefempty{\charclasses}{}{\def\classlabel{Classes}} \edef\charclasses{\ifdefempty{\charclasses}{}{\charclasses{},} ##1 (##2)}}
     \newcommand{\addattack}[5]{\expandafter\def\expandafter\attacks\expandafter{\attacks{} ##1 & \textbf{##2} & \textbf{##3} & ##4 & ##5 \\ \hline}}
     \newcommand{\addtrait}[1]{\expandafter\def\expandafter\traits\expandafter{\traits{} \item ##1 }}
     \newcommand{\addability}[1]{\expandafter\def\expandafter\abilities\expandafter{\abilities{} \item ##1}}
@@ -137,7 +139,7 @@
     \adjustbox{left=0.45\linewidth,valign=t}{
       \noindent\begin{tabulary}{\linewidth}{LJ}
         \ifdefempty{\charrace}{}{{\sectiontt Race} & \charrace \\}
-        \ifdefempty{\charclasses}{}{{\sectiontt Class} & \charclasses \\}
+        \ifdefempty{\charclasses}{}{{\sectiontt \classlabel} & \charclasses \\}
         \ifdefempty{\charbg}{}{{\sectiontt Background} & \charbg \\}
         \ifdefempty{\charalignment}{}{{\sectiontt Alignment} & \charalignment \\}
       \end{tabulary}
