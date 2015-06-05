@@ -6,7 +6,7 @@
 \usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb,setspace,multicol}
 \usepackage[margin=0.5in]{geometry}
 
-\setmainfont{PT Sans}
+\setmainfont[Scale=0.90]{PT Sans}
 \newfontfamily\titlett{Aniron}
 \newfontfamily\sectiontt[UprightFont={* Bold}]{PT Sans}
 \newfontfamily\spelldesctt[Scale=0.75]{PT Sans}
@@ -50,6 +50,8 @@
 
     \def\attrac{0}
     \def\attrhp{0}
+    \def\attrinit{0}
+    \def\attrspeed{0}
 
     \def\profstrsave{0}
     \def\profdexsave{0}
@@ -100,15 +102,15 @@
     \newcommand{\setbg}[1]{\renewcommand{\charbg}{##1}}
     \newcommand{\addclass}[2]{\expandafter\def\expandafter\charclasses\expandafter{\charclasses{} ##1 (##2)}}
     \newcommand{\addattack}[5]{\expandafter\def\expandafter\attacks\expandafter{\attacks{} ##1 & \textbf{##2} & \textbf{##3} & ##4 & ##5 \\ \hline}}
-    \newcommand{\addtrait}[1]{\expandafter\def\expandafter\traits\expandafter{\traits{} & \small{\hspace{0.25em} \textbullet \hspace{0.25em} ##1} \\ }}
+    \newcommand{\addtrait}[1]{\expandafter\def\expandafter\traits\expandafter{\traits{} \item ##1 }}
     \newcommand{\addability}[1]{\expandafter\def\expandafter\abilities\expandafter{\abilities{} \item ##1}}
-    \newcommand{\addlang}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
+    \newcommand{\addlang}[1]{\edef\languages{\ifdefempty{\languages}{}{\languages{},} ##1}}
     \newcommand{\addequip}[1]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 }}
     \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
     \newcommand{\addspell}[8]{\expandafter\def\expandafter\spells\expandafter{\spells{}
         \begin{minipage}{\linewidth}
           \adjustbox{left=\linewidth,fbox,bgcolor=spellcolor##3}{
-            \textbf{##1} \hfill {\spelldesctt \setstretch{0.7} ##2}
+            \textbf{##1} \hspace*{\fill} {\spelldesctt \setstretch{0.7} ##2}
           }
           \par\vspace{0.5em}
           \par\noindent{\spelldesctt \setstretch{0.7} \textit{##6} $\cdot$ \textit{##4}} \\
@@ -131,15 +133,25 @@
     {\large\titlett \givencharactername \par}
     \vspace{-0.5em}
     \rule{\textwidth}{0.4pt}
-    \vspace{1em}
-    \noindent\begin{tabulary}{\linewidth}{LJ}
-      \ifdefempty{\charrace}{}{{\sectiontt Race} & \charrace \\}
-      \ifdefempty{\charclasses}{}{{\sectiontt Class} & \charclasses \\}
-      \ifdefempty{\charbg}{}{{\sectiontt Background} & \charbg \\}
-      \ifdefempty{\charalignment}{}{{\sectiontt Alignment} & \charalignment \\}
-      \\
-      \ifdefempty{\traits}{}{\sectiontt Your Traits} \traits
-    \end{tabulary}
+
+    \adjustbox{left=0.45\linewidth,valign=t}{
+      \noindent\begin{tabulary}{\linewidth}{LJ}
+        \ifdefempty{\charrace}{}{{\sectiontt Race} & \charrace \\}
+        \ifdefempty{\charclasses}{}{{\sectiontt Class} & \charclasses \\}
+        \ifdefempty{\charbg}{}{{\sectiontt Background} & \charbg \\}
+        \ifdefempty{\charalignment}{}{{\sectiontt Alignment} & \charalignment \\}
+      \end{tabulary}
+    }
+    \adjustbox{left=0.05\linewidth,valign=t}{
+      \hspace{0.05\textwidth}
+    }
+    \adjustbox{left=0.45\linewidth,valign=t}{
+      \noindent\begin{tabulary}{\linewidth}{LJ}
+        \ifdefempty{\languages}{}{{\sectiontt Languages} & \languages} \\
+      \end{tabulary}
+    }
+
+    \vspace{0.5em}
 
     \rule{\textwidth}{0.4pt}
     \vspace{0.5em}
@@ -151,6 +163,12 @@
         \rowcolor{yellow} Hit Points & \textbf{\numprint{\attrhp}} \\
         \hline
         \rowcolor{yellow} Armor Class & \textbf{\numprint{\attrac}} \\
+        \hline
+        \multicolumn{2}{c}{} \\
+        \hline
+        \rowcolor{oddrow} Initiative & \textbf{\numprint{\attrinit}} \\
+        \hline
+        \rowcolor{evenrow} Speed & \textbf{\numprint{\attrspeed}} \\
         \hline
         \multicolumn{2}{c}{} \\
         \hline
@@ -204,15 +222,22 @@
         \hline
         \rowcolor{evenrow} Survival & \skillvalue{\attrwis}{\profsurvival} \\
         \hline
+        \multicolumn{2}{c}{} \\
+        \hline
+        \rowcolor{oddrow} Strength Save & \skillvalue{\attrstr}{\profstrsave} \\
+        \hline
+        \rowcolor{evenrow} Dexterity Save & \skillvalue{\attrdex}{\profdexsave} \\
+        \hline
+        \rowcolor{oddrow} Constitution Save & \skillvalue{\attrcon}{\profconsave} \\
+        \hline
+        \rowcolor{evenrow} Intelligence Save & \skillvalue{\attrint}{\profintsave} \\
+        \hline
+        \rowcolor{oddrow} Wisdom Save & \skillvalue{\attrwis}{\profwissave} \\
+        \hline
+        \rowcolor{evenrow} Charisma Save & \skillvalue{\attrcha}{\profchasave} \\
+        \hline
       \end{tabularx}
       \vspace{2em}
-
-      \ifdefempty{\languages}{}{
-        \section*{Languages}
-        \begin{itemize}[noitemsep]
-          \small\languages
-        \end{itemize}
-      }
 
     \end{minipage}
     \begin{minipage}[t]{0.05\textwidth}
@@ -220,13 +245,19 @@
     \end{minipage}
     \begin{minipage}[t]{0.65\textwidth}
 
+      \ifdefempty{\traits}{}{
+        \section*{Traits, Ideals, Bonds, and Flaws}
+        \begin{itemize}[noitemsep]
+          \small\traits
+        \end{itemize}
+      }
+
       \section*{Attacks}
       \noindent\begin{tabularx}{\textwidth}{ |X|Sc|Sc|Sc|Sc| }
         \hline
         \rowcolor{gray} \textbf{Attack} & \textbf{Hit Bonus} & \textbf{Damage} & \textbf{Type} & \textbf{Range} \\
         \attacks
       \end{tabularx}
-      \vspace{1em}
 
       \ifdefempty{\resources}{}{
         \section*{Resources}
@@ -236,7 +267,6 @@
           \hline
           \resources
         \end{tabularx}
-        \vspace{1em}
       }
 
       \ifdefempty{\abilities}{}{
@@ -257,11 +287,9 @@
 
     \pagebreak
 
-      \ifdefempty{\spells}{}{
-        \begin{multicols}{\numspellcols}[\section*{Spells}]
+    \ifdefempty{\spells}{}{
+      \begin{multicols}{\numspellcols}[\section*{Spells}]
         \spells
-        \end{multicols}
-      }
-
-
+      \end{multicols}
+    }
   }
