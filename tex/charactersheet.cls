@@ -3,7 +3,7 @@
 
 \LoadClass{article}
 
-\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb,setspace}
+\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb,setspace,multicol}
 \usepackage[margin=0.5in]{geometry}
 
 \setmainfont{PT Sans}
@@ -19,6 +19,7 @@
 \cellspacetoplimit 3pt
 \cellspacebottomlimit 3pt
 \setlength{\parindent}{0pt}
+\setlength{\columnsep}{0.5cm}
 
 \definecolor{gray}{rgb}{0.75,0.75,0.75}
 \definecolor{yellow}{rgb}{1.00,1.00,0.75}
@@ -66,6 +67,8 @@
     \def\profperformance{0}
     \def\profpersuasion{0}
 
+    \def\numspellcols{3}
+
     \newcounter{ct}
 
     \newcommand{\givencharactername}{John Doe}
@@ -92,20 +95,20 @@
     \newcommand{\addlang}[1]{\expandafter\def\expandafter\languages\expandafter{\languages{} \item ##1}}
     \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
     \newcommand{\addspell}[7]{\expandafter\def\expandafter\spells\expandafter{\spells{}
-        \adjustbox{left=0.98\textwidth,fbox,bgcolor=spellname}{
-          \begin{tabularx}{0.8\textwidth}{ X X }
-            \textbf{##1} & {\spelldesctt \setstretch{0.8} ##2}
-          \end{tabularx}
-        }
-        \par\vspace{0.5em}
-        \par\noindent{\spelldesctt \setstretch{0.8} \textit{##5} $\cdot$ \spelldesctt \setstretch{0.8} \textit{##3}} \\
-        \par\vspace{-0.5em}
-        \par\noindent{\spelldesctt \setstretch{0.8} ##7 \par}
-        \par\vspace{0.5em}
-        \begin{tabularx}{\textwidth}{ X X }
-          \spelldesctt \setstretch{0.8} \textit{Range: ##4} & \spelldesctt \setstretch{0.8} \textit{Duration: ##6} \\
-        \end{tabularx}
-        \par\vspace{1em}
+        \begin{minipage}{\linewidth}
+          \adjustbox{left=\linewidth,fbox,bgcolor=spellname}{
+            \begin{tabularx}{\linewidth}{ X X }
+              \textbf{##1} & {\spelldesctt \setstretch{0.8} ##2}
+            \end{tabularx}
+          }
+          \par\vspace{0.5em}
+          \par\noindent{\spelldesctt \setstretch{0.8} \textit{##5} $\cdot$ \spelldesctt \setstretch{0.8} \textit{##3}} \\
+          \par\vspace{-0.5em}
+          \par\noindent{\spelldesctt \setstretch{0.8} ##7 \par}
+          \par\vspace{0.5em}
+          \par\noindent{\spelldesctt \setstretch{0.8} \textit{Range: ##4} $\cdot$ \spelldesctt \setstretch{0.8} \textit{Duration: ##6}} \\
+          \par\vspace{1em}
+        \end{minipage}
     }}
 
     \newcommand{\additem}[2]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 & ##2 \\ \hline }}
@@ -237,27 +240,11 @@
 
     \pagebreak
 
-    \begin{minipage}[t]{0.60\textwidth}
-
       \ifdefempty{\spells}{}{
-        \section*{Spells}
+        \begin{multicols}{\numspellcols}[\section*{Spells}]
         \spells
+        \end{multicols}
       }
 
-    \end{minipage}
-    \begin{minipage}[t]{0.05\textwidth}
-      \hspace{0.05\textwidth}
-    \end{minipage}
-    \begin{minipage}[t]{0.35\textwidth}
 
-      \ifdefempty{\equipment}{}{
-        \section*{Equipment}
-        \noindent\begin{tabularx}{\textwidth}{ |X|Sc| }
-          \hline
-          \equipment
-        \end{tabularx}
-        \vspace{1em}
-      }
-
-    \end{minipage}
   }
