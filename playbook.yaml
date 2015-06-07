@@ -5,9 +5,13 @@
   - file: path=/home/corey/.ssh state=directory owner=corey mode=0700
   - get_url: url=https://github.com/Dennovin.keys dest=/home/corey/.ssh/authorized_keys validate_certs=no
   - file: path=/home/corey/.ssh/authorized_keys owner=corey group=corey mode=0600
+  - file: path=/data state=directory mode=0755
+  - copy: src=app dest=/data/
   - apt: pkg={{ item }} state=present
     with_items:
     - tmux
+    - python-pip
+  - pip: requirements=/data/app/requirements.txt
 
 - hosts: vagrant
   tasks:
@@ -36,6 +40,7 @@
     - PT_Sans-Web-BoldItalic.ttf
   - get_url: dest=/tmp/aniron.zip url=http://dl.1001fonts.com/aniron.zip
     notify: unzip aniron font
+  - copy: src=tex dest=/data/
 
 
 
