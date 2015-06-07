@@ -1,0 +1,45 @@
+---
+name: Test Dude
+race: Human
+background: { name: QA Department }
+alignment: Neutral
+classes:
+ - name: Test Subject
+   level: 1
+attacks:
+ - name: Punch
+   bonus: 5
+   damage: 1d4
+   damage_type: Bludgeoning
+   range: Melee
+traits:
+ - You're just, like, some guy.
+ - You're often used as a test subject for character generation programs.
+resources:
+ - name: Hit Dice (d4)
+   quantity: 1
+   recharge: Long Rest
+abilities:
+ - You can probably do some stuff, I guess. I don't know.
+items:
+ - Clothes
+ - Glasses
+languages:
+ - English
+
+armor_class: 10
+hit_points: 4
+initiative: 2
+speed: 25
+
+ability_scores:
+  str: 10
+  dex: 10
+  con: 10
+  wis: 10
+  int: 10
+  cha: 10
+
+proficiencies:
+  consave: 1
+  persuasion: 1

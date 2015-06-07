@@ -1,12 +1,15 @@
 ---
 - hosts: all
   tasks:
-  - user: name=corey shell=/bin/bash home=/home/corey createhome=yes
+  - group: name=incarnate state=present gid=2001
+  - user: name=corey shell=/bin/bash home=/home/corey createhome=yes groups=incarnate append=yes
   - file: path=/home/corey/.ssh state=directory owner=corey mode=0700
   - get_url: url=https://github.com/Dennovin.keys dest=/home/corey/.ssh/authorized_keys validate_certs=no
   - file: path=/home/corey/.ssh/authorized_keys owner=corey group=corey mode=0600
   - file: path=/data state=directory mode=0755
-  - copy: src=app dest=/data/
+  - user: name=incarnate uid=2001 groups=incarnate append=yes
+  - copy: src=app dest=/data/ owner=incarnate group=incarnate mode=0775
+  - file: path=/data/app owner=incarnate group=incarnate mode=0775
   - apt: pkg={{ item }} state=present
     with_items:
     - tmux
@@ -18,6 +21,7 @@
   - lineinfile: state=present create=yes dest=/etc/apt/apt.conf.d/01proxy line='Acquire::http::Proxy "http://leviathan:3142";'
   - file: path=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
   - lineinfile: state=present dest=/etc/hosts line='192.168.121.1 leviathan'
+  - user: name=vagrant groups=incarnate append=yes
 
 - hosts: tex
   handlers:
@@ -40,7 +44,8 @@
     - PT_Sans-Web-BoldItalic.ttf
   - get_url: dest=/tmp/aniron.zip url=http://dl.1001fonts.com/aniron.zip
     notify: unzip aniron font
-  - copy: src=tex dest=/data/
+  - copy: src=tex dest=/data/ owner=incarnate group=incarnate mode=0775
+  - file: path=/data/tex owner=incarnate group=incarnate mode=0775
 
 
 
