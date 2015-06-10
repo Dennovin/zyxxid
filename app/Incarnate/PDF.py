@@ -9,14 +9,14 @@ class PDF(object):
 
     @classmethod
     def write_pdf(cls, character):
-        character_file = tempfile.NamedTemporaryFile(delete=True, suffix=".tex", dir=cls.tex_dir)
-        pdf_filename = os.path.splitext(character_file.name)[0] + ".pdf"
+        with open(os.devnull, "w") as devnull, tempfile.NamedTemporaryFile(delete=False, suffix=".tex", dir=cls.tex_dir) as character_file:
 
-        template = cls.env.get_template("character.tex.j2")
-        file_contents = template.render(c=character)
-        character_file.write(file_contents)
+            pdf_filename = os.path.splitext(character_file.name)[0] + ".pdf"
 
-        with open(os.devnull, "w") as devnull:
+            template = cls.env.get_template("character.tex.j2")
+            file_contents = template.render(c=character)
+            character_file.write(file_contents)
+
             process = subprocess.Popen(["/usr/bin/xelatex", "-halt-on-error", "-interaction=batchmode", character_file.name],
                                        cwd=cls.tex_dir, stderr=devnull, stdout=devnull)
 
