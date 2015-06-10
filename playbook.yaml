@@ -17,11 +17,23 @@
   - pip: requirements=/data/app/requirements.txt
 
 - hosts: vagrant
+  handlers:
+  - name: make swap
+    command: mkswap /swapfile
+    notify: swap on
+
+  - name: swap on
+    command: swapon /swapfile
+
   tasks:
   - lineinfile: state=present create=yes dest=/etc/apt/apt.conf.d/01proxy line='Acquire::http::Proxy "http://leviathan:3142";'
   - file: path=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
   - lineinfile: state=present dest=/etc/hosts line='192.168.121.1 leviathan'
   - user: name=vagrant groups=incarnate append=yes
+  - command: fallocate -l 1G /swapfile
+    notify: make swap
+    args:
+      creates: /swapfile
 
 - hosts: tex
   handlers:
@@ -47,5 +59,24 @@
   - copy: src=tex dest=/data/ owner=incarnate group=incarnate mode=0775
   - file: path=/data/tex owner=incarnate group=incarnate mode=0775
 
+- hosts: web
+  handlers:
+  - name: restart nginx
+    service: name=nginx state=restarted
 
-
+  tasks:
+  - apt: name={{ item }} state=present
+    with_items:
+    - nginx
+  - template: src=templates/nginx.conf.j2 dest=/etc/nginx/sites-available/incarnate owner=root mode=0644
+    notify: restart nginx
+  - file: dest=/etc/nginx/sites-enabled/incarnate src=/etc/nginx/sites-available/incarnate state=link
+  - file: dest=/etc/nginx/sites-enabled/default state=absent
+  - file: dest=/etc/nginx/conf.d/{{ item }} state=absent
+    with_items:
+    - default.conf
+    - virtual.conf
+    - ssl.conf
+    notify: restart nginx
+  - synchronize: src=web/ dest=/data/www owner=no
+  - file: path=/data/www owner=www-data recurse=yes
