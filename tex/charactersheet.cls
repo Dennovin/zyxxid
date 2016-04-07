@@ -41,6 +41,7 @@
 \newenvironment{charactersheet}
   {
     \def\profbonus{2}
+    \def\nonprofbonus{0}
 
     \def\attrstr{0}
     \def\attrdex{0}
@@ -130,9 +131,10 @@
     \newcommand{\setattr}[2]{\@namedef{attr##1}{##2}}
     \newcommand{\setprof}[2]{\@namedef{prof##1}{##2}}
     \newcommand{\setprofbonus}[1]{\def\profbonus{##1}}
+    \newcommand{\setnonprofbonus}[1]{\def\nonprofbonus{##1}}
 
     \newcommand{\abilityscore}[1]{\FPeval{\result}{round(trunc(round(##1 / 2,1),0) - 5,0)} \textbf{\numprint{\result}}}
-    \newcommand{\skillvalue}[2]{\FPeval{\result}{round(trunc(round(##1 / 2,1),0) - 5 + (##2 * \profbonus),0)} \textbf{\numprint{\result}}}
+    \newcommand{\skillvalue}[2]{\FPeval{\result}{round(trunc(round(##1 / 2,1),0) - 5 + max((##2 * \profbonus),\nonprofbonus),0)} \textbf{\numprint{\result}}}
 
     \newcommand{\skillrow}[3]{##1 \hfill \multido{}{\@nameuse{prof##2}}{\checkmark} & \skillvalue{\@nameuse{attr##3}}{\@nameuse{prof##2}}}
   }
