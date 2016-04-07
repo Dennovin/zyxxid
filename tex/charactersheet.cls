@@ -3,7 +3,7 @@
 
 \LoadClass{article}
 
-\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb,setspace,multicol}
+\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb,setspace,multicol,multido}
 \usepackage[margin=0.5in]{geometry}
 \usepackage[table]{xcolor}
 
@@ -133,6 +133,8 @@
 
     \newcommand{\abilityscore}[1]{\FPeval{\result}{round(trunc(round(##1 / 2,1),0) - 5,0)} \textbf{\numprint{\result}}}
     \newcommand{\skillvalue}[2]{\FPeval{\result}{round(trunc(round(##1 / 2,1),0) - 5 + (##2 * \profbonus),0)} \textbf{\numprint{\result}}}
+
+    \newcommand{\skillrow}[3]{##1 \hfill \multido{}{\@nameuse{prof##2}}{\checkmark} & \skillvalue{\@nameuse{attr##3}}{\@nameuse{prof##2}}}
   }
   {
     {\large\titlett \givencharactername \par}
@@ -199,57 +201,57 @@
         \multicolumn{2}{c}{} \\
         \showrowcolors
         \hline
-        Acrobatics & \skillvalue{\attrdex}{\profacrobatics} \\
+        \skillrow{Acrobatics}{acrobatics}{dex} \\
         \hline
-        Arcana & \skillvalue{\attrint}{\profarcana} \\
+        \skillrow{Arcana}{arcana}{int} \\
         \hline
-        Athletics & \skillvalue{\attrstr}{\profathletics} \\
+        \skillrow{Athletics}{athletics}{str} \\
         \hline
-        Deception & \skillvalue{\attrcha}{\profdeception} \\
+        \skillrow{Deception}{deception}{cha} \\
         \hline
-        Handle Animal & \skillvalue{\attrwis}{\profhandleanimal} \\
+        \skillrow{Handle Animal}{handleanimal}{wis} \\
         \hline
-        History & \skillvalue{\attrint}{\profhistory} \\
+        \skillrow{History}{history}{int} \\
         \hline
-        Insight & \skillvalue{\attrwis}{\profinsight} \\
+        \skillrow{Insight}{insight}{wis} \\
         \hline
-        Intimidate & \skillvalue{\attrcha}{\profintimidate} \\
+        \skillrow{Intimidate}{intimidate}{cha} \\
         \hline
-        Investigation & \skillvalue{\attrint}{\profinvestigation} \\
+        \skillrow{Investigation}{investigation}{int} \\
         \hline
-        Medicine & \skillvalue{\attrwis}{\profmedicine} \\
+        \skillrow{Medicine}{medicine}{wis} \\
         \hline
-        Nature & \skillvalue{\attrint}{\profnature} \\
+        \skillrow{Nature}{nature}{int} \\
         \hline
-        Perception & \skillvalue{\attrwis}{\profperception} \\
+        \skillrow{Perception}{perception}{wis} \\
         \hline
-        Performance & \skillvalue{\attrcha}{\profperformance} \\
+        \skillrow{Performance}{performance}{cha} \\
         \hline
-        Persuasion & \skillvalue{\attrcha}{\profpersuasion} \\
+        \skillrow{Persuasion}{persuasion}{cha} \\
         \hline
-        Religion & \skillvalue{\attrint}{\profreligion} \\
+        \skillrow{Religion}{religion}{int} \\
         \hline
-        Sleight of Hand & \skillvalue{\attrdex}{\profsleightofhand} \\
+        \skillrow{Sleight of Hand}{sleightofhand}{dex} \\
         \hline
-        Stealth & \skillvalue{\attrdex}{\profstealth} \\
+        \skillrow{Stealth}{stealth}{dex} \\
         \hline
-        Survival & \skillvalue{\attrwis}{\profsurvival} \\
+        \skillrow{Survival}{survival}{wis} \\
         \hline
         \hiderowcolors
         \multicolumn{2}{c}{} \\
         \showrowcolors
         \hline
-        Strength Save & \skillvalue{\attrstr}{\profstrsave} \\
+        \skillrow{Strength Save}{strsave}{str} \\
         \hline
-        Dexterity Save & \skillvalue{\attrdex}{\profdexsave} \\
+        \skillrow{Dexterity Save}{dexsave}{dex} \\
         \hline
-        Constitution Save & \skillvalue{\attrcon}{\profconsave} \\
+        \skillrow{Constitution Save}{consave}{con} \\
         \hline
-        Intelligence Save & \skillvalue{\attrint}{\profintsave} \\
+        \skillrow{Intelligence Save}{intsave}{int} \\
         \hline
-        Wisdom Save & \skillvalue{\attrwis}{\profwissave} \\
+        \skillrow{Wisdom Save}{wissave}{wis} \\
         \hline
-        Charisma Save & \skillvalue{\attrcha}{\profchasave} \\
+        \skillrow{Charisma Save}{chasave}{cha} \\
         \hline
       \end{tabularx}
       \vspace{2em}
