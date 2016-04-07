@@ -100,6 +100,7 @@
     \newcommand{\skills}{}
     \newcommand{\spells}{}
     \newcommand{\spelldcs}{}
+    \newcommand{\spellclass}{}
     \newcommand{\equipment}{}
     \newcommand{\charactername}[1]{\renewcommand{\givencharactername}{##1}}
     \newcommand{\setrace}[1]{\renewcommand{\charrace}{##1}}
@@ -112,14 +113,13 @@
     \newcommand{\addlang}[1]{\edef\languages{\ifdefempty{\languages}{}{\languages{},} ##1}}
     \newcommand{\addequip}[1]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 }}
     \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
-    \newcommand{\addspelldc}[2]{\expandafter\def\expandafter\spelldcs\expandafter{\spelldcs{} ##1 Spell DC & \textbf{\numprint{##2}} \\ \hline}}
     \newcommand{\addspell}[8]{\expandafter\def\expandafter\spells\expandafter{\spells{}
         \begin{minipage}{\linewidth}
           \adjustbox{left=\linewidth,fbox,bgcolor=spellcolor##3}{
             \textbf{##1} \hspace*{\fill} {\spelldesctt \setstretch{0.7} ##2}
           }
           \par\vspace{0.5em}
-          \par\noindent{\spelldesctt \setstretch{0.7} \textit{##6} $\cdot$ \textit{##4}} \\
+          \par\noindent{\spelldesctt \setstretch{0.7} \ifdefempty{\spellclass}{}{\textit{\spellclass} $\cdot$} \textit{##6} $\cdot$ \textit{##4}} \\
           \par\vspace{-0.5em}
           \par\noindent{\spelldesctt \setstretch{0.7} ##8 \par}
           \par\vspace{0.5em}
@@ -135,6 +135,10 @@
 
     \newcommand{\abilityscore}[1]{\FPeval{\result}{round(trunc(round(##1 / 2,1),0) - 5,0)} \textbf{\numprint{\result}}}
     \newcommand{\skillvalue}[2]{\FPeval{\result}{round(trunc(round(##1 / 2,1),0) - 5 + max((##2 * \profbonus),\nonprofbonus),0)} \textbf{\numprint{\result}}}
+    \newcommand{\calcspelldc}[1]{\FPeval{\result}{trunc(8 + \profbonus + round(trunc(round(\@nameuse{attr##1} / 2,1),0) - 5,0), 0)}\textbf{\numprint{\result}}}
+
+    \newcommand{\addspelldc}[2]{\expandafter\def\expandafter\spelldcs\expandafter{\spelldcs{} ##1 Spell DC & \calcspelldc{##2} \\ \hline}}
+    \newcommand{\setspellclass}[2]{\renewcommand{\spellclass}{##1} \addspelldc{##1}{##2}}
 
     \newcommand{\skillrow}[3]{##1 \hfill \multido{}{\@nameuse{prof##2}}{\checkmark} & \skillvalue{\@nameuse{attr##3}}{\@nameuse{prof##2}}}
   }
