@@ -5,6 +5,7 @@
 
 \usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb,setspace,multicol}
 \usepackage[margin=0.5in]{geometry}
+\usepackage[table]{xcolor}
 
 \setmainfont[Scale=0.90]{PT Sans}
 \newfontfamily\titlett{Aniron}
@@ -97,6 +98,7 @@
     \newcommand{\resources}{}
     \newcommand{\skills}{}
     \newcommand{\spells}{}
+    \newcommand{\spelldcs}{}
     \newcommand{\equipment}{}
     \newcommand{\charactername}[1]{\renewcommand{\givencharactername}{##1}}
     \newcommand{\setrace}[1]{\renewcommand{\charrace}{##1}}
@@ -109,6 +111,7 @@
     \newcommand{\addlang}[1]{\edef\languages{\ifdefempty{\languages}{}{\languages{},} ##1}}
     \newcommand{\addequip}[1]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 }}
     \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
+    \newcommand{\addspelldc}[2]{\expandafter\def\expandafter\spelldcs\expandafter{\spelldcs{} ##1 Spell DC & \textbf{\numprint{##2}} \\ \hline}}
     \newcommand{\addspell}[8]{\expandafter\def\expandafter\spells\expandafter{\spells{}
         \begin{minipage}{\linewidth}
           \adjustbox{left=\linewidth,fbox,bgcolor=spellcolor##3}{
@@ -160,83 +163,93 @@
 
     \begin{minipage}[t]{0.30\textwidth}
       \section*{Attributes and Skills}
+      \rowcolors{2}{oddrow}{evenrow}
       \noindent\begin{tabularx}{\linewidth}{ |X|Sc| }
         \hline
         \rowcolor{yellow} Hit Points & \textbf{\numprint{\attrhp}} \\
         \hline
         \rowcolor{yellow} Armor Class & \textbf{\numprint{\attrac}} \\
         \hline
+        \hiderowcolors
         \multicolumn{2}{c}{} \\
+        \showrowcolors
         \hline
-        \rowcolor{oddrow} Initiative & \textbf{\numprint{\attrinit}} \\
+        Initiative & \textbf{\numprint{\attrinit}} \\
         \hline
-        \rowcolor{evenrow} Speed & \textbf{\numprint{\attrspeed}} \\
+        Speed & \textbf{\numprint{\attrspeed}} \\
         \hline
+        \spelldcs
+        \hiderowcolors
         \multicolumn{2}{c}{} \\
+        \showrowcolors
         \hline
-        \rowcolor{oddrow} Strength & \textbf{\abilityscore{\attrstr}} (\attrstr) \\
+        Strength & \textbf{\abilityscore{\attrstr}} (\attrstr) \\
         \hline
-        \rowcolor{evenrow} Dexterity & \textbf{\abilityscore{\attrdex}} (\attrdex) \\
+        Dexterity & \textbf{\abilityscore{\attrdex}} (\attrdex) \\
         \hline
-        \rowcolor{oddrow} Constitution & \textbf{\abilityscore{\attrcon}} (\attrcon) \\
+        Constitution & \textbf{\abilityscore{\attrcon}} (\attrcon) \\
         \hline
-        \rowcolor{evenrow} Intelligence & \textbf{\abilityscore{\attrint}} (\attrint) \\
+        Intelligence & \textbf{\abilityscore{\attrint}} (\attrint) \\
         \hline
-        \rowcolor{oddrow} Wisdom & \textbf{\abilityscore{\attrwis}} (\attrwis) \\
+        Wisdom & \textbf{\abilityscore{\attrwis}} (\attrwis) \\
         \hline
-        \rowcolor{evenrow} Charisma & \textbf{\abilityscore{\attrcha}} (\attrcha) \\
+        Charisma & \textbf{\abilityscore{\attrcha}} (\attrcha) \\
         \hline
+        \hiderowcolors
         \multicolumn{2}{c}{} \\
+        \showrowcolors
         \hline
-        \rowcolor{oddrow} Acrobatics & \skillvalue{\attrdex}{\profacrobatics} \\
+        Acrobatics & \skillvalue{\attrdex}{\profacrobatics} \\
         \hline
-        \rowcolor{evenrow} Arcana & \skillvalue{\attrint}{\profarcana} \\
+        Arcana & \skillvalue{\attrint}{\profarcana} \\
         \hline
-        \rowcolor{oddrow} Athletics & \skillvalue{\attrstr}{\profathletics} \\
+        Athletics & \skillvalue{\attrstr}{\profathletics} \\
         \hline
-        \rowcolor{evenrow} Deception & \skillvalue{\attrcha}{\profdeception} \\
+        Deception & \skillvalue{\attrcha}{\profdeception} \\
         \hline
-        \rowcolor{oddrow} Handle Animal & \skillvalue{\attrwis}{\profhandleanimal} \\
+        Handle Animal & \skillvalue{\attrwis}{\profhandleanimal} \\
         \hline
-        \rowcolor{evenrow} History & \skillvalue{\attrint}{\profhistory} \\
+        History & \skillvalue{\attrint}{\profhistory} \\
         \hline
-        \rowcolor{oddrow} Insight & \skillvalue{\attrwis}{\profinsight} \\
+        Insight & \skillvalue{\attrwis}{\profinsight} \\
         \hline
-        \rowcolor{evenrow} Intimidate & \skillvalue{\attrcha}{\profintimidate} \\
+        Intimidate & \skillvalue{\attrcha}{\profintimidate} \\
         \hline
-        \rowcolor{oddrow} Investigation & \skillvalue{\attrint}{\profinvestigation} \\
+        Investigation & \skillvalue{\attrint}{\profinvestigation} \\
         \hline
-        \rowcolor{evenrow} Medicine & \skillvalue{\attrwis}{\profmedicine} \\
+        Medicine & \skillvalue{\attrwis}{\profmedicine} \\
         \hline
-        \rowcolor{oddrow} Nature & \skillvalue{\attrint}{\profnature} \\
+        Nature & \skillvalue{\attrint}{\profnature} \\
         \hline
-        \rowcolor{evenrow} Perception & \skillvalue{\attrwis}{\profperception} \\
+        Perception & \skillvalue{\attrwis}{\profperception} \\
         \hline
-        \rowcolor{oddrow} Performance & \skillvalue{\attrcha}{\profperformance} \\
+        Performance & \skillvalue{\attrcha}{\profperformance} \\
         \hline
-        \rowcolor{evenrow} Persuasion & \skillvalue{\attrcha}{\profpersuasion} \\
+        Persuasion & \skillvalue{\attrcha}{\profpersuasion} \\
         \hline
-        \rowcolor{oddrow} Religion & \skillvalue{\attrint}{\profreligion} \\
+        Religion & \skillvalue{\attrint}{\profreligion} \\
         \hline
-        \rowcolor{evenrow} Sleight of Hand & \skillvalue{\attrdex}{\profsleightofhand} \\
+        Sleight of Hand & \skillvalue{\attrdex}{\profsleightofhand} \\
         \hline
-        \rowcolor{oddrow} Stealth & \skillvalue{\attrdex}{\profstealth} \\
+        Stealth & \skillvalue{\attrdex}{\profstealth} \\
         \hline
-        \rowcolor{evenrow} Survival & \skillvalue{\attrwis}{\profsurvival} \\
+        Survival & \skillvalue{\attrwis}{\profsurvival} \\
         \hline
+        \hiderowcolors
         \multicolumn{2}{c}{} \\
+        \showrowcolors
         \hline
-        \rowcolor{oddrow} Strength Save & \skillvalue{\attrstr}{\profstrsave} \\
+        Strength Save & \skillvalue{\attrstr}{\profstrsave} \\
         \hline
-        \rowcolor{evenrow} Dexterity Save & \skillvalue{\attrdex}{\profdexsave} \\
+        Dexterity Save & \skillvalue{\attrdex}{\profdexsave} \\
         \hline
-        \rowcolor{oddrow} Constitution Save & \skillvalue{\attrcon}{\profconsave} \\
+        Constitution Save & \skillvalue{\attrcon}{\profconsave} \\
         \hline
-        \rowcolor{evenrow} Intelligence Save & \skillvalue{\attrint}{\profintsave} \\
+        Intelligence Save & \skillvalue{\attrint}{\profintsave} \\
         \hline
-        \rowcolor{oddrow} Wisdom Save & \skillvalue{\attrwis}{\profwissave} \\
+        Wisdom Save & \skillvalue{\attrwis}{\profwissave} \\
         \hline
-        \rowcolor{evenrow} Charisma Save & \skillvalue{\attrcha}{\profchasave} \\
+        Charisma Save & \skillvalue{\attrcha}{\profchasave} \\
         \hline
       \end{tabularx}
       \vspace{2em}
