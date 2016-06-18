@@ -1,63 +1,66 @@
 ---
 - hosts: all
   tasks:
-  - group: name=incarnate state=present gid=2001
-  - user: name=corey shell=/bin/bash home=/home/corey createhome=yes groups=incarnate append=yes
-  - file: path=/home/corey/.ssh state=directory owner=corey mode=0700
-  - get_url: url=https://github.com/Dennovin.keys dest=/home/corey/.ssh/authorized_keys validate_certs=no
-  - file: path=/home/corey/.ssh/authorized_keys owner=corey group=corey mode=0600
-  - file: path=/data state=directory mode=0755
-  - user: name=incarnate uid=2001 groups=incarnate append=yes
-  - copy: src=app dest=/data/ owner=incarnate group=incarnate mode=0775
-  - file: path=/data/app owner=incarnate group=incarnate mode=0775
+  - apt: update_cache=yes cache_valid_time=86400
+  - group: name=zyxxid state=present gid=2001
+  - user: name=zyxxid uid=2001 groups=zyxxid append=yes
+  - file: path=/data state=directory owner=zyxxid group=zyxxid mode=0755
   - apt: pkg={{ item }} state=present
     with_items:
     - tmux
-    - python-pip
-  - pip: requirements=/data/app/requirements.txt
+    - git
 
-- hosts: vagrant
-  handlers:
-  - name: make swap
-    command: mkswap /swapfile
-    notify: swap on
 
-  - name: swap on
-    command: swapon /swapfile
-
+- hosts: tex:web
   tasks:
-  - lineinfile: state=present create=yes dest=/etc/apt/apt.conf.d/01proxy line='Acquire::http::Proxy "http://leviathan:3142";'
-  - file: path=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
-  - lineinfile: state=present dest=/etc/hosts line='192.168.121.1 leviathan'
-  - user: name=vagrant groups=incarnate append=yes
-  - command: fallocate -l 1G /swapfile
-    notify: make swap
-    args:
-      creates: /swapfile
+  - name: install Python and required libraries
+    apt: name={{ item }} state=present
+    with_items:
+    - python3-pip
+    - python-virtualenv
+    - python-dev
+    - libffi-dev
+    - libssl-dev
+    - libyaml-0-2
+
+  - name: synchronize app folder
+    copy: src=app dest=/data/ force=yes owner=zyxxid group=zyxxid
+  - name: install app into virtual environment
+    pip: name="file:///data/app" virtualenv=/data/venv virtualenv_python=python3.4
+
 
 - hosts: tex
   handlers:
-  - name: unzip aniron font
+  - name: unzip Aniron font
     unarchive: src=/tmp/aniron.zip dest=/usr/local/share/fonts/ copy=no
 
   tasks:
-  - apt: name={{ item }} state=present
+  - name: install LaTeX requirements
+    apt: name={{ item }} state=present
     with_items:
     - fontconfig
-    - texlive-xetex
-    - texlive-latex-recommended
+    - latex-xcolor
+    - texlive-generic-recommended
     - texlive-latex-extra
+    - texlive-latex-recommended
+    - texlive-xetex
     - unzip
-  - get_url: dest=/usr/local/share/fonts/{{ item }} url=https://github.com/google/fonts/blob/master/ofl/ptsans/{{ item }}?raw=true
+
+  - name: download PT Sans fonts
+    get_url: dest=/usr/local/share/fonts/{{ item }} url=https://github.com/google/fonts/blob/master/ofl/ptsans/{{ item }}?raw=true
     with_items:
     - PT_Sans-Web-Regular.ttf
     - PT_Sans-Web-Bold.ttf
     - PT_Sans-Web-Italic.ttf
     - PT_Sans-Web-BoldItalic.ttf
-  - get_url: dest=/tmp/aniron.zip url=http://dl.1001fonts.com/aniron.zip
-    notify: unzip aniron font
-  - copy: src=tex dest=/data/ owner=incarnate group=incarnate mode=0775
-  - file: path=/data/tex owner=incarnate group=incarnate mode=0775
+
+  - name: download Aniron font
+    get_url: dest=/tmp/aniron.zip url=http://dl.1001fonts.com/aniron.zip
+    notify: unzip Aniron font
+
+  - name: synchronize tex folder
+    copy: src=tex dest=/data/ force=yes owner=zyxxid group=zyxxid
+
 
 - hosts: web
   handlers:
@@ -68,9 +71,10 @@
   - apt: name={{ item }} state=present
     with_items:
     - nginx
-  - template: src=templates/nginx.conf.j2 dest=/etc/nginx/sites-available/incarnate owner=root mode=0644
+
+  - template: src=templates/nginx.conf.j2 dest=/etc/nginx/sites-available/zyxxid owner=root mode=0644
     notify: restart nginx
-  - file: dest=/etc/nginx/sites-enabled/incarnate src=/etc/nginx/sites-available/incarnate state=link
+  - file: dest=/etc/nginx/sites-enabled/zyxxid src=/etc/nginx/sites-available/zyxxid state=link
   - file: dest=/etc/nginx/sites-enabled/default state=absent
   - file: dest=/etc/nginx/conf.d/{{ item }} state=absent
     with_items:
@@ -79,4 +83,16 @@
     - ssl.conf
     notify: restart nginx
   - synchronize: src=web/ dest=/data/www owner=no
-  - file: path=/data/www owner=www-data recurse=yes
+  - file: path=/data/www owner=www-data state=directory recurse=yes
+  - git: repo=https://github.com/ephe/grimoire.git dest=/data/grimoire
+
+
+- hosts: db
+  tasks:
+  - name: install database server packages
+    apt: name={{ item }} state=present
+    with_items:
+    - rabbitmq-server
+
+  - name: install Riak
+    apt: deb=http://s3.amazonaws.com/downloads.basho.com/riak/2.1/2.1.4/ubuntu/trusty/riak_2.1.4-1_amd64.deb state=present
