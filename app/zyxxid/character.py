@@ -26,16 +26,12 @@ class Character(database.RiakStorable):
             yaml.dump(self, fh)
 
 
-class PDF(database.RiakStorable):
+class PDF(database.RiakStorableFile):
     env = Environment(loader=PackageLoader(__name__, "templates"))
     output_dir = "/data/output"
 
     @classmethod
     def create(cls, character):
-        obj = cls()
-        obj.character_id = character.id
-        obj.creation_date = datetime.utcnow()
-
         with open(os.devnull, "w") as devnull, tempfile.NamedTemporaryFile(suffix=".tex", dir=cls.output_dir, delete=False) as tex_file:
             pdf_filename = os.path.splitext(tex_file.name)[0] + ".pdf"
 
@@ -50,8 +46,5 @@ class PDF(database.RiakStorable):
         if process.returncode:
             print("fail")
 
-        with open(os.path.join(cls.output_dir, pdf_filename), "rb") as pdf:
-            obj.file_contents = pdf.read()
-
-        obj.store()
+        obj = cls.store_from_file(os.path.join(cls.output_dir, pdf_filename))
         return obj.id

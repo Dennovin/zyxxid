@@ -31,3 +31,23 @@ class RiakStorable(object):
         obj = cls()
         obj.__dict__ = cls.bucket().get(key).data
         return obj
+
+
+class RiakStorableFile(RiakStorable):
+    def store(self):
+        key = self.bucket().new(self.id, data=self.contents)
+        key.store()
+        return self.id
+
+    @classmethod
+    def store_from_file(cls, filename):
+        obj = cls()
+        key = cls.bucket().new_from_file(obj.id, filename)
+        key.store()
+        return obj
+
+    @classmethod
+    def fetch(cls, key):
+        obj = cls()
+        obj.contents = cls.bucket().get(key).data
+        return obj
