@@ -49,5 +49,5 @@ class RiakStorableFile(RiakStorable):
     @classmethod
     def fetch(cls, key):
         obj = cls()
-        obj.contents = cls.bucket().get(key).data
+        obj.contents = cls.bucket().get(key).encoded_data
         return obj

@@ -10,12 +10,13 @@ setup(
     author_email="corey@cossentino.com",
     packages=find_packages(),
     package_data={
+        "zyxxid": ["templates/*.j2"],
     },
     package_dir={
         "zyxxid": "zyxxid",
     },
     install_requires=[
-        "tornado",
+        "flask",
         "riak",
         "PyYAML",
         "uWSGI",

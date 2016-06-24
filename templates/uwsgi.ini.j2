@@ -1,0 +1,19 @@
+[uwsgi]
+master = true
+processes = 4
+threads = 4
+
+module = zyxxid
+callable = flask_app
+
+uid = zyxxid
+gid = zyxxid
+
+socket = /tmp/uwsgi.sock
+buffer-size = 32768
+chmod-socket = 660
+
+virtualenv = /data/venv
+logger = file:/data/logs/uwsgi.log
+logdate = %%c
+logformat = [%(ltime)] (%(pid)) %(method) %(uri) - %(msecs) ms

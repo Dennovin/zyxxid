@@ -2,16 +2,27 @@
 - hosts: all
   become: yes
   tasks:
-  - apt: update_cache=yes cache_valid_time=86400
-  - group: name=zyxxid state=present gid=2001
-  - user: name=zyxxid uid=2001 groups=zyxxid append=yes
-  - file: path=/data state=directory owner=zyxxid group=zyxxid mode=0755
-  - apt: pkg={{ item }} state=present
+  - name: update apt cache
+    apt: update_cache=yes cache_valid_time=86400
+
+  - name: create app group
+    group: name=zyxxid state=present gid=2001
+
+  - name: create app user
+    user: name=zyxxid uid=2001 groups=zyxxid append=yes
+
+  - name: install packages for all systems
+    apt: pkg={{ item }} state=present
     with_items:
     - tmux
     - git
-  - name: create config directory
-    file: path=/data/etc state=directory owner=zyxxid group=zyxxid mode=0755
+
+  - name: create required directories
+    file: path={{ item }} state=directory owner=zyxxid group=zyxxid mode=0755
+    with_items:
+    - /data/etc
+    - /data/logs
+
   - name: create config file
     template: src=templates/zyxxid.yaml.j2 dest=/data/etc/zyxxid.yaml owner=zyxxid mode=0644
 
@@ -30,6 +41,7 @@
 
   - name: synchronize app folder
     copy: src=app dest=/data/ force=yes owner=zyxxid group=zyxxid
+
   - name: install app into virtual environment
     pip: name="file:///data/app" virtualenv=/data/venv virtualenv_python=python3.4
     become: yes
@@ -85,24 +97,55 @@
   - name: restart nginx
     service: name=nginx state=restarted
 
+  - name: restart uWSGI
+    service: name=uwsgi state=restarted
+
   tasks:
-  - apt: name={{ item }} state=present
+  - name: install nginx
+    apt: name={{ item }} state=present
     with_items:
     - nginx
 
-  - template: src=templates/nginx.conf.j2 dest=/etc/nginx/sites-available/zyxxid owner=root mode=0644
+  - name: set up nginx from template
+    template: src=templates/nginx.conf.j2 dest=/etc/nginx/sites-available/zyxxid owner=root mode=0644
     notify: restart nginx
-  - file: dest=/etc/nginx/sites-enabled/zyxxid src=/etc/nginx/sites-available/zyxxid state=link
-  - file: dest=/etc/nginx/sites-enabled/default state=absent
-  - file: dest=/etc/nginx/conf.d/{{ item }} state=absent
+
+  - name: enable nginx site
+    file: dest=/etc/nginx/sites-enabled/zyxxid src=/etc/nginx/sites-available/zyxxid state=link
+
+  - name: disable default nginx site
+    file: dest=/etc/nginx/sites-enabled/default state=absent
+
+  - name: remove default nginx files
+    file: dest=/etc/nginx/conf.d/{{ item }} state=absent
     with_items:
     - default.conf
     - virtual.conf
     - ssl.conf
     notify: restart nginx
-  - synchronize: src=web/ dest=/data/www owner=no
-  - file: path=/data/www owner=www-data state=directory recurse=yes
-  - git: repo=https://github.com/ephe/grimoire.git dest=/data/grimoire
+
+  - name: add nginx user to app group
+    user: name=www-data groups=zyxxid append=yes
+
+  - name: set up uWSGI from template
+    template: src=templates/uwsgi.ini.j2 dest=/data/etc/uwsgi.ini
+    notify: restart uWSGI
+
+  - name: set up uWSGI service from template
+    template: src=templates/uwsgi.conf.j2 dest=/etc/init/uwsgi.conf
+    notify: restart uWSGI
+
+  - name: start and enable uWSGI
+    service: name=uwsgi enabled=yes state=started
+
+  - name: synchronize static web files
+    synchronize: src=web/ dest=/data/www owner=no
+
+  - name: set owner of static web files
+    file: path=/data/www owner=www-data state=directory recurse=yes
+
+  - name: check out grimoire
+    git: repo=https://github.com/ephe/grimoire.git dest=/data/grimoire
 
 
 - hosts: db
@@ -128,4 +171,3 @@
 
   - name: start and enable Riak
     service: name=riak enabled=yes state=started
-
