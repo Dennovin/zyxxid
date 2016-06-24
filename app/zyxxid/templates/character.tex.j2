@@ -1,0 +1,61 @@
+\documentclass{charactersheet}
+
+\begin{document}
+\begin{charactersheet}
+
+  \charactername{{ "{" }}{{ c.name }}{{ "}" }}
+
+  \setrace{{ "{" }}{{ c.race }}{{ "}" }}
+  \setalignment{{ "{" }}{{ c.alignment }}{{ "}" }}
+  \setbg{{ "{" }}{{ c.background.name }}{{ "}" }}
+  {% for class in c.classes %}
+  \addclass{{ "{" }}{{ class.name }}{{ "}" }}{{ "{" }}{{ class.level }}{{ "}" }}
+  {% endfor %}
+
+  {% for attack in c.attacks %}
+  \addattack{{ "{" }}{{ attack.name }}{{ "}" }}{{ "{" }}{{ attack.bonus }}{{ "}" }}{{ "{" }}{{ attack.damage }}{{ "}" }}{{ "{" }}{{ attack.damage_type }}{{ "}" }}{{ "{" }}{{ attack.range }}{{ "}" }}
+  {% endfor %}
+
+  {% for trait in c.traits %}
+  \addtrait{{ "{" }}{{ trait }}{{ "}" }}
+  {% endfor %}
+
+  {% for resource in c.resources %}
+  \addresource{{ "{" }}{{ resource.name }}{{ "}" }}{{ "{" }}{{ resource.quantity }}{{ "}" }}{{ "{" }}{{ resource.recharge }}{{ "}" }}
+  {% endfor %}
+
+  {% for ability in c.abilities %}
+  \addability{{ "{" }}{{ ability }}{{ "}" }}
+  {% endfor %}
+
+  {% for spellclass in c.spell_classes %}
+  {% for spell in spellclass.spells %}
+  \addspell{{ "{" }}{{ spell.name }}{{ "}" }}{{ "{" }}{{ spellclass.name }} {{ "}" }}{{ "{" }}{{ spell.type }}{{ "}" }}{{ "{" }}{{ spell.level }}{{ "}" }}{{ "{" }}{{ spell.cast_time }}{{ "}" }}{{ "{" }}{{ spell.range }}{{ "}" }}{{ "{" }}{{ spell.requirements }}{{ "}" }}{{ "{" }}{{ spell.duration }}{{ "}" }}{{ "{" }}{{ spell.description }}{{ "}" }}
+  {% endfor %}
+  {% endfor %}
+
+  {% for item in c.items %}
+  \addequip{{ "{" }}{{ item }}{{ "}" }}
+  {% endfor %}
+
+  {% for language in c.languages %}
+  \addlang{{ "{" }}{{ language }}{{ "}" }}
+  {% endfor %}
+
+  \setattr{ac}{{ "{" }}{{ c.armor_class }}{{ "}" }}
+  \setattr{hp}{{ "{" }}{{ c.hit_points }}{{ "}" }}
+  \setattr{init}{{ "{" }}{{ c.initiative }}{{ "}" }}
+  \setattr{speed}{{ "{" }}{{ c.speed }}{{ "}" }}
+
+  \setprofbonus{{ "{" }}{{ c.proficiency_bonus }}{{ "}" }}
+
+  {% for ability, score in c.ability_scores.items() %}
+  \setattr{{ "{" }}{{ ability }}{{ "}" }}{{ "{" }}{{ score }}{{ "}" }}
+  {% endfor %}
+
+  {% for skill, bonus in c.proficiencies.items() %}
+  \setprof{{ "{" }}{{ skill }}{{ "}" }}{{ "{" }}{{ bonus }}{{ "}" }}
+  {% endfor %}
+
+\end{charactersheet}
+\end{document}

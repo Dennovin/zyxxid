@@ -15,12 +15,12 @@ setup(
         "zyxxid": "zyxxid",
     },
     install_requires=[
-        "Flask",
-        "Flask-Login",
+        "tornado",
         "riak",
         "PyYAML",
         "uWSGI",
         "celery",
+        "Jinja2",
         ],
 #    scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
     )

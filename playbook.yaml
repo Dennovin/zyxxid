@@ -1,5 +1,6 @@
 ---
 - hosts: all
+  become: yes
   tasks:
   - apt: update_cache=yes cache_valid_time=86400
   - group: name=zyxxid state=present gid=2001
@@ -9,6 +10,10 @@
     with_items:
     - tmux
     - git
+  - name: create config directory
+    file: path=/data/etc state=directory owner=zyxxid group=zyxxid mode=0755
+  - name: create config file
+    template: src=templates/zyxxid.yaml.j2 dest=/data/etc/zyxxid.yaml owner=zyxxid mode=0644
 
 
 - hosts: tex:web
@@ -27,6 +32,8 @@
     copy: src=app dest=/data/ force=yes owner=zyxxid group=zyxxid
   - name: install app into virtual environment
     pip: name="file:///data/app" virtualenv=/data/venv virtualenv_python=python3.4
+    become: yes
+    become_user: zyxxid
 
 
 - hosts: tex
@@ -61,6 +68,17 @@
   - name: synchronize tex folder
     copy: src=tex dest=/data/ force=yes owner=zyxxid group=zyxxid
 
+  - name: create output directory
+    file: path=/data/output state=directory owner=zyxxid group=zyxxid
+
+  - name: create ramdisk
+    mount: name=/data/output src=tmpfs fstype=tmpfs opts="size=128M" state=mounted
+
+  - name: copy files to output directory
+    copy: src=tex/{{ item }} dest=/data/output/ force=yes owner=zyxxid group=zyxxid
+    with_items:
+    - charactersheet.cls
+
 
 - hosts: web
   handlers:
@@ -88,11 +106,26 @@
 
 
 - hosts: db
+  handlers:
+  - name: restart Riak
+    service: name=riak state=restarted
+
   tasks:
   - name: install database server packages
     apt: name={{ item }} state=present
     with_items:
     - rabbitmq-server
 
+  - name: set up Riak from template
+    template: src=templates/riak.conf.j2 dest=/etc/riak/riak.conf owner=root mode=0644
+    notify: restart Riak
+
+  - name: download Riak
+    get_url: url=http://s3.amazonaws.com/downloads.basho.com/riak/2.1/2.1.4/ubuntu/trusty/riak_2.1.4-1_amd64.deb dest=/tmp/riak_2.1.4-1_amd64.deb
+
   - name: install Riak
-    apt: deb=http://s3.amazonaws.com/downloads.basho.com/riak/2.1/2.1.4/ubuntu/trusty/riak_2.1.4-1_amd64.deb state=present
+    apt: deb=/tmp/riak_2.1.4-1_amd64.deb state=present
+
+  - name: start and enable Riak
+    service: name=riak enabled=yes state=started
+

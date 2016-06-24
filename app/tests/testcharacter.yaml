@@ -40,6 +40,8 @@ ability_scores:
   int: 10
   cha: 10
 
+proficiency_bonus: 2
+
 proficiencies:
   consave: 1
   persuasion: 1
