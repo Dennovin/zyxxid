@@ -1,5 +1,5 @@
 ---
-celery_broker: db1
+celery_broker: amqp://zyxxid:{{ rabbitmq_password }}@db1/
 riak:
   host: db1
   protocol: pbc

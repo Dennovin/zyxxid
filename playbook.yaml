@@ -1,6 +1,8 @@
 ---
 - hosts: all
   become: yes
+  vars_files:
+  - passwords.yaml
   tasks:
   - name: update apt cache
     apt: update_cache=yes cache_valid_time=86400
@@ -54,9 +56,10 @@
     unarchive: src=/tmp/aniron.zip dest=/usr/local/share/fonts/ copy=no
 
   tasks:
-  - name: install LaTeX requirements
+  - name: install LaTeX and celery requirements
     apt: name={{ item }} state=present
     with_items:
+    - celeryd
     - fontconfig
     - latex-xcolor
     - texlive-generic-recommended
@@ -90,6 +93,12 @@
     copy: src=tex/{{ item }} dest=/data/output/ force=yes owner=zyxxid group=zyxxid
     with_items:
     - charactersheet.cls
+
+  - name: set up celeryd from template
+    template: src=templates/celeryd.j2 dest=/etc/default/celeryd owner=root mode=0644
+
+  - name: start and enable celeryd
+    service: name=celeryd enabled=yes state=started
 
 
 - hosts: web
@@ -149,6 +158,8 @@
 
 
 - hosts: db
+  vars_files:
+  - passwords.yaml
   handlers:
   - name: restart Riak
     service: name=riak state=restarted
@@ -171,3 +182,6 @@
 
   - name: start and enable Riak
     service: name=riak enabled=yes state=started
+
+  - name: add RabbitMQ user
+    rabbitmq_user: user=zyxxid password={{ rabbitmq_password }} vhost=/ configure_priv=.* read_priv=.* write_priv=.* state=present

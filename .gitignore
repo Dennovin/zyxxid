@@ -64,3 +64,6 @@ Vagrantfile
 tex/*.aux
 tex/*.pdf
 tex/*.log
+
+# Passwords file
+passwords.yaml

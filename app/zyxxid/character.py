@@ -47,4 +47,13 @@ class PDF(database.RiakStorableFile):
             print("fail")
 
         obj = cls.store_from_file(os.path.join(cls.output_dir, pdf_filename))
+
+        for fn in glob.glob(os.path.join(cls.output_dir, os.path.splitext(pdf_filename)[0]) + ".*"):
+            os.unlink(fn)
+
         return obj.id
+
+
+@celery_app.task
+def create_pdf(character):
+    return PDF.create(character)
