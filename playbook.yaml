@@ -40,6 +40,7 @@
     - libffi-dev
     - libssl-dev
     - libyaml-0-2
+    - libmemcached-dev
 
   - name: synchronize app folder
     copy: src=app dest=/data/ force=yes owner=zyxxid group=zyxxid
@@ -164,11 +165,15 @@
   - name: restart Riak
     service: name=riak state=restarted
 
+  - name: restart memcached
+    service: name=memcached state=restarted
+
   tasks:
   - name: install database server packages
     apt: name={{ item }} state=present
     with_items:
     - rabbitmq-server
+    - memcached
 
   - name: set up Riak from template
     template: src=templates/riak.conf.j2 dest=/etc/riak/riak.conf owner=root mode=0644
@@ -185,3 +190,10 @@
 
   - name: add RabbitMQ user
     rabbitmq_user: user=zyxxid password={{ rabbitmq_password }} vhost=/ configure_priv=.* read_priv=.* write_priv=.* state=present
+
+  - name: set up memcached from template
+    template: src=templates/memcached.conf.j2 dest=/etc/memcached.conf owner=root mode=0644
+    notify: restart memcached
+
+  - name: start and enable memcached
+    service: name=memcached enabled=yes state=started

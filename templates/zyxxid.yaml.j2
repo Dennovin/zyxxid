@@ -1,5 +1,7 @@
 ---
 celery_broker: amqp://zyxxid:{{ rabbitmq_password }}@db1/
+celery_result_backend: cache+memcached://db1:11211/
+
 riak:
   host: db1
   protocol: pbc

@@ -22,6 +22,8 @@ setup(
         "uWSGI",
         "celery",
         "Jinja2",
+        "requests",
+        "pylibmc",
         ],
 #    scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
     )
