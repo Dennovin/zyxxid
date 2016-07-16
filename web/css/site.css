@@ -202,6 +202,15 @@ input[name=name]:focus {
     background: url("/images/add.png");
 }
 
+.input-list button.remove-item {
+    width: 16px;
+    height: 16px;
+    border: 0;
+    margin: 0 1em;
+    cursor: pointer;
+    background: url("/images/delete.png");
+}
+
 .input-list .add-item-form {
     display: none;
 }
@@ -227,6 +236,11 @@ input[name=name]:focus {
 }
 
 .input-list ul li {
+    display: flex;
+    align-items: center;
+}
+
+.input-list ul li .caption {
     cursor: pointer;
 }
 

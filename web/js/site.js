@@ -26,6 +26,13 @@ var site = function() {
         $(".overlay").show();
     };
 
+    var removeItem = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(this).closest("li").remove();
+    };
+
     var addItemFormHide = function() {
         $(".overlay").hide();
         $(".add-item-form").removeClass("active");
@@ -34,7 +41,9 @@ var site = function() {
     var addItemSubmit = function(elem) {
         var $list = $(elem).closest(".input-list");
         var $listItem = $("<li />");
-        $listItem.html(formatListItem($list));
+
+        $("<button />").addClass("remove-item").appendTo($listItem);
+        $("<div />").addClass("caption").html(formatListItem($list)).appendTo($listItem);
 
         $list.find("input").each(function() {
             $("<input />").attr("type", "hidden").attr("name", $(this).attr("name")).val($(this).val()).appendTo($listItem);
@@ -75,6 +84,7 @@ var site = function() {
     $("body")
         .on("click", "a", changeSection)
         .on("click", "button.add-item", addItem)
+        .on("click", "button.remove-item", removeItem)
         .on("click", ".overlay", overlayClick)
         .on("click", ".add-item-form button.save", addItemButtonClick)
         .on("keydown", ".add-item-form", addItemKeypress)
