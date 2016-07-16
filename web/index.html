@@ -9,6 +9,8 @@
   </head>
 
   <body>
+    <div class="overlay"></div>
+
     <div class="body-container">
       <div class="top-nav">
         <div class="title">zyxxid.xyz</div>
@@ -39,16 +41,6 @@
           </div>
 
           <div class="input-row">
-            <label for="class">Class:</label>
-            <input type="text" name="class" />
-          </div>
-
-          <div class="input-row">
-            <label for="level">Level:</label>
-            <input type="number" name="level" />
-          </div>
-
-          <div class="input-row">
             <label for="background">Background:</label>
             <input type="text" name="background" />
           </div>
@@ -61,6 +53,52 @@
           <div class="input-row">
             <label for="languages">Languages:</label>
             <input type="text" name="languages" />
+          </div>
+
+          <div class="input-list" name="classes">
+            <div class="title-row">
+              <div class="title">Classes and Levels</div>
+              <button class="add-item" />
+            </div>
+
+            <div class="add-item-form">
+              <div class="input-row">
+                <label for="class-name">Class Name:</label>
+                <input type="text" name="class-name" />
+              </div>
+
+              <div class="input-row">
+                <label for="class-level">Level:</label>
+                <input type="number" name="class-level" />
+              </div>
+
+              <div class="submit-row">
+                <button class="save">Save</button>
+              </div>
+            </div>
+
+            <ul></ul>
+          </div>
+
+          <div class="input-list" name="abilities">
+            <div class="title-row">
+              <div class="title">Abilities</div>
+              <button class="add-item" />
+            </div>
+
+            <div class="add-item-form">
+              <div class="input-row">
+                <label for="ability-name">Ability Name:</label>
+                <input type="text" name="ability-name" />
+              </div>
+
+              <div class="input-row">
+                <label for="ability-name">Description:</label>
+                <input type="text" name="ability-description" />
+              </div>
+            </div>
+
+            <ul></ul>
           </div>
 
         </div>

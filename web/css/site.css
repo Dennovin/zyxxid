@@ -1,4 +1,3 @@
-/* Palette: http://paletton.com/#uid=10I0u0kllllaFw0g0qFqFg0w0aF */
 :root {
   --main-color: #c0c0df;
   --light-1: #cbcbe5;
@@ -48,6 +47,18 @@ input:focus {
 a {
     color: black;
     text-decoration: none;
+}
+
+.overlay {
+    display: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.6);
 }
 
 .body-container {
@@ -146,8 +157,10 @@ input[name=name]:focus {
 
 .input-row {
     display: flex;
+    flex-direction: row;
     padding: 0 2em;
     margin: 0.25em 0;
+    flex-wrap: no-wrap;
 }
 
 .input-row label {
@@ -156,6 +169,64 @@ input[name=name]:focus {
     margin: 0 2em;
 }
 
-.input-row input {
+.input-row input, .input-row .textarea-popup {
+    flex-grow: 1;
+    margin: 0 1em;
+}
+
+.input-row textarea-popup {
+    cursor: pointer;
+}
+
+.input-list .title-row {
+    display: flex;
+    flex-wrap: no-wrap;
+    flex-direction: row;
+    align-items: baseline;
+    padding: 0 5em;
+}
+
+.input-list .title {
+    text-align: center;
+    margin: 1em 50px 0 50px;
+    border-bottom: 1px solid var(--dark-5);
     flex-grow: 1;
 }
+
+.input-list button.add-item {
+    width: 16px;
+    height: 16px;
+    margin: 0 0.25em;
+    border: 0;
+    cursor: pointer;
+    background: url("/images/add.png");
+}
+
+.input-list .add-item-form {
+    display: none;
+}
+
+.input-list .add-item-form.active {
+    display: block;
+    position: absolute;
+    width: 40em;
+    margin: 0 10em;
+    padding: 10px;
+    border: 1px solid black;
+    background: white;
+    z-index: 2;
+}
+
+.input-list .add-item-form .submit-row {
+    text-align: center;
+}
+
+.input-list ul {
+    width: 40em;
+    margin: 1px auto;
+}
+
+.input-list ul li {
+    cursor: pointer;
+}
+
