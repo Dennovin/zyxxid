@@ -33,14 +33,36 @@ var site = function() {
         $(this).closest("li").remove();
     };
 
+    var editItem = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var $listItem = $(this).closest("li");
+        var $form = $(this).closest(".input-list").find(".add-item-form");
+        $listItem.addClass("editing");
+
+        $listItem.find("input").each(function() {
+            $form.find("input[name=" + $(this).attr("name") + "]").val($(this).val());
+        });
+
+        $form.addClass("active");
+        $form.find("input").first().focus();
+    };
+
     var addItemFormHide = function() {
         $(".overlay").hide();
         $(".add-item-form").removeClass("active");
+        $("li").removeClass("editing");
     };
 
     var addItemSubmit = function(elem) {
         var $list = $(elem).closest(".input-list");
-        var $listItem = $("<li />");
+
+        var $listItem = $("li.editing");
+        if($listItem.length == 0) {
+            $listItem = $("<li />");
+        }
+        $listItem.empty();
 
         $("<button />").addClass("remove-item").appendTo($listItem);
         $("<div />").addClass("caption").html(formatListItem($list)).appendTo($listItem);
@@ -87,6 +109,7 @@ var site = function() {
         .on("click", "button.remove-item", removeItem)
         .on("click", ".overlay", overlayClick)
         .on("click", ".add-item-form button.save", addItemButtonClick)
+        .on("click", ".input-list li", editItem)
         .on("keydown", ".add-item-form", addItemKeypress)
     ;
 
