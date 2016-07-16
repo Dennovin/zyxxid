@@ -11,12 +11,14 @@
   --dark-3: #9e9ece;
   --dark-4: #9292c9;
   --dark-5: #8787c3;
+  --complement: #fff5d5;
+  --complement-dark-1: #ffe591;
 }
 
 @import url(https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic);
 @font-face {
     font-family: Aniron;
-    src: url("/fonts/anirm__.ttf");
+    src: url("/fonts/anirm___.ttf");
 }
 
 html {
@@ -34,6 +36,13 @@ body {
 
 input {
     font-family: "PT Sans", "Verdana", sans-serif;
+    border: 1px solid var(--light-2);
+    outline: none;
+}
+
+input:focus {
+    background-color: var(--light-5);
+    outline: none;
 }
 
 a {
@@ -99,15 +108,16 @@ input[name=name] {
 }
 
 input[name=name]:focus {
-    outline: none;
+    background-color: white;
+    border: 0;
 }
 
-div.section-nav {
+.section-nav {
     padding: 0 0.25em 2px 0.25em;
     border-bottom: 1px solid var(--dark-5);
 }
 
-div.section-nav a {
+.section-nav a {
     margin: 2px 0.125em 0 0.125em;
     padding: 2px 1em;
     border: 1px solid var(--dark-5);
@@ -116,6 +126,36 @@ div.section-nav a {
     background-color: var(--light-3);
 }
 
-div.section-nav a:hover {
+.section-nav a:hover {
     background-color: var(--light-5);
+}
+
+.section-nav a.active, .section-nav a.active:hover {
+    background-color: var(--complement);
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+    padding-top: 2em;
+    flex-grow: 1;
+}
+
+.input-row {
+    display: flex;
+    padding: 0 2em;
+    margin: 0.25em 0;
+}
+
+.input-row label {
+    width: 12em;
+    text-align: right;
+    margin: 0 2em;
+}
+
+.input-row input {
+    flex-grow: 1;
 }
