@@ -1,0 +1,121 @@
+/* Palette: http://paletton.com/#uid=10I0u0kllllaFw0g0qFqFg0w0aF */
+:root {
+  --main-color: #c0c0df;
+  --light-1: #cbcbe5;
+  --light-2: #d6d6eb;
+  --light-3: #e2e2f0;
+  --light-4: #ededf6;
+  --light-5: #f8f8fc;
+  --dark-1: #b4b4da;
+  --dark-2: #a9a9d4;
+  --dark-3: #9e9ece;
+  --dark-4: #9292c9;
+  --dark-5: #8787c3;
+}
+
+@import url(https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic);
+@font-face {
+    font-family: Aniron;
+    src: url("/fonts/anirm__.ttf");
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    height: 100%;
+    font-family: "PT Sans", "Verdana", sans-serif;
+    background-color: var(--light-4);
+}
+
+input {
+    font-family: "PT Sans", "Verdana", sans-serif;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+.body-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.top-nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    border-bottom: 1px solid black;
+    margin: 0;
+    padding: 2px 1em;
+    background-color: var(--dark-2);
+    flex-grow: 0;
+}
+
+.top-nav .title {
+    font-family: Aniron;
+    font-size: 125%;
+    flex-grow: 1;
+}
+
+.top-nav a {
+    flex-grow: 0;
+    margin: 2px 0.25em;
+    padding: 2px 1em;
+    text-decoration: none;
+    color: black;
+    border: 1px solid var(--dark-5);
+    background-color: var(--light-2);
+}
+
+.top-nav a:hover {
+    background-color: var(--light-4);
+}
+
+.main-body {
+    width: 60em;
+    margin: 0 auto;
+    background-color: white;
+    border-left: 1px solid var(--dark-5);
+    border-right: 1px solid var(--dark-5);
+    bottom: 0;
+    flex-grow: 1;
+}
+
+input[name=name] {
+    border: 0;
+    outline: none;
+    margin: 2px 0.5em 10px 0.5em;
+    padding: 2px;
+    font-size: 200%;
+    width: 29em;
+}
+
+input[name=name]:focus {
+    outline: none;
+}
+
+div.section-nav {
+    padding: 0 0.25em 2px 0.25em;
+    border-bottom: 1px solid var(--dark-5);
+}
+
+div.section-nav a {
+    margin: 2px 0.125em 0 0.125em;
+    padding: 2px 1em;
+    border: 1px solid var(--dark-5);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: var(--light-3);
+}
+
+div.section-nav a:hover {
+    background-color: var(--light-5);
+}
