@@ -1,10 +1,24 @@
 import flask
 import http.client
+import oauth2client.client
+import oauth2client.crypt
 import simplejson
 import string
 
 from .apps import flask_app
 from .character import Character, PDF, create_pdf
+from .config import Config
+
+def verify_token(token):
+    try:
+        idinfo = oauth2client.client.verify_id_token(token, Config.get("oauth2_client_id"))
+        if idinfo["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
+            raise oauth2client.crypt.AppIdentityError("Wrong issuer.")
+
+        return idinfo
+
+    except oauth2client.crypt.AppIdentityError:
+        return False
 
 @flask_app.route("/character/<character_id>", methods=["GET"])
 def get_character(character_id):
@@ -16,7 +30,13 @@ def get_character(character_id):
 
 @flask_app.route("/character", methods=["POST"])
 def post_character():
+    idinfo = verify_token(flask.request.cookies.get("googletoken"))
+    if not idinfo:
+        return flask.make_response("", http.client.UNAUTHORIZED)
+
     character = Character()
+    character.user_id = idinfo["sub"]
+
     obj = flask.request.get_json()
     flask_app.logger.warning(obj)
 

@@ -159,3 +159,9 @@ var site = function() {
 };
 
 $("document").ready(site);
+
+
+var onSignIn = function(googleUser) {
+    document.cookie = "googletoken=" + googleUser.getAuthResponse().id_token;
+};
+

@@ -71,7 +71,7 @@ a {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: baseline;
+    align-items: center;
     border-bottom: 1px solid black;
     margin: 0;
     padding: 2px 1em;
@@ -92,6 +92,20 @@ a {
     text-decoration: none;
     color: black;
     border: 1px solid var(--dark-5);
+    background-color: var(--light-2);
+}
+
+.top-nav div.g-signin2 {
+    flex-grow: 0;
+    margin: 2px 0.25em;
+    padding: 2px 1em;
+}
+
+.top-nav .abcRioButtonContents {
+    font-family: "PT Sans", "Verdana", sans-serif;
+}
+
+.top-nav .abcRioButtonLightBlue {
     background-color: var(--light-2);
 }
 

@@ -25,6 +25,7 @@ setup(
         "requests",
         "pylibmc",
         "simplejson",
+        "google-api-python-client",
         ],
 #    scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
     )
