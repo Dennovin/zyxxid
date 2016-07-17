@@ -13,6 +13,19 @@ var site = function() {
         switch(listName) {
         case "classes":
             return "<b>" + data.name + "</b> (" + data.level + ")";
+        case "abilities":
+            return data.name;
+        case "attacks":
+            return data.name;
+        case "resources":
+            return data.name;
+        case "items":
+            if(data.quantity > 1) {
+                return "<b>" + data.name + "</b> (" + data.quantity + ")";
+            }
+            return "<b>" + data.name + "</b>";
+        case "spells":
+            return "<b>" + data.name + "</b> (" + (data.level == 0 ? "Cantrip" : data.level) + ")";
         }
     };
 

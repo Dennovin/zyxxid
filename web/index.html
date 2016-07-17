@@ -44,22 +44,22 @@
 
         <div class="section" name="basics">
           <div class="input-row">
-            <label for="race">Race:</label>
+            <label>Race:</label>
             <input type="text" name="race" />
           </div>
 
           <div class="input-row">
-            <label for="background">Background:</label>
+            <label>Background:</label>
             <input type="text" name="background" />
           </div>
 
           <div class="input-row">
-            <label for="alignment">Alignment:</label>
+            <label>Alignment:</label>
             <input type="text" name="alignment" />
           </div>
 
           <div class="input-row">
-            <label for="languages">Languages:</label>
+            <label>Languages:</label>
             <input type="text" name="languages" />
           </div>
 
@@ -68,15 +68,16 @@
               <div class="title">Classes and Levels</div>
               <button class="add-item" />
             </div>
+            <ul></ul>
 
             <div class="add-item-form">
               <div class="input-row">
-                <label for="name">Class Name:</label>
+                <label>Class Name:</label>
                 <input type="text" name="name" />
               </div>
 
               <div class="input-row">
-                <label for="level">Level:</label>
+                <label>Level:</label>
                 <input type="number" name="level" />
               </div>
 
@@ -84,8 +85,6 @@
                 <button class="save">Save</button>
               </div>
             </div>
-
-            <ul></ul>
           </div>
 
           <div class="input-list" name="abilities">
@@ -93,23 +92,354 @@
               <div class="title">Abilities</div>
               <button class="add-item" />
             </div>
+            <ul></ul>
 
             <div class="add-item-form">
               <div class="input-row">
-                <label for="name">Ability Name:</label>
+                <label>Ability Name:</label>
                 <input type="text" name="name" />
               </div>
 
               <div class="input-row">
-                <label for="description">Description:</label>
+                <label>Description:</label>
                 <input type="text" name="description" />
               </div>
-            </div>
 
-            <ul></ul>
+              <div class="submit-row">
+                <button class="save">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" name="abilities">
+          <div class="input-row">
+            <label>Strength:</label>
+            <input type="number" name="strength" />
+          </div>
+
+          <div class="input-row">
+            <label>Dexterity:</label>
+            <input type="number" name="dexterity" />
+          </div>
+
+          <div class="input-row">
+            <label>Constitution:</label>
+            <input type="number" name="constitution" />
+          </div>
+
+          <div class="input-row">
+            <label>Wisdom:</label>
+            <input type="number" name="wisdom" />
+          </div>
+
+          <div class="input-row">
+            <label>Intelligence:</label>
+            <input type="number" name="intelligence" />
+          </div>
+
+          <div class="input-row">
+            <label>Charisma:</label>
+            <input type="number" name="charisma" />
+          </div>
+
+          <hr />
+
+          <div class="input-row">
+            <label>Armor Class:</label>
+            <input type="number" name="armor_class" />
+          </div>
+
+          <div class="input-row">
+            <label>Hit Points:</label>
+            <input type="number" name="hit_points" />
+          </div>
+
+          <div class="input-row">
+            <label>Initiative:</label>
+            <input type="number" name="initiative" />
+          </div>
+
+          <div class="input-row">
+            <label>Speed:</label>
+            <input type="number" name="speed" />
+          </div>
+
+       </div>
+
+        <div class="section" name="skills">
+          <div class="input-row">
+            <label>Proficiency Bonus:</label>
+            <input type="number" name="proficiency_bonus" />
+          </div>
+
+          <div class="input-row">
+            <label>Bonus to Non-Proficient Skills:</label>
+            <input type="number" name="non_proficient_bonus" />
+          </div>
+
+          <hr />
+
+          <div class="input-row">
+            <label>Acrobatics</label>
+            <input type="checkbox" name="proficiencies.acrobatics" />
+            <input type="checkbox" name="proficiencies.acrobatics" />
+          </div>
+          <div class="input-row">
+            <label>Arcana</label>
+            <input type="checkbox" name="proficiencies.arcana" />
+            <input type="checkbox" name="proficiencies.arcana" />
+          </div>
+          <div class="input-row">
+            <label>Athletics</label>
+            <input type="checkbox" name="proficiencies.athletics" />
+            <input type="checkbox" name="proficiencies.athletics" />
+          </div>
+          <div class="input-row">
+            <label>Deception</label>
+            <input type="checkbox" name="proficiencies.deception" />
+            <input type="checkbox" name="proficiencies.deception" />
+          </div>
+          <div class="input-row">
+            <label>Handle Animal</label>
+            <input type="checkbox" name="proficiencies.handleanimal" />
+            <input type="checkbox" name="proficiencies.handleanimal" />
+          </div>
+          <div class="input-row">
+            <label>History</label>
+            <input type="checkbox" name="proficiencies.history" />
+            <input type="checkbox" name="proficiencies.history" />
+          </div>
+          <div class="input-row">
+            <label>Insight</label>
+            <input type="checkbox" name="proficiencies.insight" />
+            <input type="checkbox" name="proficiencies.insight" />
+          </div>
+          <div class="input-row">
+            <label>Intimidate</label>
+            <input type="checkbox" name="proficiencies.intimidate" />
+            <input type="checkbox" name="proficiencies.intimidate" />
+          </div>
+          <div class="input-row">
+            <label>Investigation</label>
+            <input type="checkbox" name="proficiencies.investigation" />
+            <input type="checkbox" name="proficiencies.investigation" />
+          </div>
+          <div class="input-row">
+            <label>Medicine</label>
+            <input type="checkbox" name="proficiencies.medicine" />
+            <input type="checkbox" name="proficiencies.medicine" />
+          </div>
+          <div class="input-row">
+            <label>Nature</label>
+            <input type="checkbox" name="proficiencies.nature" />
+            <input type="checkbox" name="proficiencies.nature" />
+          </div>
+          <div class="input-row">
+            <label>Perception</label>
+            <input type="checkbox" name="proficiencies.perception" />
+            <input type="checkbox" name="proficiencies.perception" />
+          </div>
+          <div class="input-row">
+            <label>Religion</label>
+            <input type="checkbox" name="proficiencies.religion" />
+            <input type="checkbox" name="proficiencies.religion" />
+          </div>
+          <div class="input-row">
+            <label>Sleight of Hand</label>
+            <input type="checkbox" name="proficiencies.sleightofhand" />
+            <input type="checkbox" name="proficiencies.sleightofhand" />
+          </div>
+          <div class="input-row">
+            <label>Stealth</label>
+            <input type="checkbox" name="proficiencies.stealth" />
+            <input type="checkbox" name="proficiencies.stealth" />
+          </div>
+          <div class="input-row">
+            <label>Survival</label>
+            <input type="checkbox" name="proficiencies.survival" />
+            <input type="checkbox" name="proficiencies.survival" />
+          </div>
+          <div class="input-row">
+            <label>Strength Save</label>
+            <input type="checkbox" name="proficiencies.strsave" />
+            <input type="checkbox" name="proficiencies.strsave" />
+          </div>
+          <div class="input-row">
+            <label>Dexterity Save</label>
+            <input type="checkbox" name="proficiencies.dexsave" />
+            <input type="checkbox" name="proficiencies.dexsave" />
+          </div>
+          <div class="input-row">
+            <label>Constitution Save</label>
+            <input type="checkbox" name="proficiencies.consave" />
+            <input type="checkbox" name="proficiencies.consave" />
+          </div>
+          <div class="input-row">
+            <label>Intelligence Save</label>
+            <input type="checkbox" name="proficiencies.intsave" />
+            <input type="checkbox" name="proficiencies.intsave" />
+          </div>
+          <div class="input-row">
+            <label>Wisdom Save</label>
+            <input type="checkbox" name="proficiencies.wissave" />
+            <input type="checkbox" name="proficiencies.wissave" />
+          </div>
+          <div class="input-row">
+            <label>Charisma Save</label>
+            <input type="checkbox" name="proficiencies.chasave" />
+            <input type="checkbox" name="proficiencies.chasave" />
           </div>
 
         </div>
+
+        <div class="section" name="attacks">
+          <div class="input-list" name="attacks">
+            <div class="title-row">
+              <div class="title">Attacks</div>
+              <button class="add-item" />
+            </div>
+            <ul></ul>
+
+            <div class="add-item-form">
+              <div class="input-row">
+                <label>Attack Name:</label>
+                <input type="text" name="name" />
+              </div>
+
+              <div class="input-row">
+                <label>Hit Bonus:</label>
+                <input type="number" name="bonus" />
+              </div>
+
+              <div class="input-row">
+                <label>Damage:</label>
+                <input type="text" name="damage" />
+              </div>
+
+              <div class="input-row">
+                <label>Damage Type:</label>
+                <input type="text" name="damage_type" />
+              </div>
+
+              <div class="input-row">
+                <label>Range:</label>
+                <input type="text" name="range" />
+              </div>
+
+              <div class="submit-row">
+                <button class="save">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-list" name="resources">
+            <div class="title-row">
+              <div class="title">Resources</div>
+              <button class="add-item" />
+            </div>
+            <ul></ul>
+
+            <div class="add-item-form">
+              <div class="input-row">
+                <label>Name:</label>
+                <input type="text" name="name" />
+              </div>
+
+              <div class="input-row">
+                <label>Quantity:</label>
+                <input type="number" name="quantity" />
+              </div>
+
+              <div class="input-row">
+                <label>Recharges On:</label>
+                <input type="text" name="recharge" />
+              </div>
+
+              <div class="submit-row">
+                <button class="save">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" name="inventory">
+          <div class="input-list" name="items">
+            <div class="title-row">
+              <div class="title">Items</div>
+              <button class="add-item" />
+            </div>
+            <ul></ul>
+
+            <div class="add-item-form">
+              <div class="input-row">
+                <label>Name:</label>
+                <input type="text" name="name" />
+              </div>
+
+              <div class="input-row">
+                <label>Quantity:</label>
+                <input type="number" name="quantity" />
+              </div>
+
+              <div class="submit-row">
+                <button class="save">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" name="spellbook">
+          <div class="input-list" name="spells">
+            <div class="title-row">
+              <div class="title">Spells</div>
+              <button class="add-item" />
+            </div>
+            <ul></ul>
+
+            <div class="add-item-form">
+              <div class="input-row">
+                <label>Name:</label>
+                <input type="text" name="name" />
+              </div>
+
+              <div class="input-row">
+                <label>Type:</label>
+                <input type="text" name="type" />
+              </div>
+
+              <div class="input-row">
+                <label>Level:</label>
+                <input type="number" name="level" />
+              </div>
+
+              <div class="input-row">
+                <label>Cast Time:</label>
+                <input type="text" name="cast_time" />
+              </div>
+
+              <div class="input-row">
+                <label>Range:</label>
+                <input type="text" name="range" />
+              </div>
+
+              <div class="input-row">
+                <label>Requirements:</label>
+                <input type="text" name="requirements" />
+              </div>
+
+              <div class="input-row">
+                <label>Duration:</label>
+                <input type="text" name="duration" />
+              </div>
+
+              <div class="input-row">
+                <label>Description:</label>
+                <input type="text" name="description" />
+              </div>
+            </div>
+        </div>
+
       </div>
     </div>
   </body>

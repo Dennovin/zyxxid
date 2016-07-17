@@ -198,17 +198,26 @@ a {
     padding: 0 2em;
     margin: 0.25em 0;
     flex-wrap: no-wrap;
+    align-items: center;
 }
 
 .input-row label {
-    width: 12em;
+    width: 15em;
     text-align: right;
     margin: 0 2em;
 }
 
-.input-row input, .input-row .textarea-popup {
-    flex-grow: 1;
+.input-row input {
+    flex-grow: 0;
     margin: 0 1em;
+}
+
+.input-row input[type=text] {
+    width: 30em;
+}
+
+.input-row input[type=number] {
+    width: 5em;
 }
 
 .input-row textarea-popup {
@@ -227,6 +236,15 @@ a {
     text-align: center;
     margin: 1em 50px 0 50px;
     border-bottom: 1px solid var(--dark-5);
+    flex-grow: 1;
+}
+
+.input-list .input-row label {
+    width: 12em;
+}
+
+.input-list .input-row input[type=text] {
+    width: auto;
     flex-grow: 1;
 }
 
