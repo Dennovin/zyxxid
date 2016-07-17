@@ -23,7 +23,7 @@ def verify_token(token):
 @flask_app.route("/character/<character_id>", methods=["GET"])
 def get_character(character_id):
     character = Character.fetch(character_id)
-    response = flask.make_response(simplejson.dumps(character))
+    response = flask.make_response(simplejson.dumps(character.__dict__))
     response.headers["Content-Type"] = "text/json"
 
     return response
@@ -64,7 +64,10 @@ def list_characters():
     for id in Character.query("user_id", idinfo["sub"]).results:
         characters[id] = Character.fetch(id).name
 
-    return flask.make_response(simplejson.dumps(characters))
+    response = flask.make_response(simplejson.dumps(characters))
+    response.headers["Content-Type"] = "text/json"
+
+    return response
 
 @flask_app.route("/pdf/<file_id>/<filename>", methods=["GET"])
 def get_pdf(file_id, filename):

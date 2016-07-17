@@ -173,6 +173,25 @@ a {
     flex-grow: 1;
 }
 
+.character-list {
+    display: none;
+}
+
+.character-list.active {
+    display: block;
+    position: absolute;
+    width: 40em;
+    margin: 0 10em;
+    padding: 10px;
+    border: 1px solid black;
+    background: white;
+    z-index: 2;
+}
+
+.character-list li {
+    cursor: pointer;
+}
+
 .input-row {
     display: flex;
     flex-direction: row;

@@ -87,6 +87,7 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
         addItemFormHide();
+        $(".character-list").removeClass("active");
     }
 
     var addItemKeypress = function(e) {
@@ -148,6 +149,70 @@ var site = function() {
         }).done(saveSuccess);
     };
 
+    var loadCharacterList = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(".overlay").show();
+        $(".character-list").addClass("active");
+
+        var $list = $(".character-list ul");
+        $list.empty();
+
+        $.get("/character").done(function(data) {
+            $.each(data, function(id, name) {
+                $("<li />").attr("id", id).html(name).appendTo($list);
+            });
+        });
+    };
+
+    var loadCharacter = function(id) {
+        window.location.hash = id;
+        $.get("/character/" + id).done(function(data) {
+            $(".character-name input").val(data["name"]);
+            $(".character-id").val(data["character_id"]);
+
+            $(".input-row input").not(".input-list input").each(function() {
+                $(this).val(data[$(this).attr("name")]);
+            });
+
+            $(".input-list").each(function() {
+                var $list = $(this).find("ul");
+                $list.empty();
+                $.each(data[$(this).attr("name")], function(i, row) {
+                    var $listItem = $("<li />");
+
+                    $("<button />").addClass("remove-item").appendTo($listItem);
+                    $("<div />").addClass("caption").html(formatListItem($list)).appendTo($listItem);
+
+                    $list.find("input").each(function() {
+                        $("<input />").attr("type", "hidden").attr("name", $(this).attr("name")).val(row[$(this).attr("name")]).appendTo($listItem);
+                    });
+
+                    $listItem.appendTo($list);
+                });
+
+                list = data[$(this).attr("name")] = [];
+                $(this).find("li").each(function() {
+                    var itemData = {};
+                    $(this).find("input").each(function() {
+                        itemData[$(this).attr("name")] = $(this).val();
+                    });
+                    list.push(itemData);
+                });
+            });
+
+            $(".overlay").hide();
+        });
+    };
+
+    var loadCharacterClick = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        loadCharacter($(this).attr("id"));
+    };
+
     var clearError = function(e) {
         $(this).removeClass("error");
     };
@@ -160,12 +225,14 @@ var site = function() {
         .on("click", ".add-item-form button.save", addItemButtonClick)
         .on("click", ".input-list li", editItem)
         .on("click", "a.save", saveCharacter)
+        .on("click", "a.load", loadCharacterList)
+        .on("click", ".character-list li", loadCharacterClick)
         .on("change", ".error", clearError)
         .on("keydown", ".add-item-form", addItemKeypress)
     ;
 
     if(window.location.hash) {
-        // load
+        loadCharacter(window.location.hash.replace("#", ""));
     }
 };
 
