@@ -9,10 +9,10 @@ var site = function() {
         $(".section[name=" + $(this).attr("name") + "]").addClass("active");
     };
 
-    var formatListItem = function($list) {
-        switch($list.attr("name")) {
+    var formatListItem = function(listName, data) {
+        switch(listName) {
         case "classes":
-            return "<b>" + $list.find("input[name=name]").val() + "</b> (" + $list.find("input[name=level]").val() + ")";
+            return "<b>" + data.name + "</b> (" + data.level + ")";
         }
     };
 
@@ -46,6 +46,7 @@ var site = function() {
             $form.find("input[name=" + $(this).attr("name") + "]").val($(this).val());
         });
 
+        $(".overlay").show();
         $form.addClass("active");
         $form.find("input").first().focus();
     };
@@ -66,10 +67,15 @@ var site = function() {
         $listItem.empty();
 
         $("<button />").addClass("remove-item").appendTo($listItem);
-        $("<div />").addClass("caption").html(formatListItem($list)).appendTo($listItem);
 
+        var data = {};
         $list.find("input").each(function() {
-            $("<input />").attr("type", "hidden").attr("name", $(this).attr("name")).val($(this).val()).appendTo($listItem);
+            data[$(this).attr("name")] = $(this).val();
+        });
+
+        $("<div />").addClass("caption").html(formatListItem($list.attr("name"), data)).appendTo($listItem);
+        $.each(data, function(name, value) {
+            $("<input />").attr("type", "hidden").attr("name", name).val(value).appendTo($listItem);
         });
 
         $listItem.appendTo($list.find("ul"));
@@ -177,19 +183,20 @@ var site = function() {
             });
 
             $(".input-list").each(function() {
-                var $list = $(this).find("ul");
-                $list.empty();
+                var $list = $(this);
+                $list.find("ul").empty();
+
                 $.each(data[$(this).attr("name")], function(i, row) {
                     var $listItem = $("<li />");
 
                     $("<button />").addClass("remove-item").appendTo($listItem);
-                    $("<div />").addClass("caption").html(formatListItem($list)).appendTo($listItem);
+                    $("<div />").addClass("caption").html(formatListItem($list.attr("name"), row)).appendTo($listItem);
 
                     $list.find("input").each(function() {
                         $("<input />").attr("type", "hidden").attr("name", $(this).attr("name")).val(row[$(this).attr("name")]).appendTo($listItem);
                     });
 
-                    $listItem.appendTo($list);
+                    $listItem.appendTo($list.find("ul"));
                 });
 
                 list = data[$(this).attr("name")] = [];
