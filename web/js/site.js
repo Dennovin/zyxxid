@@ -129,7 +129,16 @@ var site = function() {
             });
         });
 
-        $.post("/character", data, saveSuccess, saveFail);
+        $.ajax({
+            type: "POST",
+            url: "/character",
+            data: JSON.stringify(data),
+            success: saveSuccess,
+            dataType: "application/json",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
     };
 
     $("body")
