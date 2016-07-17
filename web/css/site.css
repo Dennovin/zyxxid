@@ -109,7 +109,7 @@ a {
     flex-grow: 1;
 }
 
-input[name=name] {
+.character-name input {
     border: 0;
     outline: none;
     margin: 2px 0.5em 10px 0.5em;
@@ -118,7 +118,7 @@ input[name=name] {
     width: 29em;
 }
 
-input[name=name]:focus {
+.character-name input:focus {
     background-color: white;
     border: 0;
 }

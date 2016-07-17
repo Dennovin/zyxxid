@@ -11,7 +11,7 @@ var site = function() {
     var formatListItem = function($list) {
         switch($list.attr("name")) {
         case "classes":
-            return "<b>" + $list.find("input[name=class-name]").val() + "</b> (" + $list.find("input[name=class-level]").val() + ")";
+            return "<b>" + $list.find("input[name=name]").val() + "</b> (" + $list.find("input[name=level]").val() + ")";
         }
     };
 
@@ -103,13 +103,43 @@ var site = function() {
         }
     };
 
+    var saveSuccess = function(e) {
+    };
+
+    var saveFail = function(e) {
+    };
+
+    var saveCharacter = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var data = {};
+        $(".input-row input").not(".input-list input").each(function() {
+            data[$(this).attr("name")] = $(this).val();
+        });
+
+        $(".input-list").each(function() {
+            list = data[$(this).attr("name")] = [];
+            $(this).find("li").each(function() {
+                var itemData = {};
+                $(this).find("input").each(function() {
+                    itemData[$(this).attr("name")] = $(this).val();
+                });
+                list.push(itemData);
+            });
+        });
+
+        $.post("/character", data, saveSuccess, saveFail);
+    };
+
     $("body")
-        .on("click", "a", changeSection)
+        .on("click", ".section-nav a", changeSection)
         .on("click", "button.add-item", addItem)
         .on("click", "button.remove-item", removeItem)
         .on("click", ".overlay", overlayClick)
         .on("click", ".add-item-form button.save", addItemButtonClick)
         .on("click", ".input-list li", editItem)
+        .on("click", "a.save", saveCharacter)
         .on("keydown", ".add-item-form", addItemKeypress)
     ;
 
