@@ -113,6 +113,11 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
+        if(!$(".character-name input").val()) {
+            $(".character-name input").addClass("error");
+            return;
+        }
+
         var data = {
             name: $(".character-name input").val(),
             character_id: $(".character-id").val()
@@ -143,6 +148,10 @@ var site = function() {
         }).done(saveSuccess);
     };
 
+    var clearError = function(e) {
+        $(this).removeClass("error");
+    };
+
     $("body")
         .on("click", ".section-nav a", changeSection)
         .on("click", "button.add-item", addItem)
@@ -151,6 +160,7 @@ var site = function() {
         .on("click", ".add-item-form button.save", addItemButtonClick)
         .on("click", ".input-list li", editItem)
         .on("click", "a.save", saveCharacter)
+        .on("change", ".error", clearError)
         .on("keydown", ".add-item-form", addItemKeypress)
     ;
 
