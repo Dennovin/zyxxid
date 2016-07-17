@@ -1,11 +1,12 @@
 var site = function() {
     var changeSection = function(e) {
         e.stopPropagation();
+        e.preventDefault();
 
         $(".section").removeClass("active");
         $(".section-nav a").removeClass("active");
         $(this).addClass("active");
-        $(".section[name=" + $(this).attr("href").replace("#", "") + "]").addClass("active");
+        $(".section[name=" + $(this).attr("name") + "]").addClass("active");
     };
 
     var formatListItem = function($list) {
@@ -103,17 +104,20 @@ var site = function() {
         }
     };
 
-    var saveSuccess = function(e) {
-    };
-
-    var saveFail = function(e) {
+    var saveSuccess = function(data) {
+        $(".character-id").val(data["id"]);
+        window.location.hash = data["id"];
     };
 
     var saveCharacter = function(e) {
         e.stopPropagation();
         e.preventDefault();
 
-        var data = {};
+        var data = {
+            name: $(".character-name input").val(),
+            character_id: $(".character-id").val()
+        };
+
         $(".input-row input").not(".input-list input").each(function() {
             data[$(this).attr("name")] = $(this).val();
         });
@@ -133,12 +137,10 @@ var site = function() {
             type: "POST",
             url: "/character",
             data: JSON.stringify(data),
-            success: saveSuccess,
-            dataType: "application/json",
             headers: {
                 "Content-Type": "application/json"
             }
-        });
+        }).done(saveSuccess);
     };
 
     $("body")
@@ -153,8 +155,7 @@ var site = function() {
     ;
 
     if(window.location.hash) {
-        $(".section-nav a[href='" + window.location.hash + "']").addClass("active");
-        $(".section[name=" + window.location.hash.replace("#", "") + "]").addClass("active");
+        // load
     }
 };
 

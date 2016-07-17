@@ -34,11 +34,15 @@ def post_character():
     if not idinfo:
         return flask.make_response("", http.client.UNAUTHORIZED)
 
-    character = Character()
-    character.user_id = idinfo["sub"]
-
     obj = flask.request.get_json()
-    flask_app.logger.warning(obj)
+
+    if obj.get("character_id"):
+        character = Character.fetch(obj["character_id"])
+        if character.user_id != idinfo["sub"]:
+            return flask.make_response("", http.client.UNAUTHORIZED)
+    else:
+        character = Character()
+        character.user_id = idinfo["sub"]
 
     for k, v in obj.items():
         setattr(character, k, v)
