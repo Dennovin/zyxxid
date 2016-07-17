@@ -7,6 +7,8 @@ client = riak.RiakClient(**Config.get("riak"))
 
 
 class RiakStorable(object):
+    _indexes = []
+
     @classmethod
     def bucket(cls):
         if not hasattr(cls, "_bucket"):
@@ -23,6 +25,10 @@ class RiakStorable(object):
 
     def store(self):
         key = self.bucket().new(self.id, data=self.__dict__)
+        for idx in self._indexes:
+            if hasattr(self, idx):
+                key.add_index(idx + "_bin", getattr(self, idx))
+
         key.store()
         return self.id
 
@@ -32,6 +38,9 @@ class RiakStorable(object):
         obj.__dict__ = cls.bucket().get(key).data
         return obj
 
+    @classmethod
+    def query(cls, index, value):
+        return cls.bucket().get_index(index + "_bin", value)
 
 class RiakStorableFile(RiakStorable):
     def store(self):

@@ -10,6 +10,8 @@ from . import database
 from .apps import celery_app
 
 class Character(database.RiakStorable):
+    _indexes = ["user_id"]
+
     @classmethod
     def load_from_file(cls, filename):
         with open(filename) as fh:

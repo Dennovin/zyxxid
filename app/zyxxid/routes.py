@@ -54,6 +54,18 @@ def post_character():
 
     return response
 
+@flask_app.route("/character", methods=["GET"])
+def list_characters():
+    idinfo = verify_token(flask.request.cookies.get("googletoken"))
+    if not idinfo:
+        return flask.make_response("", http.client.UNAUTHORIZED)
+
+    characters = {}
+    for id in Character.query("user_id", idinfo["sub"]).results:
+        characters[id] = Character.fetch(id).name
+
+    return flask.make_response(simplejson.dumps(characters))
+
 @flask_app.route("/pdf/<file_id>/<filename>", methods=["GET"])
 def get_pdf(file_id, filename):
     data = PDF.fetch(file_id).contents
