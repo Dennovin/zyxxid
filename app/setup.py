@@ -24,6 +24,7 @@ setup(
         "Jinja2",
         "requests",
         "pylibmc",
+        "simplejson",
         ],
 #    scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
     )
