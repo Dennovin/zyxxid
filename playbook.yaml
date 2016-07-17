@@ -46,7 +46,7 @@
     copy: src=app dest=/data/ force=yes owner=zyxxid group=zyxxid
 
   - name: install app into virtual environment
-    pip: name="file:///data/app" virtualenv=/data/venv virtualenv_python=python3.4
+    pip: name="file:///data/app" virtualenv=/data/venv virtualenv_python=python3.5
     become: yes
     become_user: zyxxid
 
@@ -142,7 +142,7 @@
     notify: restart uWSGI
 
   - name: set up uWSGI service from template
-    template: src=templates/uwsgi.conf.j2 dest=/etc/init/uwsgi.conf
+    template: src=templates/uwsgi.service.j2 dest=/etc/systemd/system/uwsgi.service
     notify: restart uWSGI
 
   - name: start and enable uWSGI
