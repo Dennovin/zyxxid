@@ -1,16 +1,32 @@
 import flask
 import http.client
+import simplejson
 import string
-import yaml
 
 from .apps import flask_app
 from .character import Character, PDF, create_pdf
 
 @flask_app.route("/character/<character_id>", methods=["GET"])
-def get_charactera(character_id):
+def get_character(character_id):
     character = Character.fetch(character_id)
-    response = flask.make_response(yaml.dump(character))
-    response.headers["Content-Type"] = "text/yaml"
+    response = flask.make_response(simplejson.dumps(character))
+    response.headers["Content-Type"] = "text/json"
+
+    return response
+
+@flask_app.route("/character", methods=["POST"])
+def post_character():
+    character = Character()
+    obj = flask.request.get_json()
+    flask_app.logger.warning(obj)
+
+    for k, v in obj.items():
+        setattr(character, k, v)
+
+    id = character.store()
+
+    response = flask.make_response(simplejson.dumps({"id": id}))
+    response.headers["Content-Type"] = "text/json"
 
     return response
 
