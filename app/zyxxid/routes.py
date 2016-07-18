@@ -44,9 +44,7 @@ def post_character():
         character = Character()
         character.user_id = idinfo["sub"]
 
-    for k, v in obj.items():
-        setattr(character, k, v)
-
+    character.load_data(obj)
     id = character.store()
 
     response = flask.make_response(simplejson.dumps({"id": id}))
@@ -84,7 +82,10 @@ def submit_pdf():
     task = create_pdf.delay(character)
     filename = "".join([i for i in character.name if i in string.ascii_letters]) + ".pdf"
 
-    return flask.redirect(flask.url_for("check_pdf_status", task_id=task.task_id, filename=filename))
+    response = flask.make_response(simplejson.dumps({"filename": filename, "status_url": flask.url_for("check_pdf_status", task_id=task.task_id, filename=filename)}))
+    response.headers["Content-Type"] = "text/json"
+
+    return response
 
 @flask_app.route("/pdf/status/<task_id>/<filename>", methods=["GET"])
 def check_pdf_status(task_id, filename):

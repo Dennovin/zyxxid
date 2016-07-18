@@ -49,9 +49,12 @@
 
   \setprofbonus{{ "{" }}{{ c.proficiency_bonus }}{{ "}" }}
 
-  {% for ability, score in c.ability_scores.items() %}
-  \setattr{{ "{" }}{{ ability }}{{ "}" }}{{ "{" }}{{ score }}{{ "}" }}
-  {% endfor %}
+  \setattr{{ "{" }}strength{{ "}" }}{{ "{" }}{{ c.strength }}{{ "}" }}
+  \setattr{{ "{" }}dexterity{{ "}" }}{{ "{" }}{{ c.dexterity }}{{ "}" }}
+  \setattr{{ "{" }}constitution{{ "}" }}{{ "{" }}{{ c.constitution }}{{ "}" }}
+  \setattr{{ "{" }}wisdom{{ "}" }}{{ "{" }}{{ c.wisdom }}{{ "}" }}
+  \setattr{{ "{" }}intelligence{{ "}" }}{{ "{" }}{{ c.intelligence }}{{ "}" }}
+  \setattr{{ "{" }}charisma{{ "}" }}{{ "{" }}{{ c.charisma }}{{ "}" }}
 
   {% for skill, bonus in c.proficiencies.items() %}
   \setprof{{ "{" }}{{ skill }}{{ "}" }}{{ "{" }}{{ bonus }}{{ "}" }}

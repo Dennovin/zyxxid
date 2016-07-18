@@ -12,6 +12,17 @@ from .apps import celery_app
 class Character(database.RiakStorable):
     _indexes = ["user_id"]
 
+    def load_data(self, data):
+        for k, v in data.items():
+            key_parts = k.split(".")
+            section = self.__dict__
+            for part in key_parts[:-1]:
+                if not part in section:
+                    section[part] = {}
+                section = section[part]
+
+            section[key_parts[-1]] = v
+
     @classmethod
     def load_from_file(cls, filename):
         with open(filename) as fh:

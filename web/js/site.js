@@ -129,15 +129,7 @@ var site = function() {
         window.location.hash = data["id"];
     };
 
-    var saveCharacter = function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        if(!$(".character-name input").val()) {
-            $(".character-name input").addClass("error");
-            return;
-        }
-
+    var getCharacterJSON = function() {
         var data = {
             name: $(".character-name input").val(),
             character_id: $(".character-id").val()
@@ -158,10 +150,22 @@ var site = function() {
             });
         });
 
+        return JSON.stringify(data);
+    };
+
+    var saveCharacter = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        if(!$(".character-name input").val()) {
+            $(".character-name input").addClass("error");
+            return;
+        }
+
         $.ajax({
             type: "POST",
             url: "/character",
-            data: JSON.stringify(data),
+            data: getCharacterJSON(),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -233,6 +237,51 @@ var site = function() {
         loadCharacter($(this).attr("id"));
     };
 
+    var requestPDF = function(url) {
+        $.get(url).done(function(data, status, jqXHR) {
+            if(jqXHR.status == 202) {
+                window.setTimeout(function() { requestPDF(url); }, 2000);
+            } else {
+                console.log(data);
+            }
+        });
+    };
+
+    var generatePDF = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $("body").addClass("loading");
+
+        if(!$(".character-name input").val()) {
+            $(".character-name input").addClass("error");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/character",
+            data: getCharacterJSON(),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).done(function(data) {
+            $(".character-id").val(data["id"]);
+            window.location.hash = data["id"];
+            $.ajax({
+                type: "POST",
+                url: "/pdf",
+                data: {"character_id": data["id"]}
+            }).done(function(data) {
+                $.get(data["status_url"])
+                    .done(function(data) {
+                        console.log(data);
+                    });
+                $("<a />").attr("href", data["status_url"]).attr("download", data["filename"]).click();
+            });
+        });
+    };
+
     var clearError = function(e) {
         $(this).removeClass("error");
     };
@@ -247,6 +296,7 @@ var site = function() {
         .on("click", "a.save", saveCharacter)
         .on("click", "a.load", loadCharacterList)
         .on("click", ".character-list li", loadCharacterClick)
+        .on("click", "a.pdf", generatePDF)
         .on("change", ".error", clearError)
         .on("keydown", ".add-item-form", addItemKeypress)
     ;
