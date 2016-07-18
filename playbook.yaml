@@ -56,7 +56,20 @@
   - name: unzip Aniron font
     unarchive: src=/tmp/aniron.zip dest=/usr/local/share/fonts/ copy=no
 
+  - name: make swap
+    command: mkswap /swapfile
+    notify: mount swap
+
+  - name: mount swap
+    mount: name=none src=/swapfile fstype=swap opts=sw passno=0 dump=0 state=present
+
   tasks:
+  - name: create swap file
+    command: fallocate -l 4G /swapfile
+    notify: make swap
+    args:
+      creates: /swapfile
+
   - name: install LaTeX and celery requirements
     apt: name={{ item }} state=present
     with_items:
@@ -86,9 +99,6 @@
 
   - name: create output directory
     file: path=/data/output state=directory owner=zyxxid group=zyxxid
-
-  - name: create ramdisk
-    mount: name=/data/output src=tmpfs fstype=tmpfs opts="size=128M" state=mounted
 
   - name: copy files to output directory
     copy: src=tex/{{ item }} dest=/data/output/ force=yes owner=zyxxid group=zyxxid
