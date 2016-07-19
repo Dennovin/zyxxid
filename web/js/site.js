@@ -213,7 +213,11 @@ var site = function() {
             $(".character-id").val(data["character_id"]);
 
             $(".input-row input, .input-row textarea").not(".input-list input").each(function() {
-                $(this).val(data[$(this).attr("name")]);
+                if($(this).attr("type") == "checkbox") {
+                    $("input[name='" + $(this).attr("name") + "']").slice(0, data[$(this).attr("name")]).attr("checked", true);
+                } else {
+                    $(this).val(data[$(this).attr("name")]);
+                }
             });
 
             $(".input-list").each(function() {

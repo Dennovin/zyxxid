@@ -23,7 +23,7 @@ def verify_token(token):
 @flask_app.route("/character/<character_id>", methods=["GET"])
 def get_character(character_id):
     character = Character.fetch(character_id)
-    response = flask.make_response(simplejson.dumps(character.__dict__))
+    response = flask.make_response(simplejson.dumps(character.flatten_data()))
     response.headers["Content-Type"] = "text/json"
 
     return response

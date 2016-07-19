@@ -23,6 +23,19 @@ class Character(database.RiakStorable):
 
             section[key_parts[-1]] = v
 
+    def flatten_data(self, data=None):
+        if data is None:
+            data = self.__dict__
+
+        flattened_data = {}
+        for k, v in data.items():
+            if isinstance(v, dict):
+                flattened_data.update({k + "." + sk: sv for sk, sv in self.flatten_data(v).items()})
+            else:
+                flattened_data[k] = v
+
+        return flattened_data
+
     @classmethod
     def load_from_file(cls, filename):
         with open(filename) as fh:
