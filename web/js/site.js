@@ -16,9 +16,9 @@ var site = function() {
         case "languages":
             return data.name;
         case "abilities":
-            return data.name;
+            return (data.name ? "<b>" + data.name + "</b> - " : "") + data.description;
         case "attacks":
-            return data.name;
+            return "<b>" + data.name + "</b> - " + data.bonus + " - " + data.damage;
         case "resources":
             return data.name;
         case "items":
@@ -28,6 +28,8 @@ var site = function() {
             return "<b>" + data.name + "</b>";
         case "spells":
             return "<b>" + data.name + "</b> (" + (data.level == 0 ? "Cantrip" : data.level) + ")";
+        case "traits":
+            return data;
         }
     };
 

@@ -62,7 +62,9 @@ a {
 
 .overlay {
     display: none;
-    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
     margin: 0;
     padding: 0;
     border: 0;
@@ -231,6 +233,10 @@ a {
     cursor: pointer;
 }
 
+.input-list {
+    position: relative;
+}
+
 .input-list .title-row {
     display: flex;
     flex-wrap: no-wrap;
@@ -271,6 +277,8 @@ a {
     margin: 0 1em;
     cursor: pointer;
     background: url("/images/delete.png");
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .input-list .add-item-form {
@@ -280,8 +288,9 @@ a {
 .input-list .add-item-form.active {
     display: block;
     position: absolute;
+    top: 1em;
     width: 40em;
-    margin: 0 10em;
+    margin: auto 10em;
     padding: 10px;
     border: 1px solid black;
     background: white;
@@ -300,6 +309,7 @@ a {
 .input-list ul li {
     display: flex;
     align-items: center;
+    margin-bottom: 0.5em;
 }
 
 .input-list ul li .caption {
