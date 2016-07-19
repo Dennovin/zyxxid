@@ -3,6 +3,8 @@ import re
 from . import database
 
 class Spell(database.RiakStorable):
+    _indexes = ["title"]
+
     @classmethod
     def load_from_file(cls, filename):
         spell = cls()

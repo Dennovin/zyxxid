@@ -33,14 +33,30 @@ class RiakStorable(object):
         return self.id
 
     @classmethod
-    def fetch(cls, key):
+    def from_riak_obj(cls, riak_obj):
         obj = cls()
-        obj.__dict__ = cls.bucket().get(key).data
+        obj.__dict__ = riak_obj.data
         return obj
+
+    @classmethod
+    def fetch(cls, key):
+        return cls.from_riak_obj(cls.bucket().get(key))
 
     @classmethod
     def query(cls, index, value):
         return cls.bucket().get_index(index + "_bin", value)
+
+    @classmethod
+    def list_index(cls, index):
+        return cls.bucket().get_index(index + "_bin", chr(0), chr(255), return_terms=True).results
+
+    @classmethod
+    def all(cls):
+        objs = []
+        for keys in cls.bucket().stream_keys():
+            objs.extend([cls.from_riak_obj(i) for i in cls.bucket().multiget(keys)])
+
+        return objs
 
 class RiakStorableFile(RiakStorable):
     def store(self):

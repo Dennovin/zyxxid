@@ -8,6 +8,7 @@ import string
 from .apps import flask_app
 from .character import Character, PDF, create_pdf
 from .config import Config
+from .spell import Spell
 
 def verify_token(token):
     try:
@@ -95,6 +96,14 @@ def check_pdf_status(task_id, filename):
     else:
         data = { "ready": False }
 
+    response = flask.make_response(simplejson.dumps(data))
+    response.headers["Content-Type"] = "text/json"
+
+    return response
+
+@flask_app.route("/spells", methods=["GET"])
+def list_spells():
+    data = Spell.list_index("title")
     response = flask.make_response(simplejson.dumps(data))
     response.headers["Content-Type"] = "text/json"
 

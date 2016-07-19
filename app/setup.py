@@ -27,5 +27,5 @@ setup(
         "simplejson",
         "google-api-python-client",
         ],
-#    scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
+    scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
     )
