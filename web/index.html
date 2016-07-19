@@ -4,6 +4,7 @@
     <link href="css/site.css" rel="stylesheet" type="text/css" />
     <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="js/jquery.filedownload.js"></script>
     <script src="js/site.js"></script>
     <meta name="google-signin-client_id" content="555306898992-seqocegdil3sqm4mv48tvq89r10cv33g.apps.googleusercontent.com" />
     <title>zyxxid.xyz</title>
@@ -18,6 +19,7 @@
         <div class="title">zyxxid.xyz</div>
 
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <a class="new" href="/">New</a>
         <a class="save" href="#">Save</a>
         <a class="load" href="#">Load</a>
         <a class="pdf" href="#">Generate PDF</a>
@@ -58,9 +60,23 @@
             <input type="text" name="alignment" />
           </div>
 
-          <div class="input-row">
-            <label>Languages:</label>
-            <input type="text" name="languages" />
+          <div class="input-list" name="languages">
+            <div class="title-row">
+              <div class="title">Languages</div>
+              <button class="add-item" />
+            </div>
+            <ul></ul>
+
+            <div class="add-item-form">
+              <div class="input-row">
+                <label>Name:</label>
+                <input type="text" name="name" />
+              </div>
+
+              <div class="submit-row">
+                <button class="save">Save</button>
+              </div>
+            </div>
           </div>
 
           <div class="input-list" name="classes">
@@ -309,7 +325,7 @@
 
               <div class="input-row">
                 <label>Hit Bonus:</label>
-                <input type="number" name="bonus" />
+                <input type="text" name="bonus" />
               </div>
 
               <div class="input-row">

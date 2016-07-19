@@ -25,7 +25,11 @@
   {% endfor %}
 
   {% for ability in c.abilities %}
-  \addability{{ "{" }}{{ ability }}{{ "}" }}
+  {% if ability.name %}
+  \addnamedability{{ "{" }}{{ ability.name }}{{ "}" }}{{ "{" }}{{ ability.description }}{{ "}" }}
+  {% else %}
+  \addability{{ "{" }}{{ ability.description }}{{ "}" }}
+  {% endif %}
   {% endfor %}
 
   {% for spellclass in c.spell_classes %}
@@ -35,11 +39,11 @@
   {% endfor %}
 
   {% for item in c.items %}
-  \addequip{{ "{" }}{{ item }}{{ "}" }}
+  \addequip{{ "{" }}{{ item.name }} {% if item.quantity > 1 %}(x {{ item.quantity }}){% endif %}{{ "}" }}
   {% endfor %}
 
   {% for language in c.languages %}
-  \addlang{{ "{" }}{{ language }}{{ "}" }}
+  \addlang{{ "{" }}{{ language.name }}{{ "}" }}
   {% endfor %}
 
   \setattr{ac}{{ "{" }}{{ c.armor_class }}{{ "}" }}
@@ -49,12 +53,12 @@
 
   \setprofbonus{{ "{" }}{{ c.proficiency_bonus }}{{ "}" }}
 
-  \setattr{{ "{" }}strength{{ "}" }}{{ "{" }}{{ c.strength }}{{ "}" }}
-  \setattr{{ "{" }}dexterity{{ "}" }}{{ "{" }}{{ c.dexterity }}{{ "}" }}
-  \setattr{{ "{" }}constitution{{ "}" }}{{ "{" }}{{ c.constitution }}{{ "}" }}
-  \setattr{{ "{" }}wisdom{{ "}" }}{{ "{" }}{{ c.wisdom }}{{ "}" }}
-  \setattr{{ "{" }}intelligence{{ "}" }}{{ "{" }}{{ c.intelligence }}{{ "}" }}
-  \setattr{{ "{" }}charisma{{ "}" }}{{ "{" }}{{ c.charisma }}{{ "}" }}
+  \setattr{{ "{" }}str{{ "}" }}{{ "{" }}{{ c.strength }}{{ "}" }}
+  \setattr{{ "{" }}dex{{ "}" }}{{ "{" }}{{ c.dexterity }}{{ "}" }}
+  \setattr{{ "{" }}con{{ "}" }}{{ "{" }}{{ c.constitution }}{{ "}" }}
+  \setattr{{ "{" }}wis{{ "}" }}{{ "{" }}{{ c.wisdom }}{{ "}" }}
+  \setattr{{ "{" }}int{{ "}" }}{{ "{" }}{{ c.intelligence }}{{ "}" }}
+  \setattr{{ "{" }}cha{{ "}" }}{{ "{" }}{{ c.charisma }}{{ "}" }}
 
   {% for skill, bonus in c.proficiencies.items() %}
   \setprof{{ "{" }}{{ skill }}{{ "}" }}{{ "{" }}{{ bonus }}{{ "}" }}

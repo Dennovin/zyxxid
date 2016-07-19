@@ -13,6 +13,8 @@ var site = function() {
         switch(listName) {
         case "classes":
             return "<b>" + data.name + "</b> (" + data.level + ")";
+        case "languages":
+            return data.name;
         case "abilities":
             return data.name;
         case "attacks":
@@ -136,7 +138,16 @@ var site = function() {
         };
 
         $(".input-row input").not(".input-list input").each(function() {
-            data[$(this).attr("name")] = $(this).val();
+            if($(this).attr("type") == "checkbox") {
+                if(!data[$(this).attr("name")]) {
+                    data[$(this).attr("name")] = 0;
+                }
+                if(this.checked) {
+                    data[$(this).attr("name")]++;
+                }
+            } else {
+                data[$(this).attr("name")] = $(this).val();
+            }
         });
 
         $(".input-list").each(function() {
@@ -239,10 +250,10 @@ var site = function() {
 
     var requestPDF = function(url) {
         $.get(url).done(function(data, status, jqXHR) {
-            if(jqXHR.status == 202) {
-                window.setTimeout(function() { requestPDF(url); }, 2000);
+            if(data.ready) {
+                $.fileDownload(data.url);
             } else {
-                console.log(data);
+                window.setTimeout(function() { requestPDF(url); }, 2000);
             }
         });
     };
@@ -273,11 +284,7 @@ var site = function() {
                 url: "/pdf",
                 data: {"character_id": data["id"]}
             }).done(function(data) {
-                $.get(data["status_url"])
-                    .done(function(data) {
-                        console.log(data);
-                    });
-                $("<a />").attr("href", data["status_url"]).attr("download", data["filename"]).click();
+                requestPDF(data["status_url"]);
             });
         });
     };

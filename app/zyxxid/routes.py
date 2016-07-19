@@ -91,8 +91,11 @@ def submit_pdf():
 def check_pdf_status(task_id, filename):
     result = create_pdf.AsyncResult(task_id)
     if result.ready():
-        return flask.redirect(flask.url_for("get_pdf", file_id=result.result, filename=filename))
+        data = { "ready": True, "url": flask.url_for("get_pdf", file_id=result.result, filename=filename) }
     else:
-        response = flask.make_response("", http.client.ACCEPTED)
-        response.headers["Retry-After"] = 1
-        return response
+        data = { "ready": False }
+
+    response = flask.make_response(simplejson.dumps(data))
+    response.headers["Content-Type"] = "text/json"
+
+    return response
