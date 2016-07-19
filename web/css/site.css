@@ -39,7 +39,14 @@ input {
     outline: none;
 }
 
-input:focus {
+textarea {
+    font-family: "PT Sans", "Verdana", sans-serif;
+    border: 1px solid var(--light-2);
+    outline: none;
+    height: 5em;
+}
+
+input:focus, textarea:focus {
     background-color: var(--light-5);
     outline: none;
 }
@@ -207,12 +214,12 @@ a {
     margin: 0 2em;
 }
 
-.input-row input {
+.input-row input, .input-row textarea {
     flex-grow: 0;
     margin: 0 1em;
 }
 
-.input-row input[type=text] {
+.input-row input[type=text], .input-row textarea {
     width: 30em;
 }
 
@@ -243,7 +250,7 @@ a {
     width: 12em;
 }
 
-.input-list .input-row input[type=text] {
+.input-list .input-row input[type=text], .input-list .input-row textarea {
     width: auto;
     flex-grow: 1;
 }

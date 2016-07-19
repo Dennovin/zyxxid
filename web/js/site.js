@@ -37,7 +37,7 @@ var site = function() {
 
         var $form = $(this).closest(".input-list").find(".add-item-form");
         $form.addClass("active");
-        $form.find("input").val("").first().focus();
+        $form.find("input, textarea").val("").first().focus();
 
         $(".overlay").show();
     };
@@ -57,13 +57,13 @@ var site = function() {
         var $form = $(this).closest(".input-list").find(".add-item-form");
         $listItem.addClass("editing");
 
-        $listItem.find("input").each(function() {
+        $listItem.find("input, textarea").each(function() {
             $form.find("input[name=" + $(this).attr("name") + "]").val($(this).val());
         });
 
         $(".overlay").show();
         $form.addClass("active");
-        $form.find("input").first().focus();
+        $form.find("input, textarea").first().focus();
     };
 
     var addItemFormHide = function() {
@@ -84,7 +84,7 @@ var site = function() {
         $("<button />").addClass("remove-item").appendTo($listItem);
 
         var data = {};
-        $list.find("input").each(function() {
+        $list.find("input, textarea").each(function() {
             data[$(this).attr("name")] = $(this).val();
         });
 
@@ -137,7 +137,7 @@ var site = function() {
             character_id: $(".character-id").val()
         };
 
-        $(".input-row input").not(".input-list input").each(function() {
+        $(".input-row input, .input-row textarea").not(".input-list input").each(function() {
             if($(this).attr("type") == "checkbox") {
                 if(!data[$(this).attr("name")]) {
                     data[$(this).attr("name")] = 0;
@@ -154,8 +154,12 @@ var site = function() {
             list = data[$(this).attr("name")] = [];
             $(this).find("li").each(function() {
                 var itemData = {};
-                $(this).find("input").each(function() {
-                    itemData[$(this).attr("name")] = $(this).val();
+                $(this).find("input, textarea").each(function() {
+                    if($(this).attr("name") == "") {
+                        itemData = $(this).val();
+                    } else {
+                        itemData[$(this).attr("name")] = $(this).val();
+                    }
                 });
                 list.push(itemData);
             });
@@ -206,7 +210,7 @@ var site = function() {
             $(".character-name input").val(data["name"]);
             $(".character-id").val(data["character_id"]);
 
-            $(".input-row input").not(".input-list input").each(function() {
+            $(".input-row input, .input-row textarea").not(".input-list input").each(function() {
                 $(this).val(data[$(this).attr("name")]);
             });
 
@@ -220,7 +224,7 @@ var site = function() {
                     $("<button />").addClass("remove-item").appendTo($listItem);
                     $("<div />").addClass("caption").html(formatListItem($list.attr("name"), row)).appendTo($listItem);
 
-                    $list.find("input").each(function() {
+                    $list.find("input, textarea").each(function() {
                         $("<input />").attr("type", "hidden").attr("name", $(this).attr("name")).val(row[$(this).attr("name")]).appendTo($listItem);
                     });
 
@@ -230,7 +234,7 @@ var site = function() {
                 list = data[$(this).attr("name")] = [];
                 $(this).find("li").each(function() {
                     var itemData = {};
-                    $(this).find("input").each(function() {
+                    $(this).find("input, textarea").each(function() {
                         itemData[$(this).attr("name")] = $(this).val();
                     });
                     list.push(itemData);
