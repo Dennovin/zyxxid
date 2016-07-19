@@ -103,7 +103,11 @@ def check_pdf_status(task_id, filename):
 
 @flask_app.route("/spells", methods=["GET"])
 def list_spells():
-    data = Spell.list_index("title")
+    spell_names = Spell.list_index("title")
+    spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
+
+    data = [{"name": i[0], "id": i[1], "level": spell_levels[i[1]]} for i in spell_names]
+
     response = flask.make_response(simplejson.dumps(data))
     response.headers["Content-Type"] = "text/json"
 

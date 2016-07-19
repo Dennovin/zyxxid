@@ -3,7 +3,7 @@ import re
 from . import database
 
 class Spell(database.RiakStorable):
-    _indexes = ["title"]
+    _indexes = ["title", "level"]
 
     @classmethod
     def load_from_file(cls, filename):
@@ -20,6 +20,12 @@ class Spell(database.RiakStorable):
                 m = re.search("^tags:.*\[(.*)\]", line)
                 if m:
                     spell.tags = [i.strip() for i in m.group(1).split(",")]
+                    if "cantrip" in spell.tags:
+                        spell.level = 0
+                    else:
+                        for tag in spell.tags:
+                            if tag.startswith("level") and tag[-1].isdigit():
+                                spell.level = int(tag[-1])
 
                 m = re.search("^\*\*(.*)\*\*", line)
                 if m and not hasattr(spell, "school"):
