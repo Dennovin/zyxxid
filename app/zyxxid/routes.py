@@ -108,3 +108,11 @@ def list_spells():
     response.headers["Content-Type"] = "text/json"
 
     return response
+
+@flask_app.route("/spells/<spell_id>", methods=["GET"])
+def get_spell(spell_id):
+    spell = Spell.fetch(spell_id)
+    response = flask.make_response(simplejson.dumps(spell.__dict__))
+    response.headers["Content-Type"] = "text/json"
+
+    return response
