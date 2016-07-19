@@ -41,7 +41,7 @@ var site = function() {
         $form.addClass("active");
         $form.find("input, textarea").val("").first().focus();
 
-        $(".overlay").show();
+        $(".overlay").addClass("adding-item");
     };
 
     var removeItem = function(e) {
@@ -63,13 +63,13 @@ var site = function() {
             $form.find("input[name=" + $(this).attr("name") + "]").val($(this).val());
         });
 
-        $(".overlay").show();
+        $(".overlay").addClass("adding-item");
         $form.addClass("active");
         $form.find("input, textarea").first().focus();
     };
 
     var addItemFormHide = function() {
-        $(".overlay").hide();
+        $(".overlay").removeClass("adding-item");
         $(".add-item-form").removeClass("active");
         $("li").removeClass("editing");
     };
@@ -109,8 +109,11 @@ var site = function() {
     var overlayClick = function(e) {
         e.stopPropagation();
         e.preventDefault();
-        addItemFormHide();
-        $(".character-list").removeClass("active");
+
+        if(!$(this).hasClass("loading")) {
+            addItemFormHide();
+            $(".character-list").removeClass("active");
+        }
     }
 
     var addItemKeypress = function(e) {
@@ -131,6 +134,7 @@ var site = function() {
     var saveSuccess = function(data) {
         $(".character-id").val(data["id"]);
         window.location.hash = data["id"];
+        $("body").removeClass("loading");
     };
 
     var getCharacterJSON = function() {
@@ -174,6 +178,8 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
+        $("body").addClass("loading");
+
         if(!$(".character-name input").val()) {
             $(".character-name input").addClass("error");
             return;
@@ -193,7 +199,7 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
-        $(".overlay").show();
+        $(".overlay").addClass("loading-character");
         $(".character-list").addClass("active");
 
         var $list = $(".character-list ul");
@@ -208,6 +214,7 @@ var site = function() {
 
     var loadCharacter = function(id) {
         window.location.hash = id;
+        $("body").addClass("loading");
         $.get("/character/" + id).done(function(data) {
             $(".character-name input").val(data["name"]);
             $(".character-id").val(data["character_id"]);
@@ -247,7 +254,8 @@ var site = function() {
                 });
             });
 
-            $(".overlay").hide();
+            $(".overlay").removeClass("loading-character");
+            $("body").removeClass("loading");
         });
     };
 
@@ -262,6 +270,7 @@ var site = function() {
         $.get(url).done(function(data, status, jqXHR) {
             if(data.ready) {
                 $.fileDownload(data.url);
+                $("body").removeClass("loading");
             } else {
                 window.setTimeout(function() { requestPDF(url); }, 2000);
             }

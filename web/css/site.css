@@ -74,6 +74,17 @@ a {
     background-color: rgba(0, 0, 0, 0.6);
 }
 
+.overlay.adding-item, .overlay.loading-character {
+    display: block;
+}
+
+body.loading .overlay {
+    display: block;
+    background-image: url("/images/loading.gif");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .body-container {
     display: flex;
     flex-direction: column;
@@ -233,10 +244,6 @@ a {
     cursor: pointer;
 }
 
-.input-list {
-    position: relative;
-}
-
 .input-list .title-row {
     display: flex;
     flex-wrap: no-wrap;
@@ -287,8 +294,10 @@ a {
 
 .input-list .add-item-form.active {
     display: block;
-    position: absolute;
-    top: 1em;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    transform-style: preserve-3d;
     width: 40em;
     margin: auto 10em;
     padding: 10px;
