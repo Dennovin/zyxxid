@@ -11,6 +11,7 @@ class Spell(database.RiakStorable):
 
         with open(filename) as fh:
             spell.description = ""
+            spell.ritual = False
 
             for line in fh:
                 header_line = False
@@ -34,6 +35,10 @@ class Spell(database.RiakStorable):
                 m = re.search("^\*\*(.*)\*\*", line)
                 if m and not hasattr(spell, "school"):
                     spell.school = m.group(1)
+                    if spell.school.endswith("(ritual)"):
+                        spell.school = spell.school.replace("(ritual)", "").strip()
+                        spell.ritual = True
+
                     header_line = True
 
                 m = re.search("^\*\*Casting Time\*\*:\s*(.*)$", line)
