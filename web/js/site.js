@@ -1,5 +1,6 @@
 var site = function() {
     var spellDetails = {};
+    var listData = {};
 
     var changeSection = function(e) {
         e.stopPropagation();
@@ -35,6 +36,20 @@ var site = function() {
         }
     };
 
+    var syncList = function(listName) {
+        var $list = $(".input-list[name=" + listName + "]");
+        $list.find("ul").empty();
+
+        $.each(listData[listName], function(i, data) {
+            var $listItem = $("<li />");
+            $("<button />").addClass("remove-item").appendTo($listItem);
+            $("<div />").addClass("caption").html(formatListItem($list.attr("name"), data)).appendTo($listItem);
+
+            $listItem.appendTo($list.find("ul"));
+        });
+
+    };
+
     var addItem = function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -50,7 +65,11 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
-        $(this).closest("li").remove();
+        var listName = $(this).closest(".input-list").attr("name");
+        var listIndex = $(this).closest("li").index();
+        listData[listName].splice(listIndex, 1);
+
+        syncList(listName);
     };
 
     var editItem = function(e) {
@@ -78,35 +97,25 @@ var site = function() {
 
     var addItemSubmit = function(elem) {
         var $list = $(elem).closest(".input-list");
-
-        var $listItem = $("li.editing");
-        if($listItem.length == 0) {
-            $listItem = $("<li />");
-        }
-        $listItem.empty();
-
-        $("<button />").addClass("remove-item").appendTo($listItem);
+        var listName = $list.attr("name")
 
         var data = {};
         $list.find("input, textarea").each(function() {
             if($(this).attr("name") == "") {
                 data = $(this).val();
             } else {
-                data[$(this).attr("name")] = $(this).val();
+                data[listName] = $(this).val();
             }
         });
 
-        $("<div />").addClass("caption").html(formatListItem($list.attr("name"), data)).appendTo($listItem);
-        if(typeof data === "string") {
-            $("<input />").attr("type", "hidden").attr("name", "").val(data).appendTo($listItem);
+        var $listItem = $("li.editing");
+        if($listItem.length == 0) {
+            listData[listName].push(data);
         } else {
-            $.each(data, function(name, value) {
-                $("<input />").attr("type", "hidden").attr("name", name).val(value).appendTo($listItem);
-            });
+            listData[listName][$listItem.index()] = data;
         }
 
-        $listItem.appendTo($list.find("ul"));
-
+        syncList(listName);
         addItemFormHide();
     };
 
@@ -167,18 +176,7 @@ var site = function() {
         });
 
         $(".input-list").each(function() {
-            list = data[$(this).attr("name")] = [];
-            $(this).find("li").each(function() {
-                var itemData = {};
-                $(this).find("input, textarea").each(function() {
-                    if($(this).attr("name") == "") {
-                        itemData = $(this).val();
-                    } else {
-                        itemData[$(this).attr("name")] = $(this).val();
-                    }
-                });
-                list.push(itemData);
-            });
+            data[$(this).attr("name")] = listData[$(this).attr("name")];
         });
 
         data["spells"] = []
@@ -243,30 +241,10 @@ var site = function() {
             });
 
             $(".input-list").each(function() {
-                var $list = $(this);
-                $list.find("ul").empty();
+                var listName = $(this).attr("name");
 
-                $.each(data[$(this).attr("name")], function(i, row) {
-                    var $listItem = $("<li />");
-
-                    $("<button />").addClass("remove-item").appendTo($listItem);
-                    $("<div />").addClass("caption").html(formatListItem($list.attr("name"), row)).appendTo($listItem);
-
-                    $list.find("input, textarea").each(function() {
-                        $("<input />").attr("type", "hidden").attr("name", $(this).attr("name")).val(row[$(this).attr("name")]).appendTo($listItem);
-                    });
-
-                    $listItem.appendTo($list.find("ul"));
-                });
-
-                list = data[$(this).attr("name")] = [];
-                $(this).find("li").each(function() {
-                    var itemData = {};
-                    $(this).find("input, textarea").each(function() {
-                        itemData[$(this).attr("name")] = $(this).val();
-                    });
-                    list.push(itemData);
-                });
+                listData[listName] = data[listName];
+                syncList(listName);
             });
 
             $.each(data["spells"], function(i, spellid) {
@@ -375,8 +353,6 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
-        console.log($(this));
-
         $(this).closest(".level-spells").toggleClass("visible");
     };
 
@@ -397,6 +373,10 @@ var site = function() {
         .on("click", ".spell-icon", toggleSpell)
         .on("click", ".spell-list .level-header", toggleSpellSection)
     ;
+
+    $(".input-list").each(function() {
+        listData[$(this).attr("name")] = [];
+    });
 
     if(window.location.hash) {
         loadCharacter(window.location.hash.replace("#", ""));
