@@ -120,7 +120,7 @@
             \textbf{##1} \hspace*{\fill} {\spelldesctt \setstretch{0.7} ##3}
           }
           \par\vspace{0.5em}
-          \par\noindent{\spelldesctt \setstretch{0.7} \textit{##2} $\cdot$ \textit{##7} $\cdot$ \textit{##5}} \\
+          \par\noindent{\spelldesctt \setstretch{0.7} \ifthenelse{\equal{##2}{True}}{\textit{Ritual} $\cdot$ }{} \textit{##7} $\cdot$ \textit{##5}} \\
           \par\vspace{-0.5em}
           \par\noindent{\spelldesctt \setstretch{0.7} ##9 \par}
           \par\vspace{0.5em}

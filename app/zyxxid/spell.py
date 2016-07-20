@@ -66,4 +66,5 @@ class Spell(database.RiakStorable):
                 else:
                     spell.description += line + "\n"
 
+        spell.description = spell.description.strip()
         return spell

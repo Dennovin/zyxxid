@@ -347,11 +347,24 @@ var site = function() {
         $(this).addClass("active");
     };
 
-    var toggleSpell = function(e) {
+    var redoSpellList = function() {
+        $(".spell-name").hide();
+        $(".spell-tag.selected").each(function() {
+            console.log($(this));
+            $(".spell-name.spell-tag-" + $(this).attr("value")).show();
+        });
+    };
+
+    var toggleCheckbox = function(e) {
         e.stopPropagation();
         e.preventDefault();
 
-        $(this).closest(".spell-name").toggleClass("selected");
+        $(this).closest(".checkbox-value").toggleClass("selected");
+
+        if($(this).closest(".checkbox-value").hasClass("spell-tag")) {
+            console.log("hi");
+            redoSpellList();
+        }
     };
 
     var toggleSpellSection = function(e) {
@@ -375,7 +388,7 @@ var site = function() {
         .on("change", ".error", clearError)
         .on("keydown", ".add-item-form", addItemKeypress)
         .on("click", ".spell-name", loadSpellDetails)
-        .on("click", ".spell-icon", toggleSpell)
+        .on("click", ".checkbox-icon", toggleCheckbox)
         .on("click", ".spell-list .level-header", toggleSpellSection)
     ;
 

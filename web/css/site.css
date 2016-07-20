@@ -369,12 +369,12 @@ body.loading .overlay {
     border-bottom: 1px solid var(--dark-5);
 }
 
-.section.spellbook .spell-list .spell-name {
+.section.spellbook .spell-list .checkbox-value {
     height: 0;
     visibility: hidden;
 }
 
-.section.spellbook .spell-list .level-spells.visible .spell-name {
+.section.spellbook .spell-list .level-spells.visible .checkbox-value {
     padding: 3px 0;
     border-bottom: 1px solid var(--dark-1);
     border-collapse: collapse;
@@ -387,11 +387,11 @@ body.loading .overlay {
     visibility: visible;
 }
 
-.section.spellbook .spell-list .spell-name.active {
+.section.spellbook .spell-list .checkbox-value.active {
     background-color: var(--complement) !important;
 }
 
-.section.spellbook .spell-list .spell-icon {
+.section.spellbook .spell-list .checkbox-icon {
     width: 16px;
     margin: 0 8px;
     border: 1px solid var(--light-1);
@@ -399,23 +399,15 @@ body.loading .overlay {
     background-repeat: no-repeat;
 }
 
-.section.spellbook .spell-list .spell-name.selected .spell-icon {
+.section.spellbook .spell-list .checkbox-value.selected .checkbox-icon {
     background-image: url("/images/tick.png");
 }
 
-.section.spellbook .spell-list .spell-name .name {
+.section.spellbook .spell-list .checkbox-value .name {
     margin-right: 32px;
 }
 
-.section.spellbook .spell-list .spell-name:nth-child(even):hover, .section.spellbook .spell-list .spell-name:nth-child(odd):hover {
-    background-color: var(--light-3);
-}
-
-.section.spellbook .spell-list .spell-name:nth-child(even) {
-    background-color: var(--light-4);
-}
-
-.section.spellbook .spell-list .spell-name:nth-child(odd) {
+.section.spellbook .spell-list .checkbox-value:hover {
     background-color: var(--light-5);
 }
 
