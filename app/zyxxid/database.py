@@ -43,6 +43,14 @@ class RiakStorable(object):
         return cls.from_riak_obj(cls.bucket().get(key))
 
     @classmethod
+    def fetch_multi(cls, keys):
+        objs = []
+        for obj in cls.bucket().multiget(keys):
+            objs.append(cls.from_riak_obj(obj))
+
+        return objs
+
+    @classmethod
     def query(cls, index, value):
         return cls.bucket().get_index(index + "_bin", value)
 

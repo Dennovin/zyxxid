@@ -64,5 +64,9 @@
   \setprof{{ "{" }}{{ skill }}{{ "}" }}{{ "{" }}{{ bonus }}{{ "}" }}
   {% endfor %}
 
+  {% for spell in c.get_spells() %}
+  \addspell{{ "{" }}{{ spell.title }}{{ "}" }}{{ "{" }}{{ yes }}{{ "}" }}{{ "{" }}{{ spell.school }}{{ "}" }}{{ "{" }}{{ spell.level }}{{ "}" }}{{ "{" }}{{ spell.casttime }}{{ "}" }}{{ "{" }}{{ spell.range }}{{ "}" }}{{ "{" }}{{ spell.components }}{{ "}" }}{{ "{" }}{{ spell.duration }}{{ "}" }}{{ "{" }}{{ spell.description }}{{ "}" }}
+  {% endfor %}
+
 \end{charactersheet}
 \end{document}

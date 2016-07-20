@@ -89,13 +89,21 @@ var site = function() {
 
         var data = {};
         $list.find("input, textarea").each(function() {
-            data[$(this).attr("name")] = $(this).val();
+            if($(this).attr("name") == "") {
+                data = $(this).val();
+            } else {
+                data[$(this).attr("name")] = $(this).val();
+            }
         });
 
         $("<div />").addClass("caption").html(formatListItem($list.attr("name"), data)).appendTo($listItem);
-        $.each(data, function(name, value) {
-            $("<input />").attr("type", "hidden").attr("name", name).val(value).appendTo($listItem);
-        });
+        if(typeof data === "string") {
+            $("<input />").attr("type", "hidden").attr("name", "").val(data).appendTo($listItem);
+        } else {
+            $.each(data, function(name, value) {
+                $("<input />").attr("type", "hidden").attr("name", name).val(value).appendTo($listItem);
+            });
+        }
 
         $listItem.appendTo($list.find("ul"));
 

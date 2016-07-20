@@ -7,6 +7,7 @@ import yaml
 
 from . import database
 from .apps import celery_app, jinja_env
+from .spell import Spell
 
 class Character(database.RiakStorable):
     _indexes = ["user_id"]
@@ -34,6 +35,9 @@ class Character(database.RiakStorable):
                 flattened_data[k] = v
 
         return flattened_data
+
+    def get_spells(self):
+        return Spell.fetch_multi(self.spells)
 
     @classmethod
     def load_from_file(cls, filename):
