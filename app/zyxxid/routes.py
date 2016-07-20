@@ -21,13 +21,16 @@ def verify_token(token):
     except oauth2client.crypt.AppIdentityError:
         return False
 
-@flask_app.route("/character/<character_id>", methods=["GET"])
-def get_character(character_id):
-    character = Character.fetch(character_id)
-    response = flask.make_response(simplejson.dumps(character.flatten_data()))
+def json_response(data):
+    response = flask.make_response(simplejson.dumps(data))
     response.headers["Content-Type"] = "text/json"
 
     return response
+
+@flask_app.route("/character/<character_id>", methods=["GET"])
+def get_character(character_id):
+    character = Character.fetch(character_id)
+    return json_response(character.flatten_data())
 
 @flask_app.route("/character", methods=["POST"])
 def post_character():
@@ -48,10 +51,7 @@ def post_character():
     character.load_data(obj)
     id = character.store()
 
-    response = flask.make_response(simplejson.dumps({"id": id}))
-    response.headers["Content-Type"] = "text/json"
-
-    return response
+    return json_response({"id": id})
 
 @flask_app.route("/character", methods=["GET"])
 def list_characters():
@@ -63,10 +63,7 @@ def list_characters():
     for id in Character.query("user_id", idinfo["sub"]).results:
         characters[id] = Character.fetch(id).name
 
-    response = flask.make_response(simplejson.dumps(characters))
-    response.headers["Content-Type"] = "text/json"
-
-    return response
+    return json_response(characters)
 
 @flask_app.route("/pdf/<file_id>/<filename>", methods=["GET"])
 def get_pdf(file_id, filename):
@@ -83,10 +80,7 @@ def submit_pdf():
     task = create_pdf.delay(character)
     filename = "".join([i for i in character.name if i in string.ascii_letters]) + ".pdf"
 
-    response = flask.make_response(simplejson.dumps({"filename": filename, "status_url": flask.url_for("check_pdf_status", task_id=task.task_id, filename=filename)}))
-    response.headers["Content-Type"] = "text/json"
-
-    return response
+    return json_response({"filename": filename, "status_url": flask.url_for("check_pdf_status", task_id=task.task_id, filename=filename)})
 
 @flask_app.route("/pdf/status/<task_id>/<filename>", methods=["GET"])
 def check_pdf_status(task_id, filename):
@@ -96,10 +90,17 @@ def check_pdf_status(task_id, filename):
     else:
         data = { "ready": False }
 
-    response = flask.make_response(simplejson.dumps(data))
-    response.headers["Content-Type"] = "text/json"
+    return json_response(data)
 
-    return response
+@flask_app.route("/spells/by-tag/<tag>", methods=["GET"])
+def list_spells_by_tag(tag):
+    spell_names = {i[1]: i[0] for i in Spell.list_index("title")}
+    spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
+    tagged_spells = Spell.query("tags", tag)
+
+    data = [{"name": spell_names[i], "id": i, "level": spell_levels[i]} for i in tagged_spells]
+
+    return json_response(data)
 
 @flask_app.route("/spells", methods=["GET"])
 def list_spells():
@@ -108,18 +109,12 @@ def list_spells():
 
     data = [{"name": i[0], "id": i[1], "level": spell_levels[i[1]]} for i in spell_names]
 
-    response = flask.make_response(simplejson.dumps(data))
-    response.headers["Content-Type"] = "text/json"
+    return json_response(data)
 
-    return response
-
-@flask_app.route("/spells/<spell_id>", methods=["GET"])
+@flask_app.route("/spell/<spell_id>", methods=["GET"])
 def get_spell(spell_id):
     spell = Spell.fetch(spell_id)
-    response = flask.make_response(simplejson.dumps(spell.__dict__))
-    response.headers["Content-Type"] = "text/json"
-
-    return response
+    return json_response(spell.__dict__)
 
 @flask_app.route("/", methods=["GET"])
 def index():

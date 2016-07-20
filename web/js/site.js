@@ -336,7 +336,7 @@ var site = function() {
         } else {
             $(".spell-detail").html("");
             $(".spell-details").addClass("loading");
-            $.get("/spells/" + id).done(function(data) {
+            $.get("/spell/" + id).done(function(data) {
                 spellDetails[id] = data;
                 showSpellDetails(data);
                 $(".spell-details").removeClass("loading");

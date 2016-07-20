@@ -27,7 +27,11 @@ class RiakStorable(object):
         key = self.bucket().new(self.id, data=self.__dict__)
         for idx in self._indexes:
             if hasattr(self, idx):
-                key.add_index(idx + "_bin", getattr(self, idx))
+                if isinstance(getattr(self, idx), list):
+                    for val in getattr(self, idx):
+                        key.add_index(idx + "_bin", val)
+                else:
+                    key.add_index(idx + "_bin", getattr(self, idx))
 
         key.store()
         return self.id
