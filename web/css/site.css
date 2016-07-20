@@ -47,6 +47,10 @@ textarea {
     height: 5em;
 }
 
+select {
+    font-family: "PT Sans", "Verdana", sans-serif;
+}
+
 input:focus, textarea:focus {
     background-color: var(--light-5);
     outline: none;
@@ -236,12 +240,12 @@ body.loading .overlay {
     margin: 0 2em;
 }
 
-.input-row input, .input-row textarea {
+.input-row input, .input-row textarea, .input-row select {
     flex-grow: 0;
     margin: 0 1em;
 }
 
-.input-row input[type=text], .input-row textarea {
+.input-row input[type=text], .input-row textarea, .input-row select {
     width: 30em;
 }
 
@@ -272,7 +276,7 @@ body.loading .overlay {
     width: 12em;
 }
 
-.input-list .input-row input[type=text], .input-list .input-row textarea {
+.input-list .input-row input[type=text], .input-list .input-row textarea, .input-list .input-row select {
     width: auto;
     flex-grow: 1;
 }

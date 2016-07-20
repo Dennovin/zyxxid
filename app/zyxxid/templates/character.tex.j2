@@ -64,8 +64,12 @@
   \setprof{{ "{" }}{{ skill }}{{ "}" }}{{ "{" }}{{ bonus }}{{ "}" }}
   {% endfor %}
 
+  {% for class in c.spellclasses %}
+  \addspelldc{{ "{" }}{{ class.name }}{{ "}" }}{{ "{" }}{{ class.spellattr }}{{ "}" }}
+  {% endfor %}
+
   {% for spell in c.get_spells() %}
-  \addspell{{ "{" }}{{ spell.title }}{{ "}" }}{{ "{" }}{{ yes }}{{ "}" }}{{ "{" }}{{ spell.school }}{{ "}" }}{{ "{" }}{{ spell.level }}{{ "}" }}{{ "{" }}{{ spell.casttime }}{{ "}" }}{{ "{" }}{{ spell.range }}{{ "}" }}{{ "{" }}{{ spell.components }}{{ "}" }}{{ "{" }}{{ spell.duration }}{{ "}" }}{{ "{" }}{{ spell.description }}{{ "}" }}
+  \addspell{{ "{" }}{{ spell.title }}{{ "}" }}{{ "{" }}{{ spell.ritual }}{{ "}" }}{{ "{" }}{{ spell.school }}{{ "}" }}{{ "{" }}{{ spell.level }}{{ "}" }}{{ "{" }}{{ spell.casttime }}{{ "}" }}{{ "{" }}{{ spell.range }}{{ "}" }}{{ "{" }}{{ spell.components }}{{ "}" }}{{ "{" }}{{ spell.duration }}{{ "}" }}{{ "{" }}{{ spell.description }}{{ "}" }}
   {% endfor %}
 
 \end{charactersheet}

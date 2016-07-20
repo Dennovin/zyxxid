@@ -16,6 +16,8 @@ var site = function() {
         switch(listName) {
         case "classes":
             return "<b>" + data.name + "</b> (" + data.level + ")";
+        case "spellclasses":
+            return "<b>" + data.name + "</b> (" + data.spellattr.toUpperCase() + ")";
         case "languages":
             return data.name;
         case "abilities":
@@ -56,7 +58,7 @@ var site = function() {
 
         var $form = $(this).closest(".input-list").find(".add-item-form");
         $form.addClass("active");
-        $form.find("input, textarea").val("").first().focus();
+        $form.find("input, textarea, select").val("").first().focus();
 
         $(".overlay").addClass("adding-item");
     };
@@ -76,12 +78,15 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
+        var listName = $(this).closest(".input-list").attr("name");
         var $listItem = $(this).closest("li");
         var $form = $(this).closest(".input-list").find(".add-item-form");
+        var data = listData[listName][$listItem.index()];
+
         $listItem.addClass("editing");
 
-        $listItem.find("input, textarea").each(function() {
-            $form.find("input[name=" + $(this).attr("name") + "]").val($(this).val());
+        $form.find("input, textarea, select").each(function() {
+            $(this).val(data[$(this).attr("name")]);
         });
 
         $(".overlay").addClass("adding-item");
@@ -100,11 +105,11 @@ var site = function() {
         var listName = $list.attr("name")
 
         var data = {};
-        $list.find("input, textarea").each(function() {
+        $list.find("input, textarea, select").each(function() {
             if($(this).attr("name") == "") {
                 data = $(this).val();
             } else {
-                data[listName] = $(this).val();
+                data[$(this).attr("name")] = $(this).val();
             }
         });
 
@@ -162,7 +167,7 @@ var site = function() {
             character_id: $(".character-id").val()
         };
 
-        $(".input-row input, .input-row textarea").not(".input-list input").each(function() {
+        $(".input-row input, .input-row textarea, .input-row select").not(".input-list input").each(function() {
             if($(this).attr("type") == "checkbox") {
                 if(!data[$(this).attr("name")]) {
                     data[$(this).attr("name")] = 0;
@@ -232,7 +237,7 @@ var site = function() {
             $(".character-name input").val(data["name"]);
             $(".character-id").val(data["character_id"]);
 
-            $(".input-row input, .input-row textarea").not(".input-list input").each(function() {
+            $(".input-row input, .input-row textarea, .input-row select").not(".input-list input").each(function() {
                 if($(this).attr("type") == "checkbox") {
                     $("input[name='" + $(this).attr("name") + "']").slice(0, data[$(this).attr("name")]).attr("checked", true);
                 } else {
@@ -243,7 +248,7 @@ var site = function() {
             $(".input-list").each(function() {
                 var listName = $(this).attr("name");
 
-                listData[listName] = data[listName];
+                listData[listName] = data[listName] || [];
                 syncList(listName);
             });
 
