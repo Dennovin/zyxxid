@@ -422,59 +422,28 @@
           </div>
         </div>
 
-        <div class="section" name="spellbook">
-          <div class="input-list" name="spells">
-            <div class="title-row">
-              <div class="title">Spells</div>
-              <button class="add-item" />
+        <div class="section spellbook" name="spellbook">
+          <div class="spell-list">
+            {% for level in spells.keys()|sort %}
+            <div class="level-spells">
+            <div class="level-header">{{ "Cantrips" if level == "0" else "Level " + level }}</div>
+            {% for spell in spells[level] %}
+            <div class="spell-name" spellid="{{ spell["id"] }}"><div class="spell-icon"></div><div class="name">{{ spell["name"] }}</div></div>
+            {% endfor %}
             </div>
-            <ul></ul>
+            {% endfor %}
+          </div>
 
-            <div class="add-item-form">
-              <div class="input-row">
-                <label>Name:</label>
-                <input type="text" name="name" />
-              </div>
+          <div class="spell-details">
+            <div class="spell-detail-row spell-detail" name="title"></div>
+            <div class="spell-detail-row spell-detail" name="school"></div>
+            <div class="spell-detail-row">Casting Time: <div class="spell-detail" name="casttime"></div></div>
+            <div class="spell-detail-row">Range: <div class="spell-detail" name="range"></div></div>
+            <div class="spell-detail-row">Components: <div class="spell-detail" name="components"></div></div>
+            <div class="spell-detail-row">Duration: <div class="spell-detail" name="duration"></div></div>
+            <div class="spell-detail" name="description"></div>
+          </div>
 
-              <div class="input-row">
-                <label>Type:</label>
-                <input type="text" name="type" />
-              </div>
-
-              <div class="input-row">
-                <label>Level:</label>
-                <input type="number" name="level" />
-              </div>
-
-              <div class="input-row">
-                <label>Cast Time:</label>
-                <input type="text" name="cast_time" />
-              </div>
-
-              <div class="input-row">
-                <label>Range:</label>
-                <input type="text" name="range" />
-              </div>
-
-              <div class="input-row">
-                <label>Requirements:</label>
-                <input type="text" name="requirements" />
-              </div>
-
-              <div class="input-row">
-                <label>Duration:</label>
-                <input type="text" name="duration" />
-              </div>
-
-              <div class="input-row">
-                <label>Description:</label>
-                <input type="text" name="description" />
-              </div>
-
-              <div class="submit-row">
-                <button class="save">Save</button>
-              </div>
-            </div>
         </div>
 
       </div>

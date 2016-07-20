@@ -13,9 +13,12 @@ class Spell(database.RiakStorable):
             spell.description = ""
 
             for line in fh:
+                header_line = False
+
                 m = re.search("^title:.*\"(.*)\"", line)
                 if m:
                     spell.title = m.group(1)
+                    header_line = True
 
                 m = re.search("^tags:.*\[(.*)\]", line)
                 if m:
@@ -26,30 +29,36 @@ class Spell(database.RiakStorable):
                         for tag in spell.tags:
                             if tag.startswith("level") and tag[-1].isdigit():
                                 spell.level = int(tag[-1])
+                    header_line = True
 
                 m = re.search("^\*\*(.*)\*\*", line)
                 if m and not hasattr(spell, "school"):
                     spell.school = m.group(1)
+                    header_line = True
 
                 m = re.search("^\*\*Casting Time\*\*:\s*(.*)$", line)
                 if m:
                     spell.casttime = m.group(1)
+                    header_line = True
 
                 m = re.search("^\*\*Range\*\*:\s*(.*)$", line)
                 if m:
                     spell.range = m.group(1)
+                    header_line = True
 
                 m = re.search("^\*\*Components\*\*:\s*(.*)$", line)
                 if m:
                     spell.components = m.group(1)
+                    header_line = True
 
                 m = re.search("^\*\*Duration\*\*:\s*(.*)$", line)
                 if m:
                     spell.duration = m.group(1)
+                    header_line = True
 
-                if re.search("^\*\*", line):
+                if header_line:
                     spell.description = ""
-                elif not re.search("^\s*$", line):
-                    spell.description += line.strip() + " "
+                else:
+                    spell.description += line + "\n"
 
         return spell

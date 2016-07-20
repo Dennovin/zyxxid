@@ -120,3 +120,16 @@ def get_spell(spell_id):
     response.headers["Content-Type"] = "text/json"
 
     return response
+
+@flask_app.route("/", methods=["GET"])
+def index():
+    spell_names = sorted(Spell.list_index("title"), key=lambda i: i[0])
+    spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
+
+    spells = {}
+    for name, spell_id in spell_names:
+        level = spell_levels[spell_id]
+        spells[level] = spells.get(level, [])
+        spells[level].append({"id": spell_id, "name": name})
+
+    return flask.render_template("index.html.j2", spells=spells)

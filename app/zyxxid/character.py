@@ -1,5 +1,4 @@
 from datetime import datetime
-from jinja2 import Environment, PackageLoader, Template
 import glob
 import os
 import subprocess
@@ -7,7 +6,7 @@ import tempfile
 import yaml
 
 from . import database
-from .apps import celery_app
+from .apps import celery_app, jinja_env
 
 class Character(database.RiakStorable):
     _indexes = ["user_id"]
@@ -54,7 +53,6 @@ class Character(database.RiakStorable):
 
 
 class PDF(database.RiakStorableFile):
-    env = Environment(loader=PackageLoader(__name__, "templates"))
     output_dir = "/data/output"
 
     @classmethod
@@ -62,7 +60,7 @@ class PDF(database.RiakStorableFile):
         with open(os.devnull, "w") as devnull, tempfile.NamedTemporaryFile(suffix=".tex", dir=cls.output_dir, delete=False) as tex_file:
             pdf_filename = os.path.splitext(tex_file.name)[0] + ".pdf"
 
-            template = cls.env.get_template("character.tex.j2")
+            template = jinja_env.get_template("character.tex.j2")
             file_contents = template.render(c=character)
             tex_file.write(file_contents.encode("utf-8"))
 

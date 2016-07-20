@@ -1,4 +1,6 @@
 var site = function() {
+    var spellDetails = {};
+
     var changeSection = function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -171,6 +173,11 @@ var site = function() {
             });
         });
 
+        data["spells"] = []
+        $(".spell-name.selected").each(function() {
+            data["spells"].push($(this).attr("spellid"));
+        });
+
         return JSON.stringify(data);
     };
 
@@ -254,8 +261,13 @@ var site = function() {
                 });
             });
 
+            $.each(data["spells"], function(i, spellid) {
+                $(".spell-name[spellid=" + spellid + "]").addClass("selected");
+            });
+
             $(".overlay").removeClass("loading-character");
             $("body").removeClass("loading");
+            $(".character-list").removeClass("active");
         });
     };
 
@@ -312,6 +324,54 @@ var site = function() {
         $(this).removeClass("error");
     };
 
+    var showSpellDetails = function(details) {
+        $(".spell-details").addClass("loaded");
+        $.each(details, function(name, value) {
+            if(value.replace) {
+                value = value.replace("\n", "<br />").replace(/\*\*(.*?)\*\*/, "<b>$1</b>");
+            }
+
+            $(".spell-detail[name=" + name + "]").html(value);
+        });
+    };
+
+    var loadSpellDetails = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var id = $(this).attr("spellid");
+        if(spellDetails[id]) {
+            showSpellDetails(spellDetails[id]);
+        } else {
+            $(".spell-detail").html("");
+            $(".spell-details").addClass("loading");
+            $.get("/spells/" + id).done(function(data) {
+                spellDetails[id] = data;
+                showSpellDetails(data);
+                $(".spell-details").removeClass("loading");
+            });
+        }
+
+        $(".spell-name").removeClass("active");
+        $(this).addClass("active");
+    };
+
+    var toggleSpell = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(this).closest(".spell-name").toggleClass("selected");
+    };
+
+    var toggleSpellSection = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        console.log($(this));
+
+        $(this).closest(".level-spells").toggleClass("visible");
+    };
+
     $("body")
         .on("click", ".section-nav a", changeSection)
         .on("click", "button.add-item", addItem)
@@ -325,6 +385,9 @@ var site = function() {
         .on("click", "a.pdf", generatePDF)
         .on("change", ".error", clearError)
         .on("keydown", ".add-item-form", addItemKeypress)
+        .on("click", ".spell-name", loadSpellDetails)
+        .on("click", ".spell-icon", toggleSpell)
+        .on("click", ".spell-list .level-header", toggleSpellSection)
     ;
 
     if(window.location.hash) {
@@ -338,4 +401,3 @@ $("document").ready(site);
 var onSignIn = function(googleUser) {
     document.cookie = "googletoken=" + googleUser.getAuthResponse().id_token;
 };
-

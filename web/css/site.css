@@ -22,6 +22,7 @@
 
 html {
     height: 100%;
+    overflow-y: scroll;
 }
 
 body {
@@ -145,6 +146,8 @@ body.loading .overlay {
     border-right: 1px solid var(--dark-5);
     bottom: 0;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .character-name input {
@@ -154,6 +157,7 @@ body.loading .overlay {
     padding: 2px;
     font-size: 200%;
     width: 29em;
+    font-weight: bold;
 }
 
 .character-name input:focus {
@@ -185,6 +189,7 @@ body.loading .overlay {
 
 .section {
     display: none;
+    flex-grow: 1;
 }
 
 .section.active {
@@ -210,6 +215,10 @@ body.loading .overlay {
 
 .character-list li {
     cursor: pointer;
+}
+
+.character-list li:hover {
+    color: var(--dark-5);
 }
 
 .input-row {
@@ -325,3 +334,121 @@ body.loading .overlay {
     cursor: pointer;
 }
 
+.section.spellbook.active {
+    display: flex;
+    padding-top: 0;
+}
+
+.section.spellbook .spell-list {
+    border-right: 1px solid var(--dark-5);
+    display: flex;
+    flex-direction: column;
+    padding-top: 2em;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.section.spellbook .spell-list .level-header {
+    padding: 3px 2em;
+    margin-top: 1em;
+    font-weight: bold;
+    background-color: #cfcfcf;
+    border-top: 1px solid #8f8f8f;
+    border-bottom: 1px solid #8f8f8f;
+    text-align: center;
+    cursor: pointer;
+}
+
+.section.spellbook .spell-list .level-spells.visible .level-header {
+    background-color: var(--light-2);
+    border-top: 1px solid var(--dark-5);
+    border-bottom: 1px solid var(--dark-5);
+}
+
+.section.spellbook .spell-list .spell-name {
+    height: 0;
+    visibility: hidden;
+}
+
+.section.spellbook .spell-list .level-spells.visible .spell-name {
+    padding: 3px 0;
+    border-bottom: 1px solid var(--dark-1);
+    border-collapse: collapse;
+    white-space: nowrap;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    overflow-y: hidden;
+    visibility: visible;
+}
+
+.section.spellbook .spell-list .spell-name.active {
+    background-color: var(--complement) !important;
+}
+
+.section.spellbook .spell-list .spell-icon {
+    width: 16px;
+    margin: 0 8px;
+    border: 1px solid var(--light-1);
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.section.spellbook .spell-list .spell-name.selected .spell-icon {
+    background-image: url("/images/tick.png");
+}
+
+.section.spellbook .spell-list .spell-name .name {
+    margin-right: 32px;
+}
+
+.section.spellbook .spell-list .spell-name:nth-child(even):hover, .section.spellbook .spell-list .spell-name:nth-child(odd):hover {
+    background-color: var(--light-3);
+}
+
+.section.spellbook .spell-list .spell-name:nth-child(even) {
+    background-color: var(--light-4);
+}
+
+.section.spellbook .spell-list .spell-name:nth-child(odd) {
+    background-color: var(--light-5);
+}
+
+.section.spellbook .spell-details {
+    padding: 2em;
+    visibility: hidden;
+}
+
+.section.spellbook .spell-details.loaded {
+    visibility: visible;
+}
+
+.section.spellbook .spell-details .spell-detail[name=title] {
+    font-size: 150%;
+    margin-bottom: 0.75em;
+}
+
+.section.spellbook .spell-details.loading {
+    background-image: url("/images/loading.gif");
+    background-position: 2em center;
+    background-repeat: no-repeat;
+}
+
+.section.spellbook .spell-details .name {
+    font-size: 150%;
+    font-weight: bold;
+}
+
+.section.spellbook .spell-details .spell-detail {
+    display: inline;
+}
+
+.section.spellbook .spell-details .spell-detail-row {
+    display: block;
+}
+
+.section.spellbook .spell-details .spell-detail[name=description] {
+    display: block;
+    margin-top: 1em;
+}
