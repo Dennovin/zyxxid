@@ -348,10 +348,9 @@ var site = function() {
     };
 
     var redoSpellList = function() {
-        $(".spell-name").hide();
+        $(".spell-name").addClass("untagged");
         $(".spell-tag.selected").each(function() {
-            console.log($(this));
-            $(".spell-name.spell-tag-" + $(this).attr("value")).show();
+            $(".spell-name.spell-tag-" + $(this).attr("value")).removeClass("untagged");
         });
     };
 
@@ -362,7 +361,6 @@ var site = function() {
         $(this).closest(".checkbox-value").toggleClass("selected");
 
         if($(this).closest(".checkbox-value").hasClass("spell-tag")) {
-            console.log("hi");
             redoSpellList();
         }
     };

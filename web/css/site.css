@@ -387,6 +387,13 @@ body.loading .overlay {
     visibility: visible;
 }
 
+.section.spellbook .spell-list .level-spells.visible .checkbox-value.untagged {
+    height: 0;
+    border: 0;
+    padding: 0;
+    visibility: hidden;
+}
+
 .section.spellbook .spell-list .checkbox-value.active {
     background-color: var(--complement) !important;
 }
