@@ -19,6 +19,28 @@ server {
 }
 
 server {
+    listen 8443 ssl;
+    server_name zyxxid.xyz;
+    ssl_certificate /data/certs/cert.pem;
+    ssl_certificate_key /data/certs/privkey.pem;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    location / {
+        proxy_pass http://127.0.0.1:8001;
+    }
+}
+
+server {
+    listen 127.0.0.1:8002;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:///tmp/graphite.sock;
+    }
+}
+
+server {
     listen 80;
     server_name zyxxid.xyz;
     return 301 https://$server_name$request_uri;

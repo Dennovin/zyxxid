@@ -1,0 +1,14 @@
+[uwsgi]
+master = true
+processes = 2
+threads = 4
+plugins = python27
+module = graphite_api.app:app
+virtualenv = /data/graphite-api
+
+uid = zyxxid
+gid = zyxxid
+
+socket = /tmp/graphite.sock
+buffer-size = 32768
+chmod-socket = 660

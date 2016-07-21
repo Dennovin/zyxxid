@@ -1,0 +1,5 @@
+[Unit]
+Description=statsd
+
+[Service]
+ExecStart=/usr/bin/nodejs /data/statsd/node_modules/statsd/stats.js /data/etc/statsd.js

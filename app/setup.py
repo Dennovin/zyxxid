@@ -26,6 +26,7 @@ setup(
         "pylibmc",
         "simplejson",
         "google-api-python-client",
+        "statsd",
         ],
     scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
     )
