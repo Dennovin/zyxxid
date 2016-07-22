@@ -379,10 +379,10 @@ var site = function() {
         .on("click", ".overlay", overlayClick)
         .on("click", ".add-item-form button.save", addItemButtonClick)
         .on("click", ".input-list li", editItem)
-        .on("click", "a.save", saveCharacter)
-        .on("click", "a.load", loadCharacterList)
+        .on("click", "body.logged-in a.save", saveCharacter)
+        .on("click", "body.logged-in a.load", loadCharacterList)
         .on("click", ".character-list li", loadCharacterClick)
-        .on("click", "a.pdf", generatePDF)
+        .on("click", "body.logged-in a.pdf", generatePDF)
         .on("change", ".error", clearError)
         .on("keydown", ".add-item-form", addItemKeypress)
         .on("click", ".spell-name", loadSpellDetails)
@@ -404,4 +404,5 @@ $("document").ready(site);
 
 var onSignIn = function(googleUser) {
     document.cookie = "googletoken=" + googleUser.getAuthResponse().id_token;
+    $("body").addClass("logged-in");
 };

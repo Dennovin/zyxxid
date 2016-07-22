@@ -120,8 +120,15 @@ body.loading .overlay {
     padding: 2px 1em;
     text-decoration: none;
     color: black;
+    border: 1px solid var(#8f8f8f);
+    background-color: #cfcfcf;
+    color: #8f8f8f;
+}
+
+body.logged-in .top-nav a {
     border: 1px solid var(--dark-5);
     background-color: var(--light-2);
+    color: black;
 }
 
 .top-nav div.g-signin2 {
