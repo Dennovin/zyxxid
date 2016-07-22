@@ -224,8 +224,19 @@ var site = function() {
         $list.empty();
 
         $.get("/character").done(function(data) {
-            $.each(data, function(id, name) {
-                $("<li />").attr("id", id).html(name).appendTo($list);
+            var ids = [];
+            for(id in data) {
+                ids.push(id);
+            }
+            var sortedIDs = ids.sort(function(a, b) { return data[a].localeCompare(data[b]); });
+
+            $.each(sortedIDs, function(i, id) {
+                var name = data[id];
+                var $listItem = $("<li />").attr("id", id);
+                $("<button />").addClass("remove-item").appendTo($listItem);
+                $("<div />").addClass("caption").html(name).appendTo($listItem);
+
+                $listItem.appendTo($(".character-list ul"));
             });
         });
     };
@@ -379,10 +390,10 @@ var site = function() {
         .on("click", ".overlay", overlayClick)
         .on("click", ".add-item-form button.save", addItemButtonClick)
         .on("click", ".input-list li", editItem)
-        .on("click", "body.logged-in a.save", saveCharacter)
-        .on("click", "body.logged-in a.load", loadCharacterList)
+        .on("click", "a.save", saveCharacter)
+        .on("click", "a.load", loadCharacterList)
         .on("click", ".character-list li", loadCharacterClick)
-        .on("click", "body.logged-in a.pdf", generatePDF)
+        .on("click", "a.pdf", generatePDF)
         .on("change", ".error", clearError)
         .on("keydown", ".add-item-form", addItemKeypress)
         .on("click", ".spell-name", loadSpellDetails)

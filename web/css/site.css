@@ -145,7 +145,7 @@ body.logged-in .top-nav a {
     background-color: var(--light-2);
 }
 
-.top-nav a:hover {
+body.logged-in .top-nav a:hover {
     background-color: var(--light-4);
 }
 
@@ -224,12 +224,27 @@ body.logged-in .top-nav a {
     z-index: 2;
 }
 
-.character-list li {
-    cursor: pointer;
+.character-list ul {
+    list-style: none;
 }
 
-.character-list li:hover {
+.character-list li button.remove-item {
+    width: 16px;
+    height: 16px;
+    border: 0;
+    margin: 0 1em 0 0;
+    cursor: pointer;
+    background: url("/images/delete.png");
+}
+
+.character-list li div.caption {
+    cursor: pointer;
+    display: inline;
+}
+
+.character-list li div.caption:hover {
     color: var(--dark-5);
+    text-decoration: underline;
 }
 
 .input-row {
