@@ -2,6 +2,13 @@ var site = function() {
     var spellDetails = {};
     var listData = {};
 
+    var showPopupMessage = function(message) {
+        $(".popup-message").html(message).slideDown(200);
+        window.setTimeout(function() {
+            $(".popup-message").slideUp(200);
+        }, 5000);
+    };
+
     var changeSection = function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -137,6 +144,7 @@ var site = function() {
         if(!$(this).hasClass("loading")) {
             addItemFormHide();
             $(".character-list").removeClass("active");
+            $(this).removeClass("loading-character");
         }
     }
 
@@ -158,7 +166,7 @@ var site = function() {
     var saveSuccess = function(data) {
         $(".character-id").val(data["id"]);
         window.location.hash = data["id"];
-        $("body").removeClass("loading");
+        showPopupMessage("Character saved.");
     };
 
     var getCharacterJSON = function() {
@@ -196,8 +204,6 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
-        $("body").addClass("loading");
-
         if(!$(".character-name input").val()) {
             $(".character-name input").addClass("error");
             return;
@@ -232,7 +238,7 @@ var site = function() {
 
             $.each(sortedIDs, function(i, id) {
                 var name = data[id];
-                var $listItem = $("<li />").attr("id", id);
+                var $listItem = $("<li />").attr("characterid", id);
                 $("<button />").addClass("remove-item").appendTo($listItem);
                 $("<div />").addClass("caption").html(name).appendTo($listItem);
 
@@ -277,7 +283,38 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
-        loadCharacter($(this).attr("id"));
+        loadCharacter($(this).closest("li").attr("characterid"));
+    };
+
+    var deleteCharacterClick = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $("body").addClass("loading");
+        var $listItem = $(this).closest("li");
+
+        $.ajax({url: "/character/" + $listItem.attr("characterid"), type: "DELETE"})
+            .done(function(data) {
+                $("body").removeClass("loading");
+                $listItem.remove();
+
+                var popupMessage = $("<div />").html("Character deleted. ");
+                $("<a />").attr({ href: "#", characterid: $listItem.attr("characterid") }).addClass("restore-character").html("Undo").appendTo(popupMessage);
+                showPopupMessage(popupMessage);
+            });
+    };
+
+    var restoreCharacter = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $("body").addClass("loading");
+
+        $.ajax({ type: "POST", url: "/character/undelete/" + $(this).attr("characterid") })
+            .done(function(data) {
+                loadCharacterList(e);
+                showPopupMessage("Undeleted.");
+            });
     };
 
     var requestPDF = function(url) {
@@ -386,13 +423,15 @@ var site = function() {
     $("body")
         .on("click", ".section-nav a", changeSection)
         .on("click", "button.add-item", addItem)
-        .on("click", "button.remove-item", removeItem)
+        .on("click", "button.remove-item:not(.character-list button)", removeItem)
         .on("click", ".overlay", overlayClick)
         .on("click", ".add-item-form button.save", addItemButtonClick)
         .on("click", ".input-list li", editItem)
         .on("click", "a.save", saveCharacter)
         .on("click", "a.load", loadCharacterList)
-        .on("click", ".character-list li", loadCharacterClick)
+        .on("click", ".character-list li div.caption", loadCharacterClick)
+        .on("click", ".character-list li button.remove-item", deleteCharacterClick)
+        .on("click", ".restore-character", restoreCharacter)
         .on("click", "a.pdf", generatePDF)
         .on("change", ".error", clearError)
         .on("keydown", ".add-item-form", addItemKeypress)

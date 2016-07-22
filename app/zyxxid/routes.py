@@ -53,6 +53,22 @@ def post_character():
 
     return json_response({"id": id})
 
+@flask_app.route("/character/<character_id>", methods=["DELETE"])
+def delete_character(character_id):
+    character = Character.fetch(character_id)
+    character.deleted = True
+    character.store()
+
+    return json_response({"id": character._id})
+
+@flask_app.route("/character/undelete/<character_id>", methods=["POST"])
+def undelete_character(character_id):
+    character = Character.fetch(character_id)
+    delattr(character, "deleted")
+    character.store()
+
+    return json_response({"id": character._id})
+
 @flask_app.route("/character", methods=["GET"])
 def list_characters():
     idinfo = verify_token(flask.request.cookies.get("googletoken"))
@@ -61,6 +77,10 @@ def list_characters():
 
     characters = {}
     for id in Character.query("user_id", idinfo["sub"]).results:
+        character = Character.fetch(id)
+        if hasattr(character, "deleted") and character.deleted:
+            continue
+
         characters[id] = Character.fetch(id).name
 
     return json_response(characters)
