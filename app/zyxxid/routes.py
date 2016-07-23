@@ -5,7 +5,7 @@ import oauth2client.crypt
 import simplejson
 import string
 
-from .apps import flask_app
+from .apps import flask_app, memcached_client
 from .character import Character, PDF, create_pdf
 from .config import Config
 from .spell import Spell
@@ -138,18 +138,22 @@ def get_spell(spell_id):
 
 @flask_app.route("/", methods=["GET"])
 def index():
-    spell_names = sorted(Spell.list_index("title"), key=lambda i: i[0])
-    spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
+    spells = memcached_client.get("spell_list")
+    if spells is None:
+        spell_names = sorted(Spell.list_index("title"), key=lambda i: i[0])
+        spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
 
-    spell_tags = {}
-    for tag, spell_id in Spell.list_index("tags"):
-        spell_tags[spell_id] = spell_tags.get(spell_id, [])
-        spell_tags[spell_id].append(tag)
+        spell_tags = {}
+        for tag, spell_id in Spell.list_index("tags"):
+            spell_tags[spell_id] = spell_tags.get(spell_id, [])
+            spell_tags[spell_id].append(tag)
 
-    spells = {}
-    for name, spell_id in spell_names:
-        level = spell_levels[spell_id]
-        spells[level] = spells.get(level, [])
-        spells[level].append({"id": spell_id, "name": name, "tags": spell_tags.get(spell_id, []) })
+        spells = {}
+        for name, spell_id in spell_names:
+            level = spell_levels[spell_id]
+            spells[level] = spells.get(level, [])
+            spells[level].append({"id": spell_id, "name": name, "tags": spell_tags.get(spell_id, []) })
+
+        memcached_client.set("spell_list", spells, time=3600)
 
     return flask.render_template("index.html.j2", spells=spells)
