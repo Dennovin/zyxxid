@@ -79,15 +79,12 @@ a {
     background-color: rgba(0, 0, 0, 0.6);
 }
 
-.overlay.adding-item, .overlay.loading-character {
+.overlay.adding-item, .overlay.loading-character, .overlay.loading-pdf {
     display: block;
 }
 
 body.loading .overlay {
     display: block;
-    background-image: url("/images/loading.gif");
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
 .popup-message {
@@ -250,6 +247,19 @@ body.logged-in .top-nav a:hover {
     border: 1px solid black;
     background: white;
     z-index: 2;
+}
+
+.character-list .title {
+    font-size: 150%;
+    font-weight: bold;
+}
+
+.character-list .loading-bar {
+    display: none;
+}
+
+.character-list.loading .loading-bar {
+    display: flex;
 }
 
 .character-list ul {
@@ -504,4 +514,80 @@ body.logged-in .top-nav a:hover {
 .section.spellbook .spell-details .spell-detail[name=description] {
     display: block;
     margin-top: 1em;
+}
+
+.pdf-message {
+    display: none;
+    position: relative;
+}
+
+.pdf-message.active {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    transform-style: preserve-3d;
+    width: 40em;
+    z-index: 2;
+    padding: 2em;
+    background: white;
+    border: 1px solid black;
+}
+
+.pdf-message .pdf-message-title {
+    font-size: 150%;
+    font-weight: bold;
+    text-style: italic;
+    margin: 1em;
+}
+
+.pdf-message .pdf-message-ready, .pdf-message .pdf-message-waiting {
+    margin: 1em;
+}
+
+.pdf-message .pdf-message-ready {
+    display: none;
+}
+
+.pdf-message.ready .loading-bar {
+    visibility: hidden;
+}
+
+.pdf-message.ready .pdf-message-ready {
+    display: block;
+}
+
+.pdf-message.ready .pdf-message-waiting {
+    display: none;
+}
+
+.pdf-message-ready a {
+    color: var(--dark-3);
+}
+
+.pdf-message-ready a:hover {
+    color: var(--dark-5);
+    text-decoration: underline;
+}
+
+.pdf-message .close-window {
+    margin: 2em auto 1em auto;
+    display: block;
+    width: 5em;
+    text-align: center;
+    visibility: hidden;
+    cursor: pointer;
+    border: 1px solid var(--dark-5);
+    background-color: var(--light-2);
+    padding: 3px 1em;
+    color: black;
+}
+
+.pdf-message .close-window:hover {
+    background-color: var(--light-4);
+}
+
+.pdf-message.ready .close-window {
+    visibility: visible;
 }

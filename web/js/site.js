@@ -137,14 +137,15 @@ var site = function() {
         addItemSubmit($(this));
     }
 
-    var overlayClick = function(e) {
+    var overlayClose = function(e) {
         e.stopPropagation();
         e.preventDefault();
 
-        if(!$(this).hasClass("loading")) {
+        if(!$(".overlay").hasClass("loading")) {
             addItemFormHide();
+            $(".overlay").removeClass("loading-character loading-pdf");
             $(".character-list").removeClass("active");
-            $(this).removeClass("loading-character");
+            $(".pdf-message").removeClass("active").removeClass("ready");
         }
     }
 
@@ -224,7 +225,7 @@ var site = function() {
         e.preventDefault();
 
         $(".overlay").addClass("loading-character");
-        $(".character-list").addClass("active");
+        $(".character-list").addClass("active loading");
 
         var $list = $(".character-list ul");
         $list.empty();
@@ -244,6 +245,8 @@ var site = function() {
 
                 $listItem.appendTo($(".character-list ul"));
             });
+
+            $(".character-list").removeClass("loading");
         });
     };
 
@@ -321,7 +324,8 @@ var site = function() {
         $.get(url).done(function(data, status, jqXHR) {
             if(data.ready) {
                 $.fileDownload(data.url);
-                $("body").removeClass("loading");
+                $(".pdf-message").addClass("ready");
+                $(".pdf-message a.download-link").attr("href", data.url);
             } else {
                 window.setTimeout(function() { requestPDF(url); }, 2000);
             }
@@ -332,7 +336,8 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
-        $("body").addClass("loading");
+        $(".overlay").addClass("loading-pdf");
+        $(".pdf-message").addClass("active");
 
         if(!$(".character-name input").val()) {
             $(".character-name input").addClass("error");
@@ -424,7 +429,7 @@ var site = function() {
         .on("click", ".section-nav a", changeSection)
         .on("click", "button.add-item", addItem)
         .on("click", "button.remove-item:not(.character-list button)", removeItem)
-        .on("click", ".overlay", overlayClick)
+        .on("click", ".overlay, .close-window", overlayClose)
         .on("click", ".add-item-form button.save", addItemButtonClick)
         .on("click", ".input-list li", editItem)
         .on("click", "a.save", saveCharacter)
