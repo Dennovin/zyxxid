@@ -143,9 +143,9 @@ var site = function() {
 
         if(!$(".overlay").hasClass("loading")) {
             addItemFormHide();
-            $(".overlay").removeClass("loading-character loading-pdf");
+            $(".overlay").removeClass("loading-character loading-pdf active");
             $(".character-list").removeClass("active");
-            $(".pdf-message").removeClass("active").removeClass("ready");
+            $(".overlay-window").removeClass("active ready");
         }
     }
 
@@ -201,12 +201,17 @@ var site = function() {
         return JSON.stringify(data);
     };
 
+    var showAbout = function(e) {
+        $(".overlay, .about-site").addClass("active");
+    };
+
     var saveCharacter = function(e) {
         e.stopPropagation();
         e.preventDefault();
 
         if(!$(".character-name input").val()) {
             $(".character-name input").addClass("error");
+            showPopupMessage("Your character needs a name.");
             return;
         }
 
@@ -336,13 +341,13 @@ var site = function() {
         e.stopPropagation();
         e.preventDefault();
 
-        $(".overlay").addClass("loading-pdf");
-        $(".pdf-message").addClass("active");
-
         if(!$(".character-name input").val()) {
             $(".character-name input").addClass("error");
+            showPopupMessage("Your character needs a name.");
             return;
         }
+
+        $(".overlay, .pdf-message").addClass("active");
 
         $.ajax({
             type: "POST",
@@ -424,6 +429,7 @@ var site = function() {
         .on("click", ".overlay, .close-window", overlayClose)
         .on("click", ".add-item-form button.save", addItemButtonClick)
         .on("click", ".input-list li", editItem)
+        .on("click", "a.about", showAbout)
         .on("click", "a.save", saveCharacter)
         .on("click", "a.load", loadCharacterList)
         .on("click", ".character-list li div.caption", loadCharacterClick)

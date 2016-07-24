@@ -77,15 +77,60 @@ a {
     width: 100%;
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.6);
+    flex-direction: column;
+    justify-content: center;
 }
 
-.overlay.adding-item, .overlay.loading-character, .overlay.loading-pdf {
-    display: block;
+.overlay.adding-item, .overlay.loading-character, .overlay.active, body.loading .overlay {
+    display: flex;
 }
 
-body.loading .overlay {
-    display: block;
+.overlay-window {
+    display: none;
+    position: relative;
 }
+
+.overlay-window.active {
+    display: block;
+    margin: 0 auto;
+    width: 40em;
+    z-index: 2;
+    padding: 2em;
+    background: white;
+    border: 1px solid black;
+}
+
+.overlay-window .close-window {
+    margin: 2em auto 0 auto;
+    display: block;
+    width: 5em;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid var(--dark-5);
+    background-color: var(--light-2);
+    padding: 3px 1em;
+    color: black;
+}
+
+.overlay-window .close-window:hover {
+    background-color: var(--light-4);
+}
+
+.overlay-window a {
+    color: var(--dark-3);
+}
+
+.overlay-window a:hover {
+    color: var(--dark-5);
+    text-decoration: underline;
+}
+
+.overlay-window .overlay-window-title {
+    font-size: 150%;
+    font-weight: bold;
+    margin: 0 0 1em 1em;
+}
+
 
 .popup-message {
     display: none;
@@ -516,32 +561,6 @@ body.logged-in .top-nav a:hover {
     margin-top: 1em;
 }
 
-.pdf-message {
-    display: none;
-    position: relative;
-}
-
-.pdf-message.active {
-    display: block;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    transform-style: preserve-3d;
-    width: 40em;
-    z-index: 2;
-    padding: 2em;
-    background: white;
-    border: 1px solid black;
-}
-
-.pdf-message .pdf-message-title {
-    font-size: 150%;
-    font-weight: bold;
-    text-style: italic;
-    margin: 1em;
-}
-
 .pdf-message .pdf-message-ready, .pdf-message .pdf-message-waiting {
     margin: 1em;
 }
@@ -562,30 +581,8 @@ body.logged-in .top-nav a:hover {
     display: none;
 }
 
-.pdf-message-ready a {
-    color: var(--dark-3);
-}
-
-.pdf-message-ready a:hover {
-    color: var(--dark-5);
-    text-decoration: underline;
-}
-
 .pdf-message .close-window {
-    margin: 2em auto 1em auto;
-    display: block;
-    width: 5em;
-    text-align: center;
     visibility: hidden;
-    cursor: pointer;
-    border: 1px solid var(--dark-5);
-    background-color: var(--light-2);
-    padding: 3px 1em;
-    color: black;
-}
-
-.pdf-message .close-window:hover {
-    background-color: var(--light-4);
 }
 
 .pdf-message.ready .close-window {

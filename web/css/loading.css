@@ -8,12 +8,12 @@
     background: none;
     width: 200px;
     height: 200px;
-    visibility: hidden;
+    display: none;
     margin: 150px auto;
 }
 
 body.loading .overlay .loading-circle {
-    visibility: visible;
+    display: block;
 }
 
 .loading-circle .loading-part-div {
