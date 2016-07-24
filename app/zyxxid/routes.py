@@ -96,9 +96,9 @@ def get_pdf(file_id, filename):
 
 @flask_app.route("/pdf", methods=["POST"])
 def submit_pdf():
-    character = Character.fetch(flask.request.form["character_id"])
-    task = create_pdf.delay(character)
-    filename = "".join([i for i in character.name if i in string.ascii_letters]) + ".pdf"
+    obj = flask.request.get_json()
+    task = create_pdf.delay(obj)
+    filename = "".join([i for i in obj["name"] if i in string.ascii_letters]) + ".pdf"
 
     return json_response({"filename": filename, "status_url": flask.url_for("check_pdf_status", task_id=task.task_id, filename=filename)})
 

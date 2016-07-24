@@ -346,21 +346,13 @@ var site = function() {
 
         $.ajax({
             type: "POST",
-            url: "/character",
+            url: "/pdf",
             data: getCharacterJSON(),
             headers: {
                 "Content-Type": "application/json"
             }
         }).done(function(data) {
-            $(".character-id").val(data["id"]);
-            window.location.hash = data["id"];
-            $.ajax({
-                type: "POST",
-                url: "/pdf",
-                data: {"character_id": data["id"]}
-            }).done(function(data) {
-                requestPDF(data["status_url"]);
-            });
+            requestPDF(data["status_url"]);
         });
     };
 

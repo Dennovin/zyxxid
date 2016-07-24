@@ -84,5 +84,7 @@ class PDF(database.RiakStorableFile):
 
 
 @celery_app.task
-def create_pdf(character):
+def create_pdf(data):
+    character = Character()
+    character.load_data(data)
     return PDF.create(character)

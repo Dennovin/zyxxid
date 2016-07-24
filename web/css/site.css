@@ -150,7 +150,7 @@ body.loading .overlay {
     color: #8f8f8f;
 }
 
-body.logged-in .top-nav a {
+body.logged-in .top-nav a, .top-nav a.pdf, .top-nav a.new, .top-nav a.about {
     border: 1px solid var(--dark-5);
     background-color: var(--light-2);
     color: black;
