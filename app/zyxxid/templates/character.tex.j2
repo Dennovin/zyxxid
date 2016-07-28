@@ -39,7 +39,7 @@
   {% endfor %}
 
   {% for item in c.items %}
-  \addequip{{ "{" }}{{ item.name }} {% if item.quantity > 1 %}(x {{ item.quantity }}){% endif %}{{ "}" }}
+  \addequip{{ "{" }}{{ item.name }} {% if item.quantity|int() > 1 %}(x {{ item.quantity }}){% endif %}{{ "}" }}
   {% endfor %}
 
   {% for language in c.languages %}
