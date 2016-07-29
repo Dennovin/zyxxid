@@ -30,7 +30,7 @@ var site = function() {
         case "abilities":
             return (data.name ? "<b>" + data.name + "</b> - " : "") + data.description;
         case "attacks":
-            return "<b>" + data.name + "</b> - " + data.bonus + " - " + data.damage;
+            return "<b>" + data.name + "</b> &middot; " + data.bonus + " &middot; " + data.damage;
         case "resources":
             return data.name;
         case "items":
@@ -59,15 +59,19 @@ var site = function() {
 
     };
 
+    var showAddItemForm = function($form) {
+        $form.addClass("active");
+        $form.find("input, textarea, select").val("").first().focus();
+
+        $(".overlay").addClass("adding-item");
+    };
+
     var addItem = function(e) {
         e.stopPropagation();
         e.preventDefault();
 
         var $form = $(this).closest(".input-list").find(".add-item-form");
-        $form.addClass("active");
-        $form.find("input, textarea, select").val("").first().focus();
-
-        $(".overlay").addClass("adding-item");
+        showAddItemForm($form);
     };
 
     var removeItem = function(e) {
@@ -131,10 +135,19 @@ var site = function() {
         addItemFormHide();
     };
 
-    var addItemButtonClick = function(e) {
+    var addItemSaveClick = function(e) {
         e.stopPropagation();
         e.preventDefault();
         addItemSubmit($(this));
+    }
+
+    var addItemSaveAddClick = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        addItemSubmit($(this));
+
+        var $form = $(this).closest(".input-list").find(".add-item-form");
+        showAddItemForm($form);
     }
 
     var overlayClose = function(e) {
@@ -427,7 +440,8 @@ var site = function() {
         .on("click", "button.add-item", addItem)
         .on("click", "button.remove-item:not(.character-list button)", removeItem)
         .on("click", ".overlay, .close-window", overlayClose)
-        .on("click", ".add-item-form button.save", addItemButtonClick)
+        .on("click", ".add-item-form button.save", addItemSaveClick)
+        .on("click", ".add-item-form button.save-add", addItemSaveAddClick)
         .on("click", ".input-list li", editItem)
         .on("click", "a.about", showAbout)
         .on("click", "a.save", saveCharacter)
