@@ -301,12 +301,10 @@
       \pagebreak[3]
 
       \ifdefempty{\abilities}{}{
-        \begin{minipage}{0.65\textwidth}
-          \section*{Abilities}
-          \begin{itemize}[noitemsep]
-            \small\abilities
-          \end{itemize}
-        \end{minipage}
+        \section*{Abilities}
+        \begin{itemize}[noitemsep]
+          \small\abilities
+        \end{itemize}
       }
 
       \ifdefempty{\equipment}{}{
