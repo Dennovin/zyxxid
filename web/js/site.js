@@ -1,6 +1,7 @@
 var site = function() {
     var spellDetails = {};
     var listData = {};
+    var origIndex = null;
 
     var showPopupMessage = function(message) {
         $(".popup-message").html(message).slideDown(200);
@@ -45,17 +46,35 @@ var site = function() {
         }
     };
 
+    var grabItem = function(e, ui) {
+        origIndex = ui.item.index();
+    };
+
+    var dropItem = function(e, ui) {
+        if(origIndex != null) {
+            var newIndex = ui.item.index();
+            var $list = ui.item.closest(".input-list");
+            var listName = $list.attr("name");
+            listData[listName].splice(newIndex, 0, listData[listName].splice(origIndex, 1)[0]);
+        }
+
+        origIndex = null;
+    };
+
     var syncList = function(listName) {
         var $list = $(".input-list[name=" + listName + "]");
         $list.find("ul").empty();
 
         $.each(listData[listName], function(i, data) {
             var $listItem = $("<li />");
+            $("<i />").addClass("fa fa-arrows-v").appendTo($listItem);
             $("<button />").addClass("remove-item").appendTo($listItem);
             $("<div />").addClass("caption").html(formatListItem($list.attr("name"), data)).appendTo($listItem);
 
             $listItem.appendTo($list.find("ul"));
         });
+
+        $list.find("ul").sortable({handle: ".fa-arrows-v", start: grabItem, update: dropItem});
 
     };
 
@@ -443,6 +462,7 @@ var site = function() {
         .on("click", ".add-item-form button.save", addItemSaveClick)
         .on("click", ".add-item-form button.save-add", addItemSaveAddClick)
         .on("click", ".input-list li", editItem)
+        .on("click", ".input-list li i", function(e) { e.stopPropagation(); })
         .on("click", "a.about", showAbout)
         .on("click", "a.save", saveCharacter)
         .on("click", "a.load", loadCharacterList)

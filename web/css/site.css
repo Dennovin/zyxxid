@@ -387,6 +387,19 @@ body.logged-in .top-nav a:hover {
     flex-grow: 1;
 }
 
+.input-list .fa-arrows-v {
+    color: #afafaf;
+    cursor: grab;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+}
+
+.input-list .ui-sortable-helper .fa-arrows-v {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+}
+
 .input-list button.add-item {
     width: 16px;
     height: 16px;
