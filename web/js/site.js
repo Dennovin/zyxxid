@@ -68,7 +68,7 @@ var site = function() {
         $.each(listData[listName], function(i, data) {
             var $listItem = $("<li />");
             $("<i />").addClass("fa fa-arrows-v").appendTo($listItem);
-            $("<button />").addClass("remove-item").appendTo($listItem);
+            $("<i />").addClass("fa fa-trash").appendTo($listItem);
             $("<div />").addClass("caption").html(formatListItem($list.attr("name"), data)).appendTo($listItem);
 
             $listItem.appendTo($list.find("ul"));
@@ -277,7 +277,7 @@ var site = function() {
             $.each(sortedIDs, function(i, id) {
                 var name = data[id];
                 var $listItem = $("<li />").attr("characterid", id);
-                $("<button />").addClass("remove-item").appendTo($listItem);
+                $("<i />").addClass("fa fa-trash").appendTo($listItem);
                 $("<div />").addClass("caption").html(name).appendTo($listItem);
 
                 $listItem.appendTo($(".character-list ul"));
@@ -456,18 +456,18 @@ var site = function() {
 
     $("body")
         .on("click", ".section-nav a", changeSection)
-        .on("click", "button.add-item", addItem)
-        .on("click", "button.remove-item:not(.character-list button)", removeItem)
+        .on("click", ".input-list .fa-plus-square-o", addItem)
+        .on("click", ".input-list li .fa-trash", removeItem)
         .on("click", ".overlay, .close-window", overlayClose)
         .on("click", ".add-item-form button.save", addItemSaveClick)
         .on("click", ".add-item-form button.save-add", addItemSaveAddClick)
         .on("click", ".input-list li", editItem)
-        .on("click", ".input-list li i", function(e) { e.stopPropagation(); })
+        .on("click", ".input-list li .fa-arrows-v", function(e) { e.stopPropagation(); })
         .on("click", "a.about", showAbout)
         .on("click", "a.save", saveCharacter)
         .on("click", "a.load", loadCharacterList)
         .on("click", ".character-list li div.caption", loadCharacterClick)
-        .on("click", ".character-list li button.remove-item", deleteCharacterClick)
+        .on("click", ".character-list li .fa-trash", deleteCharacterClick)
         .on("click", ".restore-character", restoreCharacter)
         .on("click", "a.pdf", generatePDF)
         .on("change", ".error", clearError)

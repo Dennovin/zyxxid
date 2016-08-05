@@ -312,13 +312,12 @@ body.logged-in .top-nav a:hover {
     list-style: none;
 }
 
-.character-list li button.remove-item {
+.character-list li .fa-trash {
     width: 16px;
     height: 16px;
     border: 0;
     margin: 0 1em 0 0;
     cursor: pointer;
-    background: url("/images/delete.png");
 }
 
 .character-list li div.caption {
@@ -376,6 +375,8 @@ body.logged-in .top-nav a:hover {
     margin: 1em 50px 0 50px;
     border-bottom: 1px solid var(--dark-5);
     flex-grow: 1;
+    font-weight: bold;
+    font-size: 110%;
 }
 
 .input-list .input-row label {
@@ -387,8 +388,22 @@ body.logged-in .top-nav a:hover {
     flex-grow: 1;
 }
 
+.input-list .fa {
+    margin: 0 0.25em;
+    color: var(--dark-2);
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.input-list .fa:hover {
+    color: var(--dark-5);
+}
+
+.input-list .fa-trash {
+    cursor: pointer;
+}
+
 .input-list .fa-arrows-v {
-    color: #afafaf;
     cursor: grab;
     cursor: -webkit-grab;
     cursor: -moz-grab;
@@ -400,24 +415,8 @@ body.logged-in .top-nav a:hover {
     cursor: -moz-grabbing;
 }
 
-.input-list button.add-item {
-    width: 16px;
-    height: 16px;
-    margin: 0 0.25em;
-    border: 0;
+.input-list .fa-plus-square-o {
     cursor: pointer;
-    background: url("/images/add.png");
-}
-
-.input-list button.remove-item {
-    width: 16px;
-    height: 16px;
-    border: 0;
-    margin: 0 1em;
-    cursor: pointer;
-    background: url("/images/delete.png");
-    flex-grow: 0;
-    flex-shrink: 0;
 }
 
 .input-list .add-item-form {
@@ -451,9 +450,17 @@ body.logged-in .top-nav a:hover {
     display: flex;
     align-items: center;
     margin-bottom: 0.5em;
+    border-width: 1px 0;
+    border-color: transparent;
+    border-style: solid;
+}
+
+.input-list ul li:hover {
+    border-color: var(--light-1);
 }
 
 .input-list ul li .caption {
+    margin-left: 0.5em;
     cursor: pointer;
 }
 
@@ -518,15 +525,27 @@ body.logged-in .top-nav a:hover {
 }
 
 .section.spellbook .spell-list .checkbox-icon {
+    display: inline-block;
+    height: 16px;
     width: 16px;
     margin: 0 8px;
     border: 1px solid var(--light-1);
-    background-position: center;
-    background-repeat: no-repeat;
+    text-align: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+    color: black;
 }
 
-.section.spellbook .spell-list .checkbox-value.selected .checkbox-icon {
-    background-image: url("/images/tick.png");
+.section.spellbook .spell-list .checkbox-icon:before {
+    visibility: hidden;
+}
+
+.section.spellbook .spell-list .level-spells.visible .checkbox-value.selected .checkbox-icon {
+    background-color: var(--light-4);
+}
+
+.section.spellbook .spell-list .level-spells.visible .checkbox-value.selected .checkbox-icon:before {
+    visibility: visible;
 }
 
 .section.spellbook .spell-list .checkbox-value .name {

@@ -57,7 +57,7 @@
         <p><b>zyxxid.xyz</b> is a D&D 5e character sheet helper.</p>
         <p>Contact: <a href="mailto:me@zyxxid.xyz">me@zyxxid.xyz</a></p>
         <p>Spells from <a href="http://ephe.github.io/grimoire/">Grimoire</a></p>
-        <p>Icons from <a href="http://www.famfamfam.com/lab/icons/silk/">famfamfam</a></p>
+        <p>Icons from <a href="http://fontawesome.io">Font Awesome</a></p>
         <a href="#" class="close-window">Close</a>
       </div>
     </div>
@@ -127,7 +127,7 @@
           <div class="input-list" name="languages">
             <div class="title-row">
               <div class="title">Languages</div>
-              <button class="add-item" />
+              <i class="fa fa-plus-square-o"></i>
             </div>
             <ul></ul>
 
@@ -147,7 +147,7 @@
           <div class="input-list" name="classes">
             <div class="title-row">
               <div class="title">Classes and Levels</div>
-              <button class="add-item" />
+              <i class="fa fa-plus-square-o"></i>
             </div>
             <ul></ul>
 
@@ -172,7 +172,7 @@
           <div class="input-list" name="spellclasses">
             <div class="title-row">
               <div class="title">Spellcasting Classes</div>
-              <button class="add-item" />
+              <i class="fa fa-plus-square-o"></i>
             </div>
             <ul></ul>
 
@@ -204,7 +204,7 @@
           <div class="input-list" name="abilities">
             <div class="title-row">
               <div class="title">Abilities</div>
-              <button class="add-item" />
+              <i class="fa fa-plus-square-o"></i>
             </div>
             <ul></ul>
 
@@ -229,7 +229,7 @@
           <div class="input-list" name="traits">
             <div class="title-row">
               <div class="title">Traits, Ideals, Bonds, and Flaws</div>
-              <button class="add-item" />
+              <i class="fa fa-plus-square-o"></i>
             </div>
             <ul></ul>
 
@@ -441,7 +441,7 @@
           <div class="input-list" name="attacks">
             <div class="title-row">
               <div class="title">Attacks</div>
-              <button class="add-item" />
+              <i class="fa fa-plus-square-o"></i>
             </div>
             <ul></ul>
 
@@ -481,7 +481,7 @@
           <div class="input-list" name="resources">
             <div class="title-row">
               <div class="title">Resources</div>
-              <button class="add-item" />
+              <i class="fa fa-plus-square-o"></i>
             </div>
             <ul></ul>
 
@@ -513,7 +513,7 @@
           <div class="input-list" name="items">
             <div class="title-row">
               <div class="title">Items</div>
-              <button class="add-item" />
+              <i class="fa fa-plus-square-o"></i>
             </div>
             <ul></ul>
 
@@ -539,22 +539,22 @@
         <div class="section spellbook" name="spellbook">
           <div class="spell-list">
             <div class="spell-tags-selector level-spells visible">
-              <div class="spell-tags-header level-header">Spells from Classes</div>
-              <div class="spell-tag checkbox-value selected" value="bard"><div class="checkbox-icon"></div><div class="name">Bard</div></div>
-              <div class="spell-tag checkbox-value selected" value="cleric"><div class="checkbox-icon"></div><div class="name">Cleric</div></div>
-              <div class="spell-tag checkbox-value selected" value="druid"><div class="checkbox-icon"></div><div class="name">Druid</div></div>
-              <div class="spell-tag checkbox-value selected" value="paladin"><div class="checkbox-icon"></div><div class="name">Paladin</div></div>
-              <div class="spell-tag checkbox-value selected" value="ranger"><div class="checkbox-icon"></div><div class="name">Ranger</div></div>
-              <div class="spell-tag checkbox-value selected" value="sorcerer"><div class="checkbox-icon"></div><div class="name">Sorcerer</div></div>
-              <div class="spell-tag checkbox-value selected" value="warlock"><div class="checkbox-icon"></div><div class="name">Warlock</div></div>
-              <div class="spell-tag checkbox-value selected" value="wizard"><div class="checkbox-icon"></div><div class="name">Wizard</div></div>
+              <div class="spell-tags-header level-header">Filter by Class</div>
+              <div class="spell-tag checkbox-value selected" value="bard"><i class="fa fa-check checkbox-icon"></i><div class="name">Bard</div></div>
+              <div class="spell-tag checkbox-value selected" value="cleric"><i class="fa fa-check checkbox-icon"></i><div class="name">Cleric</div></div>
+              <div class="spell-tag checkbox-value selected" value="druid"><i class="fa fa-check checkbox-icon"></i><div class="name">Druid</div></div>
+              <div class="spell-tag checkbox-value selected" value="paladin"><i class="fa fa-check checkbox-icon"></i><div class="name">Paladin</div></div>
+              <div class="spell-tag checkbox-value selected" value="ranger"><i class="fa fa-check checkbox-icon"></i><div class="name">Ranger</div></div>
+              <div class="spell-tag checkbox-value selected" value="sorcerer"><i class="fa fa-check checkbox-icon"></i><div class="name">Sorcerer</div></div>
+              <div class="spell-tag checkbox-value selected" value="warlock"><i class="fa fa-check checkbox-icon"></i><div class="name">Warlock</div></div>
+              <div class="spell-tag checkbox-value selected" value="wizard"><i class="fa fa-check checkbox-icon"></i><div class="name">Wizard</div></div>
             </div>
 
             {% for level in spells.keys()|sort %}
             <div class="level-spells">
             <div class="level-header">{{ "Cantrips" if level == "0" else "Level " + level }}</div>
             {% for spell in spells[level] %}
-            <div class="spell-name checkbox-value {% for tag in spell["tags"] %} spell-tag-{{ tag }}{% endfor %}" spellid="{{ spell["id"] }}"><div class="checkbox-icon"></div><div class="name">{{ spell["name"] }}</div></div>
+            <div class="spell-name checkbox-value {% for tag in spell["tags"] %} spell-tag-{{ tag }}{% endfor %}" spellid="{{ spell["id"] }}"><i class="fa fa-check checkbox-icon"></i><div class="name">{{ spell["name"] }}</div></div>
             {% endfor %}
             </div>
             {% endfor %}
