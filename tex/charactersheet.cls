@@ -291,24 +291,26 @@
           \resources
         \end{tabularx}
       }
-
-      \ifdefempty{\abilities}{}{
-        \section*{Abilities}
-        \begin{itemize}[noitemsep]
-          \small\abilities
-        \end{itemize}
-      }
-
-      \ifdefempty{\equipment}{}{
-        \begin{multicols*}{3}[\section*{Equipment}]
-          \begin{itemize}[noitemsep]
-            \small\equipment
-          \end{itemize}
-        \end{multicols*}
-      }
     \end{minipage}
 
-    \pagebreak
+    \clearpage
+
+    \ifdefempty{\abilities}{}{
+      \section*{Abilities}
+      \begin{itemize}[noitemsep]
+        \small\abilities
+      \end{itemize}
+    }
+
+    \ifdefempty{\equipment}{}{
+      \begin{multicols*}{3}[\section*{Equipment}]
+        \begin{itemize}[noitemsep]
+          \small\equipment
+        \end{itemize}
+      \end{multicols*}
+    }
+
+    \clearpage
 
     \ifdefempty{\spells}{}{
       \begin{multicols}{\numspellcols}[\section*{Spells}]
