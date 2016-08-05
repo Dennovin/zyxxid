@@ -222,6 +222,7 @@ body.logged-in .top-nav a:hover {
 .main-body {
     width: 60em;
     margin: 0 auto;
+    padding-bottom: 2em;
     background-color: white;
     border-left: 1px solid var(--dark-5);
     border-right: 1px solid var(--dark-5);
