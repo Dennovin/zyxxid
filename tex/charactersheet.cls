@@ -3,7 +3,7 @@
 
 \LoadClass{article}
 
-\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb,setspace,multicol,multido}
+\usepackage{fontspec,tabularx,tabulary,fp,numprint,etoolbox,enumitem,cellspace,color,colortbl,titlesec,adjustbox,forloop,amssymb,setspace,multicol,multido,wrapfig,afterpage}
 \usepackage[margin=0.5in]{geometry}
 \usepackage[table]{xcolor}
 
@@ -167,9 +167,10 @@
     \vspace{0.5em}
 
     \rule{\textwidth}{0.4pt}
-    \vspace{0.5em}
 
+    \begin{wrapfigure}{l}{0.35\textwidth}
     \begin{minipage}[t]{0.30\textwidth}
+      \vspace{-2em}
       \section*{Attributes and Skills}
       \rowcolors{2}{oddrow}{evenrow}
       \noindent\begin{tabularx}{\linewidth}{ |X|Sc| }
@@ -266,17 +267,22 @@
     \begin{minipage}[t]{0.05\textwidth}
       \hspace{0.05\textwidth}
     \end{minipage}
-    \begin{minipage}[t]{0.65\textwidth}
 
-      \ifdefempty{\traits}{}{
+    \end{wrapfigure}
+
+    \afterpage{\clearpage}
+
+    \ifdefempty{\traits}{}{
+      \begin{samepage}
         \section*{Traits, Ideals, Bonds, and Flaws}
         \begin{itemize}[noitemsep]
           \small\traits
         \end{itemize}
-      }
+      \end{samepage}
+    }
 
       \section*{Attacks}
-      \noindent\begin{tabularx}{\textwidth}{ |X|Sc|Sc|Sc|Sc| }
+      \noindent\begin{tabularx}{0.65\textwidth}{ |X|Sc|Sc|Sc|Sc| }
         \hline
         \rowcolor{gray} \textbf{Attack} & \textbf{Hit Bonus} & \textbf{Damage} & \textbf{Type} & \textbf{Range} \\
         \attacks
@@ -284,7 +290,7 @@
 
       \ifdefempty{\resources}{}{
         \section*{Resources}
-        \noindent\begin{tabularx}{\textwidth}{ |X|Sl|Sc| }
+        \noindent\begin{tabularx}{0.65\textwidth}{ |X|Sl|Sc| }
           \hline
           \rowcolor{gray} \textbf{Resource Type} & & \textbf{Restored After} \\
           \hline
@@ -292,11 +298,15 @@
         \end{tabularx}
       }
 
+      \pagebreak[3]
+
       \ifdefempty{\abilities}{}{
-        \section*{Abilities}
-        \begin{itemize}[noitemsep]
-          \small\abilities
-        \end{itemize}
+        \begin{minipage}{0.65\textwidth}
+          \section*{Abilities}
+          \begin{itemize}[noitemsep]
+            \small\abilities
+          \end{itemize}
+        \end{minipage}
       }
 
       \ifdefempty{\equipment}{}{
@@ -306,9 +316,8 @@
           \end{itemize}
         \end{multicols*}
       }
-    \end{minipage}
 
-    \pagebreak
+    \clearpage
 
     \ifdefempty{\spells}{}{
       \begin{multicols}{\numspellcols}[\section*{Spells}]
