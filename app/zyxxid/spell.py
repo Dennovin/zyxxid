@@ -68,3 +68,6 @@ class Spell(database.RiakStorable):
 
         spell.description = spell.description.strip()
         return spell
+
+    def format_description(self):
+        return re.sub("\*\*(.*?)\*\*", "\\\\textbf{\\1}", self.description.strip())

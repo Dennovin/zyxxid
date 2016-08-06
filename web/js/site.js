@@ -401,7 +401,7 @@ var site = function() {
         $(".spell-details").addClass("loaded");
         $.each(details, function(name, value) {
             if(value.replace) {
-                value = value.replace("\n", "<br />").replace(/\*\*(.*?)\*\*/, "<b>$1</b>");
+                value = value.replace("\n", "<br />").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
             }
 
             $(".spell-detail[name=" + name + "]").html(value);

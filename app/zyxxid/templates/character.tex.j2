@@ -69,7 +69,7 @@
   {% endfor %}
 
   {% for spell in c.get_spells() %}
-  \addspell{{ "{" }}{{ spell.title }}{{ "}" }}{{ "{" }}{{ spell.ritual }}{{ "}" }}{{ "{" }}{{ spell.school }}{{ "}" }}{{ "{" }}{{ spell.level }}{{ "}" }}{{ "{" }}{{ spell.casttime }}{{ "}" }}{{ "{" }}{{ spell.range }}{{ "}" }}{{ "{" }}{{ spell.components }}{{ "}" }}{{ "{" }}{{ spell.duration }}{{ "}" }}{{ "{" }}{{ spell.description }}{{ "}" }}
+  \addspell{{ "{" }}{{ spell.title }}{{ "}" }}{{ "{" }}{{ spell.ritual }}{{ "}" }}{{ "{" }}{{ spell.school }}{{ "}" }}{{ "{" }}{{ spell.level }}{{ "}" }}{{ "{" }}{{ spell.casttime }}{{ "}" }}{{ "{" }}{{ spell.range }}{{ "}" }}{{ "{" }}{{ spell.components }}{{ "}" }}{{ "{" }}{{ spell.duration }}{{ "}" }}{{ "{" }}{{ spell.format_description() }}{{ "}" }}
   {% endfor %}
 
 \end{charactersheet}
