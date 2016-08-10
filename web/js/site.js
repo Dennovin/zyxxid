@@ -430,10 +430,14 @@ var site = function() {
     };
 
     var redoSpellList = function() {
-        $(".spell-name").addClass("untagged");
-        $(".spell-tag.selected").each(function() {
-            $(".spell-name.spell-tag-" + $(this).attr("value")).removeClass("untagged");
-        });
+        if($(".spell-tag.selected").length > 0) {
+            $(".spell-name").addClass("untagged");
+            $(".spell-tag.selected").each(function() {
+                $(".spell-name.spell-tag-" + $(this).attr("value")).removeClass("untagged");
+            });
+        } else {
+            $(".spell-name.untagged").removeClass("untagged");
+        }
     };
 
     var toggleCheckbox = function(e) {
