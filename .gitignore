@@ -67,3 +67,7 @@ tex/*.log
 
 # Passwords file
 passwords.yaml
+
+# Certificates
+certs/
+

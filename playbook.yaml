@@ -1,9 +1,27 @@
 ---
 - hosts: all
   become: yes
+
   vars_files:
   - passwords.yaml
+
+  handlers:
+  - name: reboot machine
+    shell: /sbin/reboot
+    ignore_errors: true
+    async: 1
+    poll: 0
+    notify: wait for machine to come back up
+
+  - name: wait for machine to come back up
+    local_action: wait_for host="{{ ansible_ssh_host }}" port="{{ ansible_ssh_port }}" delay=1 timeout=300
+    become: no
+
   tasks:
+  - name: set hostname
+    lineinfile: dest=/etc/hostname regexp=".*" line="{{ ansible_hostname }}"
+    notify: reboot machine
+
   - name: update apt cache
     apt: update_cache=yes cache_valid_time=86400
 
@@ -12,6 +30,9 @@
 
   - name: create app user
     user: name=zyxxid uid=2001 groups=zyxxid append=yes
+
+  - name: allow ansible user to sudo to app user without a password
+    lineinfile: 'dest=/etc/sudoers state=present regexp="{{ ansible_user }} ALL=\(zyxxid\)" line="{{ ansible_user }} ALL=(zyxxid) NOPASSWD: ALL" validate="visudo -cf %s"'
 
   - name: install packages for all systems
     apt: pkg={{ item }} state=present
@@ -120,11 +141,28 @@
   - name: restart uWSGI
     service: name=uwsgi state=restarted
 
+  - name: restart memcached
+    service: name=memcached state=restarted
+
   tasks:
-  - name: install nginx
+  - name: install packages
     apt: name={{ item }} state=present
     with_items:
     - nginx
+    - memcached
+
+  - name: set up memcached from template
+    template: src=templates/memcached.conf.j2 dest=/etc/memcached.conf owner=root mode=0644
+    notify: restart memcached
+
+  - name: start and enable memcached
+    service: name=memcached enabled=yes state=started
+
+  - name: copy SSL certificates
+    synchronize: src=certs/ dest=/data/certs/
+
+  - name: set permissions on SSL certificates
+    file: path=/data/certs state=directory recurse=yes owner=root group=www-data mode=0750
 
   - name: set up nginx from template
     template: src=templates/nginx.conf.j2 dest=/etc/nginx/sites-available/zyxxid owner=root mode=0644
@@ -175,15 +213,11 @@
   - name: restart Riak
     service: name=riak state=restarted
 
-  - name: restart memcached
-    service: name=memcached state=restarted
-
   tasks:
   - name: install database server packages
     apt: name={{ item }} state=present
     with_items:
     - rabbitmq-server
-    - memcached
 
   - name: download Riak
     get_url: url=http://s3.amazonaws.com/downloads.basho.com/riak/2.1/2.1.4/ubuntu/trusty/riak_2.1.4-1_amd64.deb dest=/tmp/riak_2.1.4-1_amd64.deb
@@ -200,13 +234,6 @@
 
   - name: add RabbitMQ user
     rabbitmq_user: user=zyxxid password={{ rabbitmq_password }} vhost=/ configure_priv=.* read_priv=.* write_priv=.* state=present
-
-  - name: set up memcached from template
-    template: src=templates/memcached.conf.j2 dest=/etc/memcached.conf owner=root mode=0644
-    notify: restart memcached
-
-  - name: start and enable memcached
-    service: name=memcached enabled=yes state=started
 
 
 - hosts: stats
