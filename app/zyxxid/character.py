@@ -83,6 +83,14 @@ class PDF(database.RiakStorableFile):
         return obj.id
 
 
+class Template(database.RiakStorable):
+    _indexes = ["name"]
+
+
+class TemplateFile(database.RiakStorableFile):
+    pass
+
+
 @celery_app.task
 def create_pdf(data):
     character = Character()
