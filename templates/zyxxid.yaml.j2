@@ -3,9 +3,12 @@ celery_broker: amqp://zyxxid:{{ rabbitmq_password }}@localhost/
 celery_result_backend: cache+memcached://localhost:11211/
 
 riak:
-  host: localhost
+  nodes:
+{% for host in groups["db"] %}
+  - host: {{ hostvars[host]["ansible_eth1"]["ipv4"]["address"] }}
+    port: 8098
+{% endfor %}
   protocol: pbc
-  port: 8098
 
 memcached_servers:
   - localhost:11211
