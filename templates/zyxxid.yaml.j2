@@ -1,6 +1,8 @@
 ---
-celery_broker: amqp://zyxxid:{{ rabbitmq_password }}@localhost/
-celery_result_backend: cache+memcached://localhost:11211/
+celery_broker:
+{% for host in groups["db"] %}
+  - amqp://zyxxid:{{ rabbitmq_password }}@{{ hostvars[host]["ansible_eth1"]["ipv4"]["address"] }}/
+{% endfor %}
 
 riak:
   nodes:
@@ -11,7 +13,9 @@ riak:
   protocol: pbc
 
 memcached_servers:
-  - localhost:11211
+{% for host in groups["web"] %}
+  - {{ hostvars[host]["ansible_eth1"]["ipv4"]["address"] }}:11211
+{% endfor %}
 
 oauth2_client_id: {{ oauth2_client_id }}
 oauth2_domain: zyxxid.xyz
