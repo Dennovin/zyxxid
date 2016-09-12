@@ -36,7 +36,7 @@ loading_messages = [
     "Starting lengthy argument about rules",
     "Checking for traps",
     "Painting miniatures",
-    "Casting Magic Missile",
+    "Casting Magic Missile at the darkness",
     "Adding dinosaurs to your campaign",
     "Turning campagin into fantasy football league",
     "Doing wizard things. You wouldn't understand.",
@@ -45,6 +45,8 @@ loading_messages = [
     "Ordering more pizza",
     "Dropping rocks on everyone",
     "Generating cryptic riddles",
+    "Brewing mysterious potions",
+    "Spilling mysterious potions",
 ]
 
 spell_list = None

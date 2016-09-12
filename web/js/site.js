@@ -368,7 +368,7 @@ var site = function() {
                 $(".pdf-message a.download-link").attr("href", data.url);
             } else {
                 $(".pdf-message .pdf-message-waiting").html(data.loading_message);
-                window.setTimeout(function() { requestPDF(url); }, 2000);
+                window.setTimeout(function() { requestPDF(url); }, 1000);
             }
         });
     };
