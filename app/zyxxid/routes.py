@@ -6,10 +6,14 @@ import random
 import simplejson
 import string
 
-from .apps import flask_app, memcached_client
+from .apps import flask_app
 from .character import Character, PDF, Template, create_pdf
 from .config import Config
 from .spell import Spell
+
+
+spells = None
+templates = None
 
 loading_messages = [
     "Splitting the party",
@@ -46,6 +50,9 @@ loading_messages = [
     "Dropping rocks on everyone",
     "Generating cryptic riddles",
 ]
+
+spell_list = None
+
 
 def get_loading_message():
     msg = random.choice(loading_messages)
@@ -186,7 +193,6 @@ def get_spell(spell_id):
 
 @flask_app.route("/", methods=["GET"])
 def index():
-    spells = memcached_client.get("spell_list")
     if spells is None:
         spell_names = sorted(Spell.list_index("title"), key=lambda i: i[0])
         spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
@@ -202,11 +208,7 @@ def index():
             spells[level] = spells.get(level, [])
             spells[level].append({"id": spell_id, "name": name, "tags": spell_tags.get(spell_id, []) })
 
-        memcached_client.set("spell_list", spells, time=3600)
-
-    templates = memcached_client.get("template_list")
     if templates is None:
         templates = sorted(Template.all(), key=lambda i: i.name)
-        memcached_client.set("template_list", templates, time=3600)
 
     return flask.render_template("index.html.j2", spells=spells, templates=templates)
