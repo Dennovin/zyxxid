@@ -3,6 +3,9 @@ var site = function() {
     var listData = {};
     var origIndex = null;
 
+    var loadingMessages = [
+    ];
+
     var showPopupMessage = function(message) {
         $(".popup-message").html(message).slideDown(200);
         window.setTimeout(function() {
@@ -230,7 +233,7 @@ var site = function() {
             data["spells"].push($(this).attr("spellid"));
         });
 
-        return JSON.stringify(data);
+        return data;
     };
 
     var showAbout = function(e) {
@@ -250,7 +253,7 @@ var site = function() {
         $.ajax({
             type: "POST",
             url: "/character",
-            data: getCharacterJSON(),
+            data: JSON.stringify(getCharacterJSON()),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -361,15 +364,16 @@ var site = function() {
         $.get(url).done(function(data, status, jqXHR) {
             if(data.ready) {
                 $.fileDownload(data.url);
-                $(".pdf-message").addClass("ready");
+                $(".pdf-message").addClass("ready").removeClass("generating");
                 $(".pdf-message a.download-link").attr("href", data.url);
             } else {
+                $(".pdf-message .pdf-message-waiting").html(data.loading_message);
                 window.setTimeout(function() { requestPDF(url); }, 2000);
             }
         });
     };
 
-    var generatePDF = function(e) {
+    var showPDFWindow = function(e) {
         e.stopPropagation();
         e.preventDefault();
 
@@ -380,11 +384,25 @@ var site = function() {
         }
 
         $(".overlay, .pdf-message").addClass("active");
+        $(".pdf-template li").removeClass("selected");
+        $(".pdf-template li:first").addClass("selected");
+    };
+
+    var generatePDF = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(".overlay, .pdf-message").addClass("generating");
+
+        data = getCharacterJSON();
+        data.template_name = $("select.pdf-template").val();
+
+        console.log(data);
 
         $.ajax({
             type: "POST",
             url: "/pdf",
-            data: getCharacterJSON(),
+            data: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -395,6 +413,13 @@ var site = function() {
 
     var clearError = function(e) {
         $(this).removeClass("error");
+    };
+
+    var changeTemplateDescription = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(".pdf-template-description").html($("select.pdf-template option:selected").attr("description"));
     };
 
     var showSpellDetails = function(details) {
@@ -463,6 +488,7 @@ var site = function() {
         .on("click", ".input-list .fa-plus-square-o", addItem)
         .on("click", ".input-list li .fa-trash", removeItem)
         .on("click", ".overlay, .close-window", overlayClose)
+        .on("click", ".overlay-window", function(e) { e.stopPropagation(); })
         .on("click", ".add-item-form button.save", addItemSaveClick)
         .on("click", ".add-item-form button.save-add", addItemSaveAddClick)
         .on("click", ".input-list li", editItem)
@@ -473,8 +499,10 @@ var site = function() {
         .on("click", ".character-list li div.caption", loadCharacterClick)
         .on("click", ".character-list li .fa-trash", deleteCharacterClick)
         .on("click", ".restore-character", restoreCharacter)
-        .on("click", "a.pdf", generatePDF)
+        .on("click", "a.pdf", showPDFWindow)
+        .on("click", "a.submit-pdf", generatePDF)
         .on("change", ".error", clearError)
+        .on("change", "select.pdf-template", changeTemplateDescription)
         .on("keydown", ".add-item-form", addItemKeypress)
         .on("click", ".spell-name", loadSpellDetails)
         .on("click", ".checkbox-icon", toggleCheckbox)

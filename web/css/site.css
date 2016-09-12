@@ -100,7 +100,7 @@ a {
     border: 1px solid black;
 }
 
-.overlay-window .close-window {
+.overlay-window .close-window, .pdf-choose-template .submit-pdf {
     margin: 2em auto 0 auto;
     display: block;
     width: 5em;
@@ -112,7 +112,7 @@ a {
     color: black;
 }
 
-.overlay-window .close-window:hover {
+.overlay-window .close-window:hover .pdf-choose-template .submit-pdf:hover {
     background-color: var(--light-4);
 }
 
@@ -594,12 +594,44 @@ body.logged-in .top-nav a:hover {
     margin-top: 1em;
 }
 
-.pdf-message .pdf-message-ready, .pdf-message .pdf-message-waiting {
-    margin: 1em;
+.pdf-message .pdf-choose-template {
+    display: block;
 }
 
-.pdf-message .pdf-message-ready {
+.pdf-message .pdf-waiting, .pdf-message .pdf-ready {
     display: none;
+}
+
+.pdf-message.generating .pdf-choose-template, .pdf-message.ready .pdf-choose-template {
+    display: none;
+}
+
+.pdf-message.generating .pdf-waiting {
+    display: block;
+}
+
+.pdf-message.ready .pdf-ready {
+    display: block;
+}
+
+.pdf-message ul.pdf-template li .template-name {
+    cursor: pointer;
+}
+
+.pdf-message ul.pdf-template li .template-description {
+    display: none;
+}
+
+.pdf-message ul.pdf-template li.selected .template-description {
+    display: block;
+}
+
+.pdf-choose-template .pdf-template-label, .pdf-choose-template select.pdf-template, .pdf-choose-template .pdf-template-description {
+    margin-bottom: 1em;
+}
+
+.pdf-message .pdf-message-ready, .pdf-message .pdf-message-waiting {
+    margin: 1em;
 }
 
 .pdf-message.ready .loading-bar {
@@ -612,6 +644,11 @@ body.logged-in .top-nav a:hover {
 
 .pdf-message.ready .pdf-message-waiting {
     display: none;
+}
+
+.pdf-message-waiting {
+    text-align: center;
+    font-style: italic;
 }
 
 .pdf-message .close-window {

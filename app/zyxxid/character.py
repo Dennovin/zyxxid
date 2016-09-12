@@ -57,27 +57,40 @@ class Character(database.RiakStorable):
 
 
 class PDF(database.RiakStorableFile):
-    output_dir = "/data/output"
+    output_base_dir = "/data/output"
 
     @classmethod
-    def create(cls, character):
-        with open(os.devnull, "w") as devnull, tempfile.NamedTemporaryFile(suffix=".tex", dir=cls.output_dir, delete=False) as tex_file:
+    def create(cls, character, template_name):
+        output_dir = os.path.join(cls.output_base_dir, template_name)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        template_id = Template.query("name", template_name)[0]
+        template = Template.fetch(template_id)
+
+        with open(os.devnull, "w") as devnull, tempfile.NamedTemporaryFile(suffix=".tex", dir=output_dir, delete=False) as tex_file:
             pdf_filename = os.path.splitext(tex_file.name)[0] + ".pdf"
 
-            template = jinja_env.get_template("character.tex.j2")
-            file_contents = template.render(c=character)
-            tex_file.write(file_contents.encode("utf-8"))
+            for template_file in template.files:
+                if template_file["filename"].endswith(".tex.j2"):
+                    jinja_template = jinja_env.from_string(TemplateFile.fetch(template_file["id"]).contents.decode("utf-8"))
+                    file_contents = jinja_template.render(c=character)
+                    tex_file.write(file_contents.encode("utf-8"))
+
+                elif not os.path.exists(os.path.join(output_dir, template_file["filename"])):
+                    with open(os.path.join(output_dir, template_file["filename"]), "wb") as out_fh:
+                        out_fh.write(TemplateFile.fetch(template_file["id"]).contents)
 
             process = subprocess.Popen(["/usr/bin/xelatex", "-halt-on-error", "-interaction=batchmode", tex_file.name],
-                                       cwd=cls.output_dir, stderr=devnull, stdout=devnull)
+                                       cwd=output_dir, stderr=devnull, stdout=devnull)
 
         process.wait(timeout=10)
         if process.returncode:
             print("fail")
 
-        obj = cls.store_from_file(os.path.join(cls.output_dir, pdf_filename))
+        obj = cls.store_from_file(os.path.join(output_dir, pdf_filename))
 
-        for fn in glob.glob(os.path.join(cls.output_dir, os.path.splitext(pdf_filename)[0]) + ".*"):
+        for fn in glob.glob(os.path.join(output_dir, os.path.splitext(pdf_filename)[0]) + ".*"):
             os.unlink(fn)
 
         return obj.id
@@ -92,7 +105,8 @@ class TemplateFile(database.RiakStorableFile):
 
 
 @celery_app.task
-def create_pdf(data):
+def create_pdf(data, template_name):
     character = Character()
     character.load_data(data)
-    return PDF.create(character)
+
+    return PDF.create(character, template_name)

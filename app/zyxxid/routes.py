@@ -2,13 +2,57 @@ import flask
 import http.client
 import oauth2client.client
 import oauth2client.crypt
+import random
 import simplejson
 import string
 
 from .apps import flask_app, memcached_client
-from .character import Character, PDF, create_pdf
+from .character import Character, PDF, Template, create_pdf
 from .config import Config
 from .spell import Spell
+
+loading_messages = [
+    "Splitting the party",
+    "Rolling for initiative",
+    "Stalling for time",
+    "Adding random character flaws",
+    "Folding pages in your spellbook",
+    "Translating into Draconic",
+    "Removing all vowels from character sheet",
+    "Redoing everything in Comic Sans",
+    "Defacing ancient Dwarven artifacts",
+    "Punting gnomes",
+    "Rolling sneak attack damage",
+    "Using up all your spell slots",
+    "Generating sarcastic animal companion",
+    "Making you a sandwich",
+    "Complaining",
+    "Feigning death",
+    "Killing the bard",
+    "Forging titles of nobility",
+    "Hi Mom!",
+    "Drastically underestimating encounters",
+    "Taking an extended rest",
+    "Starting lengthy argument about rules",
+    "Checking for traps",
+    "Painting miniatures",
+    "Casting Magic Missile",
+    "Adding dinosaurs to your campaign",
+    "Turning campagin into fantasy football league",
+    "Doing wizard things. You wouldn't understand.",
+    "Elfsplaining",
+    "Building dice towers",
+    "Ordering more pizza",
+    "Dropping rocks on everyone",
+    "Generating cryptic riddles",
+]
+
+def get_loading_message():
+    msg = random.choice(loading_messages)
+    if msg[-1].isalpha():
+        msg += "..."
+
+    return msg
 
 def verify_token(token):
     try:
@@ -97,10 +141,14 @@ def get_pdf(file_id, filename):
 @flask_app.route("/pdf", methods=["POST"])
 def submit_pdf():
     obj = flask.request.get_json()
-    task = create_pdf.delay(obj)
+    task = create_pdf.delay(obj, obj["template_name"])
     filename = "".join([i for i in obj["name"] if i in string.ascii_letters]) + ".pdf"
 
-    return json_response({"filename": filename, "status_url": flask.url_for("check_pdf_status", task_id=task.task_id, filename=filename)})
+    return json_response({
+        "filename": filename,
+        "status_url": flask.url_for("check_pdf_status", task_id=task.task_id, filename=filename),
+        "loading_message": get_loading_message(),
+    })
 
 @flask_app.route("/pdf/status/<task_id>/<filename>", methods=["GET"])
 def check_pdf_status(task_id, filename):
@@ -108,7 +156,7 @@ def check_pdf_status(task_id, filename):
     if result.ready():
         data = { "ready": True, "url": flask.url_for("get_pdf", file_id=result.result, filename=filename) }
     else:
-        data = { "ready": False }
+        data = { "ready": False, "loading_message": get_loading_message() }
 
     return json_response(data)
 
@@ -156,4 +204,9 @@ def index():
 
         memcached_client.set("spell_list", spells, time=3600)
 
-    return flask.render_template("index.html.j2", spells=spells)
+    templates = memcached_client.get("template_list")
+    if templates is None:
+        templates = sorted(Template.all(), key=lambda i: i.name)
+        memcached_client.set("template_list", templates, time=3600)
+
+    return flask.render_template("index.html.j2", spells=spells, templates=templates)
