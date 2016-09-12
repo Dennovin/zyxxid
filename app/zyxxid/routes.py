@@ -11,10 +11,6 @@ from .character import Character, PDF, Template, create_pdf
 from .config import Config
 from .spell import Spell
 
-
-spells = None
-templates = None
-
 loading_messages = [
     "Splitting the party",
     "Rolling for initiative",
@@ -193,6 +189,7 @@ def get_spell(spell_id):
 
 @flask_app.route("/", methods=["GET"])
 def index():
+    spells = getattr(flask.g, "_spells", None)
     if spells is None:
         spell_names = sorted(Spell.list_index("title"), key=lambda i: i[0])
         spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
@@ -208,7 +205,11 @@ def index():
             spells[level] = spells.get(level, [])
             spells[level].append({"id": spell_id, "name": name, "tags": spell_tags.get(spell_id, []) })
 
+        flask.g._spells = spells
+
+    templates = getattr(flask.g, "_templates", None)
     if templates is None:
         templates = sorted(Template.all(), key=lambda i: i.name)
+        flask.g._templates = templates
 
     return flask.render_template("index.html.j2", spells=spells, templates=templates)
