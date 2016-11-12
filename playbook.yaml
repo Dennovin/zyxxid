@@ -229,7 +229,7 @@
 
   - name: join Riak cluster
     command: /usr/sbin/riak-admin cluster join riak@{{ hostvars[groups["db"][0]]["ansible_eth1"]["ipv4"]["address"] }}
-    when: groups["db"][0] != ansible_hostname
+    when: groups["db"].index(inventory_hostname) > 0
 
   - name: add RabbitMQ user
     rabbitmq_user: user=zyxxid password={{ rabbitmq_password }} vhost=/ configure_priv=.* read_priv=.* write_priv=.* state=present
