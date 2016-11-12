@@ -291,22 +291,23 @@
           \resources
         \end{tabularx}
       }
-    \end{minipage}
 
-    \ifdefempty{\abilities}{}{
-      \section*{Abilities}
-      \begin{itemize}[noitemsep]
-        \small\abilities
-      \end{itemize}
-    }
-
-    \ifdefempty{\equipment}{}{
-      \begin{multicols*}{3}[\section*{Equipment}]
+      \ifdefempty{\abilities}{}{
+        \section*{Abilities}
         \begin{itemize}[noitemsep]
-          \small\equipment
+          \small\abilities
         \end{itemize}
-      \end{multicols*}
-    }
+      }
+
+      \ifdefempty{\equipment}{}{
+        \begin{multicols*}{3}[\section*{Equipment}]
+          \begin{itemize}[noitemsep]
+            \small\equipment
+          \end{itemize}
+        \end{multicols*}
+      }
+
+    \end{minipage}
 
     \clearpage
 
