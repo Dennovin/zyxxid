@@ -407,7 +407,8 @@ var site = function() {
                 "Content-Type": "application/json"
             }
         }).done(function(data) {
-            requestPDF(data["status_url"]);
+            $(".pdf-message .pdf-message-waiting").html(data.loading_message);
+            window.setTimeout(function() { requestPDF(data.status_url); }, 1000);
         });
     };
 
