@@ -1,7 +1,6 @@
 import celery
 import flask
 import jinja2
-import pylibmc
 
 from .config import Config
 
@@ -15,5 +14,3 @@ celery_app.CELERY_IGNORE_RESULT = False
 
 flask_app = flask.Flask(__name__)
 flask_app.jinja_env = jinja_env
-
-memcached_client = pylibmc.Client(Config.get("memcached_servers"), binary=True, behaviors={"tcp_nodelay": True, "ketama": True})

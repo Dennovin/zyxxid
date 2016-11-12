@@ -61,7 +61,6 @@
     - libffi-dev
     - libssl-dev
     - libyaml-0-2
-    - libmemcached-dev
 
   - name: synchronize app folder
     copy: src=app dest=/data/ force=yes owner=zyxxid group=zyxxid
@@ -136,22 +135,12 @@
   - name: restart uWSGI
     service: name=uwsgi state=restarted
 
-  - name: restart memcached
-    service: name=memcached state=restarted
 
   tasks:
   - name: install packages
     apt: name={{ item }} state=present
     with_items:
     - nginx
-    - memcached
-
-  - name: set up memcached from template
-    template: src=templates/memcached.conf.j2 dest=/etc/memcached.conf owner=root mode=0644
-    notify: restart memcached
-
-  - name: start and enable memcached
-    service: name=memcached enabled=yes state=started
 
   - name: copy SSL certificates
     synchronize: src=certs/ dest=/data/certs/
