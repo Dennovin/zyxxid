@@ -121,11 +121,6 @@
   - name: create output directory
     file: path=/data/output state=directory owner=zyxxid group=zyxxid
 
-  - name: copy files to output directory
-    copy: src=tex/{{ item }} dest=/data/output/ force=yes owner=zyxxid group=zyxxid
-    with_items:
-    - charactersheet.cls
-
   - name: set up celeryd from template
     template: src=templates/celeryd.j2 dest=/etc/default/celeryd owner=root mode=0644
 
