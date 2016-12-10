@@ -3,9 +3,6 @@ var site = function() {
     var listData = {};
     var origIndex = null;
 
-    var loadingMessages = [
-    ];
-
     var showPopupMessage = function(message) {
         $(".popup-message").html(message).slideDown(200);
         window.setTimeout(function() {
@@ -21,6 +18,14 @@ var site = function() {
         $(".section-nav a").removeClass("active");
         $(this).addClass("active");
         $(".section[name=" + $(this).attr("name") + "]").addClass("active");
+    };
+
+    var setPageTitle = function() {
+        if($.trim($(".character-name input").val())) {
+            document.title = $.trim($(".character-name input").val()) + " • zyxxid.xyz";
+        } else {
+            document.title = "zyxxid.xyz - character sheet templates for D&D 5e";
+        }
     };
 
     var formatListItem = function(listName, data) {
@@ -319,6 +324,8 @@ var site = function() {
             $(".overlay").removeClass("loading-character");
             $("body").removeClass("loading");
             $(".character-list").removeClass("active");
+
+            setPageTitle();
         });
     };
 
@@ -508,6 +515,7 @@ var site = function() {
         .on("click", ".spell-name", loadSpellDetails)
         .on("click", ".checkbox-icon", toggleCheckbox)
         .on("click", ".spell-list .level-header", toggleSpellSection)
+        .on("change", ".character-name", setPageTitle)
     ;
 
     $(".input-list").each(function() {
