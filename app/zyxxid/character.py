@@ -65,21 +65,18 @@ class PDF(database.RiakStorableFile):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        template_id = Template.query("name", template_name)[0]
-        template = Template.fetch(template_id)
-
+        template = Template(template_name)
         with open(os.devnull, "w") as devnull, tempfile.NamedTemporaryFile(suffix=".tex", dir=output_dir, delete=False) as tex_file:
             pdf_filename = os.path.splitext(tex_file.name)[0] + ".pdf"
 
             for template_file in template.files:
-                if template_file["filename"].endswith(".tex.j2"):
-                    jinja_template = jinja_env.from_string(TemplateFile.fetch(template_file["id"]).contents.decode("utf-8"))
-                    file_contents = jinja_template.render(c=character)
+                if template_file.filename.endswith(".tex.j2"):
+                    file_contents = template.render(c=character)
                     tex_file.write(file_contents.encode("utf-8"))
 
-                elif not os.path.exists(os.path.join(output_dir, template_file["filename"])):
-                    with open(os.path.join(output_dir, template_file["filename"]), "wb") as out_fh:
-                        out_fh.write(TemplateFile.fetch(template_file["id"]).contents)
+                elif not os.path.exists(os.path.join(output_dir, template_file.filename)):
+                    with open(os.path.join(output_dir, template_file.filename), "wb") as out_fh:
+                        out_fh.write(template_file.render().encode("utf-8"))
 
             process = subprocess.Popen(["/usr/bin/xelatex", "-halt-on-error", "-interaction=batchmode", tex_file.name],
                                        cwd=output_dir, stderr=devnull, stdout=devnull)
@@ -96,12 +93,26 @@ class PDF(database.RiakStorableFile):
         return obj.id
 
 
-class Template(database.RiakStorable):
-    _indexes = ["name"]
+class Template(object):
+    _templates = [
+        { "name": "default", "description": "The default character sheet. One page, plus spellbook." },
+        { "name": "twopage", "description": "Abilities and equipment moved to the second page." },
+        { "name": "spellbook", "description": "No character details, only the spellbook." },
+    ]
 
+    def __init__(self, name="default"):
+        info = next(filter(lambda x: x["name"] == name, self._templates), None)
+        for k, v in info.items():
+            setattr(self, k, v)
 
-class TemplateFile(database.RiakStorableFile):
-    pass
+    @classmethod
+    def list_templates(cls):
+        for info in cls._templates:
+            yield cls(name=info["name"])
+
+    def files(self):
+        for tmpl_fn in jinja_env.list_templates(filter_func=lambda x: x.startswith(self.name + "/")):
+            yield jinja_env.get_template(tmpl_fn)
 
 
 @celery_app.task
