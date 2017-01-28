@@ -1,4 +1,5 @@
 import flask
+import functools
 import http.client
 import oauth2client.client
 import oauth2client.crypt
@@ -70,6 +71,17 @@ def verify_token(token):
     except oauth2client.crypt.AppIdentityError:
         return False
 
+def login_required(func):
+    @functools.wraps(func)
+    def inner_func(*args, **kwargs):
+        idinfo = verify_token(flask.request.cookies.get("googletoken"))
+        if not idinfo:
+            return flask.make_response("", http.client.UNAUTHORIZED)
+
+        return func(idinfo["sub"], *args, **kwargs)
+
+    return inner_func
+
 def json_response(data):
     response = flask.make_response(simplejson.dumps(data))
     response.headers["Content-Type"] = "text/json"
@@ -82,20 +94,17 @@ def get_character(character_id):
     return json_response(character.flatten_data())
 
 @flask_app.route("/character", methods=["POST"])
-def post_character():
-    idinfo = verify_token(flask.request.cookies.get("googletoken"))
-    if not idinfo:
-        return flask.make_response("", http.client.UNAUTHORIZED)
-
+@login_required
+def post_character(user_id):
     obj = flask.request.get_json()
 
     if obj.get("character_id"):
         character = Character.fetch(obj["character_id"])
-        if character.user_id != idinfo["sub"]:
+        if character.user_id != user_id:
             return flask.make_response("", http.client.UNAUTHORIZED)
     else:
         character = Character()
-        character.user_id = idinfo["sub"]
+        character.user_id = user_id
 
     character.load_data(obj)
     id = character.store()
@@ -103,29 +112,34 @@ def post_character():
     return json_response({"id": id})
 
 @flask_app.route("/character/<character_id>", methods=["DELETE"])
-def delete_character(character_id):
+@login_required
+def delete_character(user_id, character_id):
     character = Character.fetch(character_id)
+    if character.user_id != user_id:
+        return flask.make_response("", http.client.UNAUTHORIZED)
+
     character.deleted = True
     character.store()
 
     return json_response({"id": character._id})
 
 @flask_app.route("/character/undelete/<character_id>", methods=["POST"])
-def undelete_character(character_id):
+@login_required
+def undelete_character(user_id, character_id):
     character = Character.fetch(character_id)
+    if character.user_id != user_id:
+        return flask.make_response("", http.client.UNAUTHORIZED)
+
     delattr(character, "deleted")
     character.store()
 
     return json_response({"id": character._id})
 
 @flask_app.route("/character", methods=["GET"])
-def list_characters():
-    idinfo = verify_token(flask.request.cookies.get("googletoken"))
-    if not idinfo:
-        return flask.make_response("", http.client.UNAUTHORIZED)
-
+@login_required
+def list_characters(user_id):
     characters = {}
-    for id in Character.query("user_id", idinfo["sub"]).results:
+    for id in Character.query("user_id", user_id).results:
         character = Character.fetch(id)
         if hasattr(character, "deleted") and character.deleted:
             continue
@@ -144,6 +158,7 @@ def get_pdf(file_id, filename):
     return response
 
 @flask_app.route("/pdf", methods=["POST"])
+@login_required
 def submit_pdf():
     obj = flask.request.get_json()
     task = create_pdf.delay(obj, obj["template_name"])
@@ -211,7 +226,8 @@ def index():
 
     templates = getattr(flask.g, "_templates", None)
     if templates is None:
-        templates = sorted(Template.all(), key=lambda i: i.name)
+        templates = sorted(Template.list_templates(), key=lambda i: i.name)
         flask.g._templates = templates
 
     return flask.render_template("index.html.j2", spells=spells, templates=templates)
+
