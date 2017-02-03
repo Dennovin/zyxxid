@@ -27,6 +27,7 @@ setup(
         "google-api-python-client",
         "statsd",
         "python-memcached",
+        "httplib2 < 0.10",
         ],
     scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
     )
