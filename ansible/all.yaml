@@ -1,0 +1,47 @@
+---
+- hosts: all
+  become: yes
+
+  vars_files:
+  - passwords.yaml
+
+  tasks:
+  - name: get external IP address
+    set_fact:
+      ip_address: "{{ hostvars[inventory_hostname][ext_interface]['ipv4']['address'] }}"
+
+    when: ip_address is not defined
+
+  - name: set hostname
+    lineinfile: dest=/etc/hostname regexp=".*" line="{{ ansible_hostname }}"
+
+  - name: update apt cache
+    apt: update_cache=yes cache_valid_time=86400
+
+  - name: create app group
+    group: name=zyxxid state=present gid=2001
+
+  - name: create app user
+    user: name=zyxxid uid=2001 groups=zyxxid append=yes
+
+  - name: allow ansible user to sudo to app user without a password
+    lineinfile: 'dest=/etc/sudoers state=present regexp="{{ ansible_user }} ALL=\(zyxxid\)" line="{{ ansible_user }} ALL=(zyxxid) NOPASSWD: ALL" validate="visudo -cf %s"'
+    when: ansible_user != "root"
+
+  - name: install packages for all systems
+    apt: pkg={{ item }} state=present
+    with_items:
+    - tmux
+    - git
+    - sudo
+    - nano
+
+  - name: create required directories
+    file: path={{ item }} state=directory owner=zyxxid group=zyxxid mode=0755
+    with_items:
+    - /data
+    - /data/etc
+    - /data/logs
+
+  - name: create config file
+    template: src=templates/zyxxid.yaml.j2 dest=/data/etc/zyxxid.yaml owner=zyxxid mode=0644

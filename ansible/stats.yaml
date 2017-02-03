@@ -1,0 +1,76 @@
+---
+- hosts: stats
+  vars_files:
+  - passwords.yaml
+
+  handlers:
+  - name: restart statsd
+    service: name=statsd state=restarted
+
+  - name: restart graphite-api
+    service: name=graphite-api state=restarted
+
+  - name: restart grafana
+    service: name=grafana-server state=restarted
+
+  tasks:
+  - name: add grafana repository
+    apt_repository: repo="deb https://packagecloud.io/grafana/stable/debian/ wheezy main" state=present update_cache=yes
+
+  - name: add packagecloud key
+    apt_key: url=https://packagecloud.io/gpg.key state=present
+
+  - name: install stats packages
+    apt: name={{ item }} state=present
+    with_items:
+    - graphite-carbon
+    - grafana
+    - python-virtualenv
+    - npm
+    - uwsgi
+
+  - name: set carbon to only listen on localhost
+    lineinfile: dest=/etc/carbon/carbon.conf regexp="^LINE_RECEIVER_INTERFACE" line="LINE_RECEIVER_INTERFACE = 127.0.0.1"
+
+  - name: start and enable carbon-cache
+    service: name=carbon-cache enabled=yes state=started
+
+  - name: install graphite-api into virtual environment
+    pip: name={{ item }} virtualenv=/data/graphite-api
+    with_items:
+    - graphite-api
+    - uwsgi
+    become: yes
+    become_user: zyxxid
+
+  - name: create graphite-api uwsgi config file from template
+    template: src=templates/graphite.ini.j2 dest=/data/etc/graphite.ini owner=root mode=0644
+    notify: restart graphite-api
+
+  - name: create graphite-api service from template
+    template: src=templates/graphite-api.service.j2 dest=/etc/systemd/system/graphite-api.service
+    notify: restart graphite-api
+
+  - name: start and enable graphite-api service
+    service: name=graphite-api enabled=yes state=started
+
+  - name: install statsd
+    npm: name=statsd path=/data/statsd
+
+  - name: create statsd config file from template
+    template: src=templates/statsd.js.j2 dest=/data/etc/statsd.js owner=root mode=0644
+    notify: restart statsd
+
+  - name: create statsd service from template
+    template: src=templates/statsd.service.j2 dest=/etc/systemd/system/statsd.service
+    notify: restart statsd
+
+  - name: start and enable statsd
+    service: name=statsd enabled=yes state=started
+
+  - name: create grafana config file from template
+    template: src=templates/grafana.ini.j2 dest=/etc/grafana/grafana.ini owner=root mode=0644
+    notify: restart grafana
+
+  - name: start and enable grafana
+    service: name=grafana-server enabled=yes state=started

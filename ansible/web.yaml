@@ -1,0 +1,74 @@
+---
+- hosts: web
+  handlers:
+  - name: restart nginx
+    service: name=nginx state=restarted
+    when: ansible_virtualization_type != "docker"
+
+  - name: restart uWSGI
+    service: name=uwsgi state=restarted
+    when: ansible_virtualization_type != "docker"
+
+  - name: restart memcached
+    service: name=memcached state=restarted
+    when: ansible_virtualization_type != "docker"
+
+  tasks:
+  - name: install packages
+    apt: name={{ item }} state=present
+    with_items:
+    - nginx
+    - memcached
+
+  - name: set up memcached from template
+    template: src=templates/memcached.conf.j2 dest=/etc/memcached.conf owner=root mode=0644
+    notify: restart memcached
+
+  - name: start and enable memcached
+    service: name=memcached enabled=yes state=started
+    when: ansible_virtualization_type != "docker"
+
+  - name: copy SSL certificates
+    synchronize: src=../certs/ dest=/data/certs/
+
+  - name: set permissions on SSL certificates
+    file: path=/data/certs state=directory recurse=yes owner=root group=www-data mode=0750
+
+  - name: set up nginx from template
+    template: src=templates/nginx.conf.j2 dest=/etc/nginx/sites-available/zyxxid owner=root mode=0644
+    notify: restart nginx
+
+  - name: enable nginx site
+    file: dest=/etc/nginx/sites-enabled/zyxxid src=/etc/nginx/sites-available/zyxxid state=link
+
+  - name: disable default nginx site
+    file: dest=/etc/nginx/sites-enabled/default state=absent
+
+  - name: remove default nginx files
+    file: dest=/etc/nginx/conf.d/{{ item }} state=absent
+    with_items:
+    - default.conf
+    - virtual.conf
+    - ssl.conf
+    notify: restart nginx
+
+  - name: add nginx user to app group
+    user: name=www-data groups=zyxxid append=yes
+
+  - name: set up uWSGI from template
+    template: src=templates/uwsgi.ini.j2 dest=/data/etc/uwsgi.ini
+    notify: restart uWSGI
+
+  - name: set up uWSGI service from template
+    template: src=templates/uwsgi.service.j2 dest=/etc/systemd/system/uwsgi.service
+    notify: restart uWSGI
+
+  - name: start and enable uWSGI
+    service: name=uwsgi enabled=yes state=started
+    when: ansible_virtualization_type != "docker"
+
+  - name: synchronize static web files
+    synchronize: src=../web/ dest=/data/www owner=no
+
+  - name: set owner of static web files
+    file: path=/data/www owner=www-data state=directory recurse=yes

@@ -1,0 +1,38 @@
+---
+- hosts: db
+  vars_files:
+  - passwords.yaml
+  handlers:
+  - name: restart Riak
+    service: name=riak state=restarted
+    when: ansible_virtualization_type != "docker"
+
+  tasks:
+  - name: install database server packages
+    apt: name={{ item }} state=present
+    with_items:
+    - rabbitmq-server
+
+  - name: download Riak
+    get_url: url=http://s3.amazonaws.com/downloads.basho.com/riak/2.1/2.1.4/ubuntu/trusty/riak_2.1.4-1_amd64.deb dest=/tmp/riak_2.1.4-1_amd64.deb
+
+  - name: install Riak
+    apt: deb=/tmp/riak_2.1.4-1_amd64.deb state=present
+
+  - name: set up Riak from template
+    template: src=templates/riak.conf.j2 dest=/etc/riak/riak.conf owner=root mode=0644
+    notify: restart Riak
+
+  - name: start and enable Riak
+    service: name=riak enabled=yes state=started
+    when: ansible_virtualization_type != "docker"
+
+  - name: join Riak cluster
+    command: /usr/sbin/riak-admin cluster join riak@{{ hostvars[groups["db"][0]]["ip_address"] }}
+    when: groups["db"].index(inventory_hostname) > 0
+
+  - name: start and enable RabbitMQ service
+    service: name=rabbitmq-server enabled=yes state=started
+
+  - name: add RabbitMQ user
+    rabbitmq_user: user=zyxxid password={{ rabbitmq_password }} vhost=/ configure_priv=.* read_priv=.* write_priv=.* state=present

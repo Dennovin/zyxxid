@@ -1,0 +1,52 @@
+- hosts: tex
+  handlers:
+  - name: unzip Aniron font
+    unarchive: src=/tmp/aniron.zip dest=/usr/local/share/fonts/ copy=no
+
+  - name: make swap
+    command: mkswap /swapfile
+    notify: mount swap
+
+  - name: mount swap
+    mount: name=none src=/swapfile fstype=swap opts=sw passno=0 dump=0 state=present
+
+  tasks:
+  - name: create swap file
+    command: fallocate -l 4G /swapfile
+    notify: make swap
+    args:
+      creates: /swapfile
+
+  - name: install LaTeX and celery requirements
+    apt: name={{ item }} state=present
+    with_items:
+    - celeryd
+    - fontconfig
+    - latex-xcolor
+    - texlive-generic-recommended
+    - texlive-latex-extra
+    - texlive-latex-recommended
+    - texlive-xetex
+    - unzip
+
+  - name: download PT Sans fonts
+    get_url: dest=/usr/local/share/fonts/{{ item }} url=https://github.com/google/fonts/blob/master/ofl/ptsans/{{ item }}?raw=true
+    with_items:
+    - PT_Sans-Web-Regular.ttf
+    - PT_Sans-Web-Bold.ttf
+    - PT_Sans-Web-Italic.ttf
+    - PT_Sans-Web-BoldItalic.ttf
+
+  - name: download Aniron font
+    get_url: dest=/tmp/aniron.zip url=http://dl.1001fonts.com/aniron.zip
+    notify: unzip Aniron font
+
+  - name: create output directory
+    file: path=/data/output state=directory owner=zyxxid group=zyxxid
+
+  - name: set up celeryd from template
+    template: src=templates/celeryd.j2 dest=/etc/default/celeryd owner=root mode=0644
+
+  - name: start and enable celeryd
+    service: name=celeryd enabled=yes state=started
+    when: ansible_virtualization_type != "docker"

@@ -1,20 +1,20 @@
 ---
 celery_broker:
 {% for host in groups["db"] %}
-  - amqp://zyxxid:{{ rabbitmq_password }}@{{ hostvars[host]["ansible_eth1"]["ipv4"]["address"] }}/
+  - amqp://zyxxid:{{ rabbitmq_password }}@{{ hostvars[host]["ip_address"] }}/
 {% endfor %}
 
 riak:
   nodes:
 {% for host in groups["db"] %}
-  - host: {{ hostvars[host]["ansible_eth1"]["ipv4"]["address"] }}
+  - host: {{ hostvars[host]["ip_address"] }}
     port: 8098
 {% endfor %}
   protocol: pbc
 
 memcached_servers:
 {% for host in groups["web"] %}
-  - {{ hostvars[host]["ansible_eth1"]["ipv4"]["address"] }}:11211
+  - {{ hostvars[host]["ip_address"] }}:11211
 {% endfor %}
 
 oauth2_client_id: {{ oauth2_client_id }}

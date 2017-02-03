@@ -1,0 +1,20 @@
+---
+- hosts: tex:web
+  tasks:
+  - name: install Python and required libraries
+    apt: name={{ item }} state=present
+    with_items:
+    - python3-pip
+    - python-virtualenv
+    - python-dev
+    - libffi-dev
+    - libssl-dev
+    - libyaml-0-2
+
+  - name: synchronize app folder
+    copy: src=../app dest=/data/ force=yes owner=zyxxid group=zyxxid
+
+  - name: install app into virtual environment
+    pip: name="file:///data/app" virtualenv=/data/venv virtualenv_python=python3.5
+    become: yes
+    become_user: zyxxid
