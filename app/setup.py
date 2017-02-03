@@ -26,6 +26,7 @@ setup(
         "simplejson",
         "google-api-python-client",
         "statsd",
+        "python-memcached",
         ],
     scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
     )
