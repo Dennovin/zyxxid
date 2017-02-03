@@ -89,8 +89,14 @@ def json_response(data):
     return response
 
 @flask_app.route("/character/<character_id>", methods=["GET"])
-def get_character(character_id):
+@login_required
+def get_character(user_id, character_id):
     character = Character.fetch(character_id)
+    if not character:
+        return flask.make_response("", http.client.NOT_FOUND)
+    if character.user_id != user_id:
+            return flask.make_response("", http.client.UNAUTHORIZED)
+
     return json_response(character.flatten_data())
 
 @flask_app.route("/character", methods=["POST"])
