@@ -1,5 +1,6 @@
 ---
 - hosts: tex:web
+  become: yes
   tasks:
   - name: install Python and required libraries
     apt: name={{ item }} state=present
@@ -12,7 +13,14 @@
     - libyaml-0-2
 
   - name: synchronize app folder
-    copy: src=../app dest=/data/ force=yes owner=zyxxid group=zyxxid
+    synchronize:
+      src: ../app
+      dest: /data/
+      rsync_opts:
+        - "--exclude=.git"
+
+  - name: set permissions on app folder
+    file: path=/data/app state=directory owner=zyxxid group=zyxxid recurse=yes
 
   - name: install app into virtual environment
     pip: name="file:///data/app" virtualenv=/data/venv virtualenv_python=python3.5

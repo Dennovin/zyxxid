@@ -1,0 +1,15 @@
+[web]
+198.199.88.241
+
+[tex]
+198.199.88.241
+
+[db]
+198.199.88.241
+
+[stats]
+198.199.88.241
+
+[all:vars]
+ext_interface=ansible_eth1
+ansible_ssh_user=root

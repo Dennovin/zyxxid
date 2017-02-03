@@ -1,4 +1,5 @@
 - hosts: tex
+  become: yes
   handlers:
   - name: unzip Aniron font
     unarchive: src=/tmp/aniron.zip dest=/usr/local/share/fonts/ copy=no
