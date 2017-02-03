@@ -195,7 +195,7 @@ a {
     color: #8f8f8f;
 }
 
-body.logged-in .top-nav a, .top-nav a.pdf, .top-nav a.new, .top-nav a.about {
+body.logged-in .top-nav a, .top-nav a.pdf, .top-nav a.new, .top-nav a.about, .top-nav a.share {
     border: 1px solid var(--dark-5);
     background-color: var(--light-2);
     color: black;
@@ -656,5 +656,13 @@ body.logged-in .top-nav a:hover {
 }
 
 .pdf-message.ready .close-window {
+    visibility: visible;
+}
+
+.share-link-window .share-link-ready, .share-link-window.ready .share-link-waiting {
+    visibility: hidden;
+}
+
+.share-link-window.ready .share-link-ready {
     visibility: visible;
 }

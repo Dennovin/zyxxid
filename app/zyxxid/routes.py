@@ -8,7 +8,7 @@ import simplejson
 import string
 
 from .apps import flask_app
-from .character import Character, PDF, Template, create_pdf
+from .character import Character, PDF, Template, ShareLink, create_pdf
 from .config import Config
 from .spell import Spell
 
@@ -117,6 +117,22 @@ def post_character(user_id):
 
     return json_response({"id": id})
 
+@flask_app.route("/character/share", methods=["POST"])
+def share_character():
+    obj = flask.request.get_json()
+
+    share_link = ShareLink.from_character_info(obj)
+    share_link.store()
+
+    return json_response({"link_id": share_link.id})
+
+@flask_app.route("/shared/<link_id>", methods=["GET"])
+def get_shared_character(link_id):
+    share_link = ShareLink.fetch(link_id)
+    character = share_link.copy_to_character()
+
+    return json_response(character.flatten_data())
+
 @flask_app.route("/character/<character_id>", methods=["DELETE"])
 @login_required
 def delete_character(user_id, character_id):
@@ -211,7 +227,8 @@ def get_spell(spell_id):
     return json_response(spell.__dict__)
 
 @flask_app.route("/", methods=["GET"])
-def index():
+@flask_app.route("/shared/<share_link_id>", methods=["GET"])
+def index(share_link_id=None):
     spells = getattr(flask.g, "_spells", None)
     if spells is None:
         spell_names = sorted(Spell.list_index("title"), key=lambda i: i[0])
@@ -236,4 +253,3 @@ def index():
         flask.g._templates = templates
 
     return flask.render_template("index.html.j2", spells=spells, templates=templates)
-

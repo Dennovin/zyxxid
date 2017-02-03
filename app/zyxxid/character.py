@@ -1,8 +1,10 @@
 from datetime import datetime
+import copy
 import glob
 import os
 import subprocess
 import tempfile
+import time
 import yaml
 
 from . import database
@@ -114,6 +116,25 @@ class Template(object):
         for tmpl_fn in jinja_env.list_templates(filter_func=lambda x: x.startswith(self.name + "/")):
             yield jinja_env.get_template(tmpl_fn)
 
+
+class ShareLink(database.RiakStorable):
+    @classmethod
+    def from_character_info(cls, info):
+        obj = cls()
+        obj.create_timestamp = time.time()
+        obj.character_data = info
+
+        return obj
+
+    def copy_to_character(self):
+        character = Character()
+        character.__dict__ = copy.deepcopy(self.character_data)
+
+        for k in "_id", "user_id":
+            if hasattr(character, k):
+                delattr(character, k)
+
+        return character
 
 @celery_app.task
 def create_pdf(data, template_name):

@@ -295,10 +295,40 @@ var site = function() {
         });
     };
 
+    var shareCharacter = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(".overlay").addClass("active");
+        $(".share-link-window").addClass("active loading");
+
+        $.ajax({
+            type: "POST",
+            url: "/character/share",
+            data: JSON.stringify(getCharacterJSON()),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).done(function(data) {
+            $(".share-link-window").removeClass("loading").addClass("ready");
+
+            var url = "https://" + window.location.hostname + window.location.pathname + "#s=" + data["link_id"];
+            $("a.share-link").attr("href", url).html(url);
+        });
+    };
+
     var loadCharacter = function(id) {
         window.location.hash = id;
+        return loadCharacterFromURL("/character/" + id);
+    };
+
+    var loadSharedCharacter = function(id) {
+        return loadCharacterFromURL("/shared/" + id);
+    };
+
+    var loadCharacterFromURL = function(url) {
         $("body").addClass("loading");
-        $.get("/character/" + id).done(function(data) {
+        $.get(url).done(function(data) {
             $(".character-name input").val(data["name"]);
             $(".character-id").val(data["character_id"]);
 
@@ -504,6 +534,7 @@ var site = function() {
         .on("click", "a.about", showAbout)
         .on("click", "a.save", saveCharacter)
         .on("click", "a.load", loadCharacterList)
+        .on("click", "a.share", shareCharacter)
         .on("click", ".character-list li div.caption", loadCharacterClick)
         .on("click", ".character-list li .fa-trash", deleteCharacterClick)
         .on("click", ".restore-character", restoreCharacter)
@@ -523,7 +554,11 @@ var site = function() {
     });
 
     if(window.location.hash) {
-        loadCharacter(window.location.hash.replace("#", ""));
+        if(window.location.hash.startsWith("#s=")) {
+            loadSharedCharacter(window.location.hash.replace("#s=", ""));
+        } else {
+            loadCharacter(window.location.hash.replace("#", ""));
+        }
     }
 };
 
