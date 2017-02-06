@@ -227,7 +227,6 @@ def get_spell(spell_id):
     return json_response(spell.__dict__)
 
 @flask_app.route("/", methods=["GET"])
-@flask_app.route("/shared/<share_link_id>", methods=["GET"])
 def index(share_link_id=None):
     spells = getattr(flask.g, "_spells", None)
     if spells is None:
