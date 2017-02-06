@@ -80,7 +80,7 @@ class RiakStorable(object):
             yield from cls.fetch_multi(keys)
 
     def export(self, fh):
-        yaml.dump(self.__dict__, fh, encoding="utf-8")
+        yaml.dump(self.__dict__, fh, encoding="utf-8", explicit_start=True)
 
     @classmethod
     def export_all(cls, filename):
