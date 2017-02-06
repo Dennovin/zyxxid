@@ -7,7 +7,7 @@ import random
 import simplejson
 import string
 
-from .apps import flask_app
+from .apps import flask_app, flask_cache
 from .character import Character, PDF, Template, ShareLink, create_pdf
 from .config import Config
 from .spell import Spell
@@ -203,6 +203,7 @@ def check_pdf_status(task_id, filename):
     return json_response(data)
 
 @flask_app.route("/spells/by-tag/<tag>", methods=["GET"])
+@flask_cache.cached(timeout=3600)
 def list_spells_by_tag(tag):
     spell_names = {i[1]: i[0] for i in Spell.list_index("title")}
     spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
@@ -213,6 +214,7 @@ def list_spells_by_tag(tag):
     return json_response(data)
 
 @flask_app.route("/spells", methods=["GET"])
+@flask_cache.cached(timeout=3600)
 def list_spells():
     spell_names = Spell.list_index("title")
     spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
@@ -222,33 +224,28 @@ def list_spells():
     return json_response(data)
 
 @flask_app.route("/spell/<spell_id>", methods=["GET"])
+@flask_cache.cached(timeout=3600)
 def get_spell(spell_id):
     spell = Spell.fetch(spell_id)
     return json_response(spell.__dict__)
 
 @flask_app.route("/", methods=["GET"])
+@flask_cache.cached(timeout=3600)
 def index(share_link_id=None):
-    spells = getattr(flask.g, "_spells", None)
-    if spells is None:
-        spell_names = sorted(Spell.list_index("title"), key=lambda i: i[0])
-        spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
+    spell_names = sorted(Spell.list_index("title"), key=lambda i: i[0])
+    spell_levels = {i[1]: i[0] for i in Spell.list_index("level")}
 
-        spell_tags = {}
-        for tag, spell_id in Spell.list_index("tags"):
-            spell_tags[spell_id] = spell_tags.get(spell_id, [])
-            spell_tags[spell_id].append(tag)
+    spell_tags = {}
+    for tag, spell_id in Spell.list_index("tags"):
+        spell_tags[spell_id] = spell_tags.get(spell_id, [])
+        spell_tags[spell_id].append(tag)
 
-        spells = {}
-        for name, spell_id in spell_names:
-            level = spell_levels[spell_id]
-            spells[level] = spells.get(level, [])
-            spells[level].append({"id": spell_id, "name": name, "tags": spell_tags.get(spell_id, []) })
+    spells = {}
+    for name, spell_id in spell_names:
+        level = spell_levels[spell_id]
+        spells[level] = spells.get(level, [])
+        spells[level].append({"id": spell_id, "name": name, "tags": spell_tags.get(spell_id, []) })
 
-        flask.g._spells = spells
-
-    templates = getattr(flask.g, "_templates", None)
-    if templates is None:
-        templates = sorted(Template.list_templates(), key=lambda i: i.name)
-        flask.g._templates = templates
+    templates = sorted(Template.list_templates(), key=lambda i: i.name)
 
     return flask.render_template("index.html.j2", spells=spells, templates=templates)

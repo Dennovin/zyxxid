@@ -17,6 +17,7 @@ setup(
     },
     install_requires=[
         "flask",
+        "Flask-Cache",
         "riak",
         "PyYAML",
         "uWSGI",

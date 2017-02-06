@@ -1,5 +1,6 @@
 import celery
 import flask
+import flask.ext.cache
 import jinja2
 
 from .config import Config
@@ -14,3 +15,4 @@ celery_app.CELERY_IGNORE_RESULT = False
 
 flask_app = flask.Flask(__name__)
 flask_app.jinja_env = jinja_env
+flask_cache = flask.ext.cache.Cache(flask_app, config={"CACHE_TYPE": "simple"})
