@@ -35,6 +35,7 @@
     - git
     - sudo
     - nano
+    - mosh
 
   - name: create required directories
     file: path={{ item }} state=directory owner=zyxxid group=zyxxid mode=0755
