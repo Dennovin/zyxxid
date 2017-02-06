@@ -1,5 +1,7 @@
+import gzip
 import riak
 import uuid
+import yaml
 
 from .config import Config
 
@@ -8,6 +10,15 @@ client = riak.RiakClient(**Config.get("riak"))
 
 class RiakStorable(object):
     _indexes = []
+
+    def __str__(self):
+        if hasattr(self, "_id"):
+            return "<{} {}>".format(self.__class__.__name__, self.id)
+        else:
+            return "<unsaved {} object>".format(self.__class__.__name__)
+
+    def __repr__(self):
+        return self.__str__()
 
     @classmethod
     def bucket(cls):
@@ -37,10 +48,14 @@ class RiakStorable(object):
         return self.id
 
     @classmethod
-    def from_riak_obj(cls, riak_obj):
+    def from_dict(cls, data):
         obj = cls()
-        obj.__dict__ = riak_obj.data
+        obj.__dict__ = data
         return obj
+
+    @classmethod
+    def from_riak_obj(cls, riak_obj):
+        return cls.from_dict(riak_obj.data)
 
     @classmethod
     def fetch(cls, key):
@@ -48,11 +63,8 @@ class RiakStorable(object):
 
     @classmethod
     def fetch_multi(cls, keys):
-        objs = []
         for obj in cls.bucket().multiget(keys):
-            objs.append(cls.from_riak_obj(obj))
-
-        return objs
+            yield cls.from_riak_obj(obj)
 
     @classmethod
     def query(cls, index, value):
@@ -64,11 +76,24 @@ class RiakStorable(object):
 
     @classmethod
     def all(cls):
-        objs = []
         for keys in cls.bucket().stream_keys():
-            objs.extend([cls.from_riak_obj(i) for i in cls.bucket().multiget(keys)])
+            yield from cls.fetch_multi(keys)
 
-        return objs
+    def export(self, fh):
+        yaml.dump(self.__dict__, fh, encoding="utf-8")
+
+    @classmethod
+    def export_all(cls, filename):
+        with gzip.open(filename, "wb") as fh:
+            for obj in cls.all():
+                obj.export(fh)
+
+    @classmethod
+    def import_all(cls, filename):
+        with gzip.open(filename, "rb") as fh:
+            for data in yaml.load_all(fh):
+                cls.from_dict(data).store()
+
 
 class RiakStorableFile(RiakStorable):
     def store(self):
