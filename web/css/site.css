@@ -131,6 +131,23 @@ a {
     margin: 0 0 1em 1em;
 }
 
+.fixed-container {
+    width: inherit;
+    position: fixed;
+    background: white;
+}
+
+.top-nav-spacer {
+    visibility: hidden;
+    font-size: 125%;
+    padding-top: 23px;
+}
+
+.section-nav-spacer {
+    visibility: hidden;
+    font-size: 300%;
+    padding-top: 13px;
+}
 
 .popup-message {
     display: none;
@@ -164,6 +181,7 @@ a {
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    width: 100%;
 }
 
 .top-nav {
@@ -554,6 +572,22 @@ body.logged-in .top-nav a:hover {
 
 .section.spellbook .spell-list .checkbox-value:hover {
     background-color: var(--light-5);
+}
+
+.section.spellbook .spell-details-container {
+    position: fixed;
+    width: 60em;
+    background: transparent;
+    pointer-events: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.section.spellbook .spell-details-container .spell-details-left-spacer {
+    visibility: hidden;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding-left: 34px;
 }
 
 .section.spellbook .spell-details {

@@ -110,31 +110,37 @@
     </div>
 
     <div class="body-container">
-      <div class="top-nav">
-        <div class="title">zyxxid.xyz</div>
+      <div class="fixed-container">
+        <div class="top-nav">
+          <div class="title">zyxxid.xyz</div>
 
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
-        <a class="about" href="#">About</a>
-        <a class="new" href="/">New</a>
-        <a class="save" href="#">Save</a>
-        <a class="load" href="#">Load</a>
-        <a class="share" href="#">Share</a>
-        <a class="pdf" href="#">Generate PDF</a>
+          <div class="g-signin2" data-onsuccess="onSignIn"></div>
+          <a class="about" href="#">About</a>
+          <a class="new" href="/">New</a>
+          <a class="save" href="#">Save</a>
+          <a class="load" href="#">Load</a>
+          <a class="share" href="#">Share</a>
+          <a class="pdf" href="#">Generate PDF</a>
+        </div>
       </div>
+      <div class="top-nav-spacer">&nbsp;</div>
 
       <div class="main-body">
-        <div class="character-name">
-          <input type="text" name="name" placeholder="Character Name" />
-        </div>
+        <div class="fixed-container">
+          <div class="character-name">
+            <input type="text" name="name" placeholder="Character Name" />
+          </div>
 
-        <div class="section-nav">
-          <a href="#" name="basics" class="active">Basics</a>
-          <a href="#" name="abilities">Ability Scores</a>
-          <a href="#" name="skills">Skill Proficiencies</a>
-          <a href="#" name="attacks">Attacks and Resources</a>
-          <a href="#" name="inventory">Inventory</a>
-          <a href="#" name="spellbook">Spellbook</a>
+          <div class="section-nav">
+            <a href="#" name="basics" class="active">Basics</a>
+            <a href="#" name="abilities">Ability Scores</a>
+            <a href="#" name="skills">Skill Proficiencies</a>
+            <a href="#" name="attacks">Attacks and Resources</a>
+            <a href="#" name="inventory">Inventory</a>
+            <a href="#" name="spellbook">Spellbook</a>
+          </div>
         </div>
+        <div class="section-nav-spacer">&nbsp;</div>
 
         <div class="character-list">
           <div class="title">Your Saved Characters</div>
@@ -610,14 +616,24 @@
             {% endfor %}
           </div>
 
-          <div class="spell-details">
-            <div class="spell-detail-row spell-detail" name="title"></div>
-            <div class="spell-detail-row spell-detail" name="school"></div>
-            <div class="spell-detail-row">Casting Time: <div class="spell-detail" name="casttime"></div></div>
-            <div class="spell-detail-row">Range: <div class="spell-detail" name="range"></div></div>
-            <div class="spell-detail-row">Components: <div class="spell-detail" name="components"></div></div>
-            <div class="spell-detail-row">Duration: <div class="spell-detail" name="duration"></div></div>
-            <div class="spell-detail" name="description"></div>
+          <div class="spell-details-container">
+            <div class="spell-details-left-spacer">
+              {% for level in spells.keys()|sort %}
+              {% for spell in spells[level] %}
+              <div class="dummy-spell-name"><i class="fa fa-check checkbox-icon"></i><div class="name">{{ spell["name"] }}</div></div>
+              {% endfor %}
+              {% endfor %}
+            </div>
+
+            <div class="spell-details">
+              <div class="spell-detail-row spell-detail" name="title"></div>
+              <div class="spell-detail-row spell-detail" name="school"></div>
+              <div class="spell-detail-row">Casting Time: <div class="spell-detail" name="casttime"></div></div>
+              <div class="spell-detail-row">Range: <div class="spell-detail" name="range"></div></div>
+              <div class="spell-detail-row">Components: <div class="spell-detail" name="components"></div></div>
+              <div class="spell-detail-row">Duration: <div class="spell-detail" name="duration"></div></div>
+              <div class="spell-detail" name="description"></div>
+            </div>
           </div>
 
         </div>
