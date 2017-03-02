@@ -180,7 +180,6 @@ def get_pdf(file_id, filename):
     return response
 
 @flask_app.route("/pdf", methods=["POST"])
-@login_required
 def submit_pdf():
     obj = flask.request.get_json()
     task = create_pdf.delay(obj, obj["template_name"])
