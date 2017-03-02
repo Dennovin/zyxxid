@@ -39,7 +39,7 @@ class Character(database.RiakStorable):
         return flattened_data
 
     def get_spells(self):
-        return Spell.fetch_multi(self.spells)
+        return list(Spell.fetch_multi(self.spells))
 
     @classmethod
     def load_from_file(cls, filename):
@@ -97,9 +97,9 @@ class PDF(database.RiakStorableFile):
 
 class Template(object):
     _templates = [
-        { "name": "default", "description": "The default character sheet. One page, plus spellbook." },
-        { "name": "twopage", "description": "Abilities and equipment moved to the second page." },
-        { "name": "spellbook", "description": "No character details, only the spellbook." },
+        { "name": "default", "display_name": "Default Character Sheet", "description": "The default character sheet. One page, plus spellbook." },
+        { "name": "twopage", "display_name": "Two-Page Character Sheet", "description": "Abilities and equipment moved to the second page." },
+        { "name": "spellbook", "display_name": "Spellbook Only", "description": "No character details, only the spellbook." },
     ]
 
     def __init__(self, name="default"):
