@@ -22,7 +22,7 @@
     - memcached
 
   - name: set up memcached from template
-    template: src=templates/memcached.conf.j2 dest=/etc/memcached.conf owner=root mode=0644
+    template: src=memcached.conf.j2 dest=/etc/memcached.conf owner=root mode=0644
     notify: restart memcached
 
   - name: start and enable memcached
@@ -36,7 +36,7 @@
     file: path=/data/certs state=directory recurse=yes owner=root group=www-data mode=0750
 
   - name: set up nginx from template
-    template: src=templates/nginx.conf.j2 dest=/etc/nginx/sites-available/zyxxid owner=root mode=0644
+    template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/zyxxid owner=root mode=0644
     notify: restart nginx
 
   - name: enable nginx site
@@ -57,11 +57,11 @@
     user: name=www-data groups=zyxxid append=yes
 
   - name: set up uWSGI from template
-    template: src=templates/uwsgi.ini.j2 dest=/data/etc/uwsgi.ini
+    template: src=uwsgi.ini.j2 dest=/data/etc/uwsgi.ini
     notify: restart uWSGI
 
   - name: set up uWSGI service from template
-    template: src=templates/uwsgi.service.j2 dest=/etc/systemd/system/uwsgi.service
+    template: src=uwsgi.service.j2 dest=/etc/systemd/system/uwsgi.service
     notify: restart uWSGI
 
   - name: start and enable uWSGI
@@ -73,3 +73,11 @@
 
   - name: set owner of static web files
     file: path=/data/www owner=www-data state=directory recurse=yes
+
+  - name: automatically renew certificate
+    cron:
+      name: renew certificates
+      minute: 0
+      hour: 0
+      day: 25
+      job: "letsencrypt renew && cp /etc/letsencrypt/live/zyxxid.xyz/* /data/certs/ && service nginx reload"

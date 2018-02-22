@@ -5,7 +5,7 @@ import jinja2
 
 from .config import Config
 
-jinja_env = jinja2.Environment(loader=jinja2.PackageLoader(__name__, "templates"))
+jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(Config.get("template_dir")))
 
 result_backend = "cache+memcached://{}/".format(";".join(Config.get("memcached_servers")))
 celery_app = celery.Celery("zyxxid", broker=Config.get("celery_broker"), backend=result_backend)

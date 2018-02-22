@@ -21,7 +21,7 @@
     apt: deb=/tmp/riak_2.1.4-1_amd64.deb state=present
 
   - name: set up Riak from template
-    template: src=templates/riak.conf.j2 dest=/etc/riak/riak.conf owner=root mode=0644
+    template: src=riak.conf.j2 dest=/etc/riak/riak.conf owner=root mode=0644
     notify: restart Riak
 
   - name: start and enable Riak

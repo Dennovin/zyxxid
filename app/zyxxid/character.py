@@ -71,9 +71,9 @@ class PDF(database.RiakStorableFile):
         with open(os.devnull, "w") as devnull, tempfile.NamedTemporaryFile(suffix=".tex", dir=output_dir, delete=False) as tex_file:
             pdf_filename = os.path.splitext(tex_file.name)[0] + ".pdf"
 
-            for template_file in template.files:
+            for template_file in template.files():
                 if template_file.filename.endswith(".tex.j2"):
-                    file_contents = template.render(c=character)
+                    file_contents = template_file.render(c=character)
                     tex_file.write(file_contents.encode("utf-8"))
 
                 elif not os.path.exists(os.path.join(output_dir, template_file.filename)):

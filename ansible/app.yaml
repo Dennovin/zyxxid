@@ -26,3 +26,10 @@
     pip: name="file:///data/app" virtualenv=/data/venv virtualenv_python=python3.5
     become: yes
     become_user: zyxxid
+
+  - name: copy template directory
+    synchronize:
+      src: ../templates
+      dest: /data/
+      rsync_opts:
+        - "--exclude=.git"

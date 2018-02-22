@@ -45,4 +45,4 @@
     - /data/logs
 
   - name: create config file
-    template: src=templates/zyxxid.yaml.j2 dest=/data/etc/zyxxid.yaml owner=zyxxid mode=0644
+    template: src=zyxxid.yaml.j2 dest=/data/etc/zyxxid.yaml owner=zyxxid mode=0644
