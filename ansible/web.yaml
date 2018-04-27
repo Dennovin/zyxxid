@@ -29,12 +29,6 @@
     service: name=memcached enabled=yes state=started
     when: ansible_virtualization_type != "docker"
 
-  - name: copy SSL certificates
-    synchronize: src=../certs/ dest=/data/certs/
-
-  - name: set permissions on SSL certificates
-    file: path=/data/certs state=directory recurse=yes owner=root group=www-data mode=0750
-
   - name: set up nginx from template
     template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/zyxxid owner=root mode=0644
     notify: restart nginx
@@ -70,6 +64,7 @@
 
   - name: synchronize static web files
     synchronize: src=../web/ dest=/data/www owner=no
+    become: no
 
   - name: set owner of static web files
     file: path=/data/www owner=www-data state=directory recurse=yes

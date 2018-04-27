@@ -13,6 +13,7 @@
     - libyaml-0-2
 
   - name: synchronize app folder
+    become: no
     synchronize:
       src: ../app
       dest: /data/
@@ -28,6 +29,7 @@
     become_user: zyxxid
 
   - name: copy template directory
+    become: no
     synchronize:
       src: ../templates
       dest: /data/
