@@ -403,6 +403,8 @@ var site = function() {
                 $.fileDownload(data.url);
                 $(".pdf-message").addClass("ready").removeClass("generating");
                 $(".pdf-message a.download-link").attr("href", data.url);
+            } else if(data.failed) {
+                $(".pdf-message").addClass("failed").removeClass("generating");
             } else {
                 $(".pdf-message .pdf-message-waiting").html(data.loading_message);
                 window.setTimeout(function() { requestPDF(url); }, 1000);

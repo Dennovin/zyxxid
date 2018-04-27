@@ -134,7 +134,6 @@ a {
 .fixed-container {
     width: inherit;
     position: fixed;
-    background: white;
 }
 
 .top-nav-spacer {
@@ -632,11 +631,11 @@ body.logged-in .top-nav a:hover {
     display: block;
 }
 
-.pdf-message .pdf-waiting, .pdf-message .pdf-ready {
+.pdf-message .pdf-waiting, .pdf-message .pdf-ready, .pdf-message .pdf-failed {
     display: none;
 }
 
-.pdf-message.generating .pdf-choose-template, .pdf-message.ready .pdf-choose-template {
+.pdf-message.generating .pdf-choose-template, .pdf-message.ready .pdf-choose-template, .pdf-message.failed .pdf-choose-template {
     display: none;
 }
 
@@ -645,6 +644,10 @@ body.logged-in .top-nav a:hover {
 }
 
 .pdf-message.ready .pdf-ready {
+    display: block;
+}
+
+.pdf-message.failed .pdf-failed {
     display: block;
 }
 

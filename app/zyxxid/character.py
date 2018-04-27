@@ -2,6 +2,7 @@ from datetime import datetime
 import copy
 import glob
 import os
+import shutil
 import subprocess
 import tempfile
 import time
@@ -9,7 +10,11 @@ import yaml
 
 from . import database
 from .apps import celery_app, jinja_env
+from .config import Config
 from .spell import Spell
+
+class SubprocessException(Exception):
+    pass
 
 class Character(database.RiakStorable):
     _indexes = ["user_id"]
@@ -71,21 +76,23 @@ class PDF(database.RiakStorableFile):
         with open(os.devnull, "w") as devnull, tempfile.NamedTemporaryFile(suffix=".tex", dir=output_dir, delete=False) as tex_file:
             pdf_filename = os.path.splitext(tex_file.name)[0] + ".pdf"
 
-            for template_file in template.files():
-                if template_file.filename.endswith(".tex.j2"):
+            for template_fn in template.files():
+                if template_fn.endswith(".tex.j2"):
+                    template_file = jinja_env.get_template(template_fn)
                     file_contents = template_file.render(c=character)
                     tex_file.write(file_contents.encode("utf-8"))
 
-                elif not os.path.exists(os.path.join(output_dir, template_file.filename)):
-                    with open(os.path.join(output_dir, template_file.filename), "wb") as out_fh:
-                        out_fh.write(template_file.render().encode("utf-8"))
+                elif not os.path.exists(os.path.join(output_dir, os.path.basename(template_fn))):
+                    shutil.copyfile(os.path.join(Config.get("template_dir"), template_fn), os.path.join(output_dir, os.path.basename(template_fn)))
 
             process = subprocess.Popen(["/usr/bin/xelatex", "-halt-on-error", "-interaction=batchmode", tex_file.name],
                                        cwd=output_dir, stderr=devnull, stdout=devnull)
 
-        process.wait(timeout=10)
+        process.wait(timeout=60)
         if process.returncode:
-            print("fail")
+            raise SubprocessException("subprocess returned error code {}".format(process.returncode))
+        if not os.path.exists(os.path.join(output_dir, pdf_filename)):
+            raise SubprocessException("process did not return an error, but file {} does not exist".format(os.path.join(output_dir, pdf_filename)))
 
         obj = cls.store_from_file(os.path.join(output_dir, pdf_filename))
 
@@ -113,8 +120,7 @@ class Template(object):
             yield cls(name=info["name"])
 
     def files(self):
-        for tmpl_fn in jinja_env.list_templates(filter_func=lambda x: x.startswith(self.name + "/")):
-            yield jinja_env.get_template(tmpl_fn)
+        return jinja_env.list_templates(filter_func=lambda x: x.startswith(self.name + "/"))
 
 
 class ShareLink(database.RiakStorable):

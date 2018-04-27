@@ -39,7 +39,7 @@ loading_messages = [
     "Painting miniatures",
     "Casting Magic Missile at the darkness",
     "Adding dinosaurs to your campaign",
-    "Turning campagin into fantasy football league",
+    "Turning campaign into fantasy football league",
     "Doing wizard things. You wouldn't understand.",
     "Elfsplaining",
     "Building dice towers",
@@ -196,6 +196,8 @@ def check_pdf_status(task_id, filename):
     result = create_pdf.AsyncResult(task_id)
     if result.ready():
         data = { "ready": True, "url": flask.url_for("get_pdf", file_id=result.result, filename=filename) }
+    elif result.failed():
+        data = { "ready": False, "failed": True }
     else:
         data = { "ready": False, "loading_message": get_loading_message() }
 
