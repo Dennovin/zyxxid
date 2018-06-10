@@ -71,3 +71,5 @@ passwords.yaml
 # Certificates
 certs/
 
+# Open5e data
+open5e/

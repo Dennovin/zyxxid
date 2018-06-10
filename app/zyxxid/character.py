@@ -9,8 +9,9 @@ import time
 import yaml
 
 from . import database
-from .apps import celery_app, jinja_env
+from .apps import celery_app, jinja_env, logger
 from .config import Config
+from .item import Item
 from .spell import Spell
 
 class SubprocessException(Exception):
@@ -45,6 +46,9 @@ class Character(database.RiakStorable):
 
     def get_spells(self):
         return list(Spell.fetch_multi(self.spells))
+
+    def get_magic_items(self):
+        return list(Item.fetch_multi(getattr(self, "magic_items", [])))
 
     @classmethod
     def load_from_file(cls, filename):
@@ -86,7 +90,7 @@ class PDF(database.RiakStorableFile):
                     shutil.copyfile(os.path.join(Config.get("template_dir"), template_fn), os.path.join(output_dir, os.path.basename(template_fn)))
 
             process = subprocess.Popen(["/usr/bin/xelatex", "-halt-on-error", "-interaction=batchmode", tex_file.name],
-                                       cwd=output_dir, stderr=devnull, stdout=devnull)
+                                       cwd=output_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         process.wait(timeout=60)
         if process.returncode:

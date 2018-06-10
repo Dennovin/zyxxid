@@ -84,6 +84,7 @@
         <p><b>zyxxid.xyz</b> is a D&D 5e character sheet helper.</p>
         <p>Contact: <a href="mailto:me@zyxxid.xyz">me@zyxxid.xyz</a></p>
         <p>Spells from <a href="https://github.com/thebombzen/grimoire/">Grimoire</a></p>
+        <p>Items from <a href="https://open5e.com">Open5e</a></p>
         <p>Icons from <a href="http://fontawesome.io">Font Awesome</a></p>
         <a href="#" class="close-window">Close</a>
       </div>
@@ -376,126 +377,13 @@
 
           <hr />
 
+          {% for attribute in attributes %}
           <div class="input-row">
-            <label>Acrobatics</label>
-            <input type="checkbox" name="proficiencies.acrobatics" />
-            <input type="checkbox" name="proficiencies.acrobatics" />
+            <label>{{ attribute[1] }}</label>
+            <input type="checkbox" name="proficiencies.{{ attribute[0] }}" />
+            <input type="checkbox" name="proficiencies.{{ attribute[0] }}" />
           </div>
-          <div class="input-row">
-            <label>Arcana</label>
-            <input type="checkbox" name="proficiencies.arcana" />
-            <input type="checkbox" name="proficiencies.arcana" />
-          </div>
-          <div class="input-row">
-            <label>Athletics</label>
-            <input type="checkbox" name="proficiencies.athletics" />
-            <input type="checkbox" name="proficiencies.athletics" />
-          </div>
-          <div class="input-row">
-            <label>Deception</label>
-            <input type="checkbox" name="proficiencies.deception" />
-            <input type="checkbox" name="proficiencies.deception" />
-          </div>
-          <div class="input-row">
-            <label>Handle Animal</label>
-            <input type="checkbox" name="proficiencies.handleanimal" />
-            <input type="checkbox" name="proficiencies.handleanimal" />
-          </div>
-          <div class="input-row">
-            <label>History</label>
-            <input type="checkbox" name="proficiencies.history" />
-            <input type="checkbox" name="proficiencies.history" />
-          </div>
-          <div class="input-row">
-            <label>Insight</label>
-            <input type="checkbox" name="proficiencies.insight" />
-            <input type="checkbox" name="proficiencies.insight" />
-          </div>
-          <div class="input-row">
-            <label>Intimidate</label>
-            <input type="checkbox" name="proficiencies.intimidate" />
-            <input type="checkbox" name="proficiencies.intimidate" />
-          </div>
-          <div class="input-row">
-            <label>Investigation</label>
-            <input type="checkbox" name="proficiencies.investigation" />
-            <input type="checkbox" name="proficiencies.investigation" />
-          </div>
-          <div class="input-row">
-            <label>Medicine</label>
-            <input type="checkbox" name="proficiencies.medicine" />
-            <input type="checkbox" name="proficiencies.medicine" />
-          </div>
-          <div class="input-row">
-            <label>Nature</label>
-            <input type="checkbox" name="proficiencies.nature" />
-            <input type="checkbox" name="proficiencies.nature" />
-          </div>
-          <div class="input-row">
-            <label>Perception</label>
-            <input type="checkbox" name="proficiencies.perception" />
-            <input type="checkbox" name="proficiencies.perception" />
-          </div>
-          <div class="input-row">
-            <label>Performance</label>
-            <input type="checkbox" name="proficiencies.performance" />
-            <input type="checkbox" name="proficiencies.performance" />
-          </div>
-          <div class="input-row">
-            <label>Persuasion</label>
-            <input type="checkbox" name="proficiencies.persuasion" />
-            <input type="checkbox" name="proficiencies.persuasion" />
-          </div>
-          <div class="input-row">
-            <label>Religion</label>
-            <input type="checkbox" name="proficiencies.religion" />
-            <input type="checkbox" name="proficiencies.religion" />
-          </div>
-          <div class="input-row">
-            <label>Sleight of Hand</label>
-            <input type="checkbox" name="proficiencies.sleightofhand" />
-            <input type="checkbox" name="proficiencies.sleightofhand" />
-          </div>
-          <div class="input-row">
-            <label>Stealth</label>
-            <input type="checkbox" name="proficiencies.stealth" />
-            <input type="checkbox" name="proficiencies.stealth" />
-          </div>
-          <div class="input-row">
-            <label>Survival</label>
-            <input type="checkbox" name="proficiencies.survival" />
-            <input type="checkbox" name="proficiencies.survival" />
-          </div>
-          <div class="input-row">
-            <label>Strength Save</label>
-            <input type="checkbox" name="proficiencies.strsave" />
-            <input type="checkbox" name="proficiencies.strsave" />
-          </div>
-          <div class="input-row">
-            <label>Dexterity Save</label>
-            <input type="checkbox" name="proficiencies.dexsave" />
-            <input type="checkbox" name="proficiencies.dexsave" />
-          </div>
-          <div class="input-row">
-            <label>Constitution Save</label>
-            <input type="checkbox" name="proficiencies.consave" />
-            <input type="checkbox" name="proficiencies.consave" />
-          </div>
-          <div class="input-row">
-            <label>Intelligence Save</label>
-            <input type="checkbox" name="proficiencies.intsave" />
-            <input type="checkbox" name="proficiencies.intsave" />
-          </div>
-          <div class="input-row">
-            <label>Wisdom Save</label>
-            <input type="checkbox" name="proficiencies.wissave" />
-            <input type="checkbox" name="proficiencies.wissave" />
-          </div>
-          <div class="input-row">
-            <label>Charisma Save</label>
-            <input type="checkbox" name="proficiencies.chasave" />
-            <input type="checkbox" name="proficiencies.chasave" />
-          </div>
+          {% endfor %}
 
         </div>
 
@@ -572,9 +460,28 @@
         </div>
 
         <div class="section" name="inventory">
+          <div class="input-list" name="magic_items">
+            <div class="title-row">
+              <div class="title">Magic Items</div>
+              <i class="fa fa-plus-square-o"></i>
+            </div>
+            <ul></ul>
+
+            <div class="add-item-form">
+              <div class="input-row">
+                <textarea name=""></textarea>
+              </div>
+
+              <div class="submit-row">
+                <button class="save">Save</button>
+                <button class="save-add">Save and Add Another</button>
+              </div>
+            </div>
+          </div>
+
           <div class="input-list" name="items">
             <div class="title-row">
-              <div class="title">Items</div>
+              <div class="title">Other Equipment</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
             <ul></ul>

@@ -102,6 +102,7 @@
     \newcommand{\spelldcs}{}
     \newcommand{\spellclass}{}
     \newcommand{\equipment}{}
+    \newcommand{\magicitems}{}
     \newcommand{\charactername}[1]{\renewcommand{\givencharactername}{##1}}
     \newcommand{\setrace}[1]{\renewcommand{\charrace}{##1}}
     \newcommand{\setalignment}[1]{\renewcommand{\charalignment}{##1}}
@@ -113,6 +114,7 @@
     \newcommand{\addnamedability}[2]{\expandafter\def\expandafter\abilities\expandafter{\abilities{} \item \textbf{##1:} ##2}}
     \newcommand{\addlang}[1]{\edef\languages{\ifdefempty{\languages}{}{\languages{},} ##1}}
     \newcommand{\addequip}[1]{\expandafter\def\expandafter\equipment\expandafter{\equipment{} \item ##1 }}
+    \newcommand{\addmagicitem}[2]{\expandafter\def\expandafter\magicitems\expandafter{\magicitems{} \item \textbf{##1} \\ ##2}}
     \newcommand{\addresource}[3]{\expandafter\def\expandafter\resources\expandafter{\resources{} ##1 & \forloop{ct}{0}{\value{ct} < ##2}{ $\square$ } & ##3 \\ \hline }}
     \newcommand{\addspell}[9]{\expandafter\def\expandafter\spells\expandafter{\spells{}
         \begin{minipage}{\linewidth}
@@ -296,6 +298,13 @@
         \section*{Abilities}
         \begin{itemize}[noitemsep]
           \small\abilities
+        \end{itemize}
+      }
+
+      \ifdefempty{\magicitems}{}{
+        \section{Magic Items}
+        \begin{itemize}[noitemsep]
+          \small\magicitems
         \end{itemize}
       }
 

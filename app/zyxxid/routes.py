@@ -194,10 +194,10 @@ def submit_pdf():
 @flask_app.route("/pdf/status/<task_id>/<filename>", methods=["GET"])
 def check_pdf_status(task_id, filename):
     result = create_pdf.AsyncResult(task_id)
-    if result.ready():
-        data = { "ready": True, "url": flask.url_for("get_pdf", file_id=result.result, filename=filename) }
-    elif result.failed():
+    if result.failed():
         data = { "ready": False, "failed": True }
+    elif result.ready():
+        data = { "ready": True, "url": flask.url_for("get_pdf", file_id=result.result, filename=filename) }
     else:
         data = { "ready": False, "loading_message": get_loading_message() }
 
@@ -249,4 +249,31 @@ def index(share_link_id=None):
 
     templates = sorted(Template.list_templates(), key=lambda i: i.name)
 
-    return flask.render_template("index.html.j2", spells=spells, templates=templates)
+    attributes = [
+        ("acrobatics", "Acrobatics"),
+        ("arcana", "Arcana"),
+        ("athletics", "Athletics"),
+        ("deception", "Deception"),
+        ("handleanimal", "Handle Animal"),
+        ("history", "History"),
+        ("insight", "Insight"),
+        ("intimidate", "Intimidate"),
+        ("investigation", "Investigation"),
+        ("medicine", "Medicine"),
+        ("nature", "Nature"),
+        ("perception", "Perception"),
+        ("performance", "Performance"),
+        ("persuasion", "Persuasion"),
+        ("religion", "Religion"),
+        ("sleightofhand", "Sleight of Hand"),
+        ("stealth", "Stealth"),
+        ("survival", "Survival"),
+        ("strsave", "Strength Save"),
+        ("dexsave", "Dexterity Save"),
+        ("consave", "Constitution Save"),
+        ("intsave", "Intelligence Save"),
+        ("wissave", "Wisdom Save"),
+        ("chasave", "Charisma Save"),
+    ]
+
+    return flask.render_template("index.html.j2", spells=spells, templates=templates, attributes=attributes)

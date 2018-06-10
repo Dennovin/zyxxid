@@ -42,6 +42,10 @@
   \addequip{{ "{" }}{{ item.name }} {% if item.quantity|int() > 1 %}(x {{ item.quantity }}){% endif %}{{ "}" }}
   {% endfor %}
 
+  {% for item in c.get_magic_items() %}
+  \addmagicitem{{ "{" }}{{ item.name }}{{ "}" }}{{ "{" }}{{ item.plaintext }}{{ "}" }}
+  {% endfor %}
+
   {% for language in c.languages %}
   \addlang{{ "{" }}{{ language.name }}{{ "}" }}
   {% endfor %}

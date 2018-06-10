@@ -47,6 +47,8 @@ var site = function() {
                 return "<b>" + data.name + "</b> (" + data.quantity + ")";
             }
             return "<b>" + data.name + "</b>";
+        case "magic_items":
+            return data;
         case "spells":
             return "<b>" + data.name + "</b> (" + (data.level == 0 ? "Cantrip" : data.level) + ")";
         case "traits":
