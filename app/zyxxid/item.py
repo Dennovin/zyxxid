@@ -1,6 +1,6 @@
 import docutils.core
 import docutils.nodes
-from docutils.writers import html4css1
+from docutils.writers import html4css1, latex2e
 
 from . import database
 
@@ -10,6 +10,10 @@ class HTMLTranslator(html4css1.HTMLTranslator):
         super().depart_document(node)
         self.html_body.pop(0)
         self.html_body.pop()
+
+
+class LaTeXTranslator(latex2e.LaTeXTranslator):
+    pass
 
 
 class Item(database.RiakStorable):
@@ -34,11 +38,15 @@ class Item(database.RiakStorable):
                 paragraphs.append(paragraph.astext().replace("\n", " "))
 
             item.plaintext = "\n".join(paragraphs)
-            item.latex = " \\\\\n".join(paragraphs)
 
             writer = html4css1.Writer()
             writer.translator_class = HTMLTranslator
             parts = docutils.core.publish_parts(item.source, writer=writer)
             item.html = parts["html_body"]
+
+            writer = latex2e.Writer()
+            writer.translator_class = LaTeXTranslator
+            parts = docutils.core.publish_parts(item.source, writer=writer)
+            item.latex = parts["body"]
 
         return item

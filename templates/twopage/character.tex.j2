@@ -43,7 +43,7 @@
   {% endfor %}
 
   {% for item in c.get_magic_items() %}
-  \addmagicitem{{ "{" }}{{ item.name }}{{ "}" }}{{ "{" }}{{ item.plaintext }}{{ "}" }}
+  \addmagicitem{{ "{" }}{{ item.name }}{{ "}" }}{{ "{" }}{{ item.latex }}{{ "}" }}
   {% endfor %}
 
   {% for language in c.languages %}
