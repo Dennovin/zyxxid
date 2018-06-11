@@ -17,7 +17,7 @@ setup(
     },
     install_requires=[
         "flask",
-        "Flask-Cache",
+        "flask-caching",
         "riak",
         "PyYAML",
         "uWSGI",
@@ -29,6 +29,8 @@ setup(
         "statsd",
         "python-memcached",
         "httplib2 < 0.10",
+        "oauth2client",
+        "docutils",
         ],
     scripts=["scripts/{}".format(i) for i in os.listdir("scripts")],
     )

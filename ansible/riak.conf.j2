@@ -9,7 +9,7 @@ log.crash.maximum_message_size = 64KB
 log.crash.size = 10MB
 log.crash.rotation = $D0
 log.crash.rotation.keep = 5
-nodename = riak@127.0.0.1
+nodename = riak@{{ hostvars[inventory_hostname]["ip_address"] }}
 distributed_cookie = riak
 erlang.async_threads = 64
 erlang.max_ports = 65536
@@ -19,13 +19,9 @@ platform_data_dir = /var/lib/riak
 platform_etc_dir = /etc/riak
 platform_lib_dir = /usr/lib/riak/lib
 platform_log_dir = /var/log/riak
-listener.http.internal = 127.0.0.1:8098
 {% if hostvars[inventory_hostname]["ip_address"] != "127.0.0.1" %}
-listener.http.external = {{ hostvars[inventory_hostname]["ip_address"] }}:8098
-{% endif %}
-listener.protobuf.internal = 127.0.0.1:8087
-{% if hostvars[inventory_hostname]["ip_address"] != "127.0.0.1" %}
-listener.protobuf.external = {{ hostvars[inventory_hostname]["ip_address"] }}:8087
+listener.http.internal = {{ hostvars[inventory_hostname]["ip_address"] }}:8098
+listener.protobuf.internal = {{ hostvars[inventory_hostname]["ip_address"] }}:8087
 {% endif %}
 anti_entropy = active
 storage_backend = leveldb

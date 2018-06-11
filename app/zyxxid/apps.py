@@ -1,6 +1,6 @@
 import celery
 import flask
-import flask_cache
+import flask_caching
 import jinja2
 import logging
 import logging.handlers
@@ -18,7 +18,7 @@ celery_app.CELERY_IGNORE_RESULT = False
 
 flask_app = flask.Flask(__name__)
 flask_app.jinja_env = jinja_env
-flask_cache = flask_cache.Cache(flask_app, config={"CACHE_TYPE": "simple"})
+flask_cache = flask_caching.Cache(flask_app, config={"CACHE_TYPE": "simple"})
 
 log_file = os.path.join(Config.get("log_dir"), "zyxxid.log")
 handler = logging.handlers.TimedRotatingFileHandler(log_file, when="midnight")

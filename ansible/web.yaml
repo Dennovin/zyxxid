@@ -69,6 +69,17 @@
   - name: set owner of static web files
     file: path=/data/www owner=www-data state=directory recurse=yes
 
+  - name: copy certificates
+    synchronize: src=../certs/ dest=/data/certs
+    become: no
+
+  - name: set owner and permissions on certificates
+    file: path=/data/certs owner=root group=www-data mode="u=rwX,g=rX,o=" recurse=yes
+
+  - name: start and enable nginx
+    service: name=nginx enabled=yes state=started
+    when: ansible_virtualization_type != "docker"
+
   - name: automatically renew certificate
     cron:
       name: renew certificates
