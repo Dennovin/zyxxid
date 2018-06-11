@@ -1,6 +1,8 @@
 var site = function() {
     var spellDetails = {};
     var listData = {};
+    var items = {};
+    var itemIndex = null;
     var origIndex = null;
 
     var showPopupMessage = function(message) {
@@ -48,7 +50,7 @@ var site = function() {
             }
             return "<b>" + data.name + "</b>";
         case "magic_items":
-            return data;
+            return items[data].name;
         case "spells":
             return "<b>" + data.name + "</b> (" + (data.level == 0 ? "Cantrip" : data.level) + ")";
         case "traits":
@@ -73,7 +75,7 @@ var site = function() {
 
     var syncList = function(listName) {
         var $list = $(".input-list[name=" + listName + "]");
-        $list.find("ul").empty();
+        $list.find("ul.input-list-ul").empty();
 
         $.each(listData[listName], function(i, data) {
             var $listItem = $("<li />");
@@ -81,7 +83,7 @@ var site = function() {
             $("<i />").addClass("fa fa-trash").appendTo($listItem);
             $("<div />").addClass("caption").html(formatListItem($list.attr("name"), data)).appendTo($listItem);
 
-            $listItem.appendTo($list.find("ul"));
+            $listItem.appendTo($list.find("ul.input-list-ul"));
         });
 
         $list.find("ul").sortable({handle: ".fa-arrows-v", start: grabItem, update: dropItem});
@@ -125,7 +127,7 @@ var site = function() {
 
         $listItem.addClass("editing");
 
-        $form.find("input, textarea, select").each(function() {
+        $form.find("input, textarea, select").not(".search-box").each(function() {
             $(this).val(data[$(this).attr("name")]);
         });
 
@@ -164,11 +166,35 @@ var site = function() {
         addItemFormHide();
     };
 
+    var selectSearchResult = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var value = $(this).attr("value");
+        var $list = $(this).closest(".input-list");
+        var listName = $list.attr("name");
+
+        console.log(listName);
+
+        var $listItem = $("li.editing");
+        if($listItem.length == 0) {
+            listData[listName].push(value);
+        } else {
+            listData[listName][$listItem.index()] = value;
+        }
+
+        $list.find("input.search-box").val("");
+        $list.find("ul.search-results").empty();
+
+        syncList(listName);
+        addItemFormHide();
+    };
+
     var addItemSaveClick = function(e) {
         e.stopPropagation();
         e.preventDefault();
         addItemSubmit($(this));
-    }
+    };
 
     var addItemSaveAddClick = function(e) {
         e.stopPropagation();
@@ -177,7 +203,7 @@ var site = function() {
 
         var $form = $(this).closest(".input-list").find(".add-item-form");
         showAddItemForm($form);
-    }
+    };
 
     var overlayClose = function(e) {
         e.stopPropagation();
@@ -189,7 +215,7 @@ var site = function() {
             $(".character-list").removeClass("active");
             $(".overlay-window").removeClass("active ready");
         }
-    }
+    };
 
     var addItemKeypress = function(e) {
         switch(e.which) {
@@ -386,6 +412,52 @@ var site = function() {
             });
     };
 
+    var loadItems = function() {
+        $.ajax({
+            type: "GET",
+            url: "/items",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).done(function(data) {
+            data.forEach(function(item) {
+                items[item.id] = item;
+            });
+
+            itemIndex = lunr(function() {
+                this.ref("id");
+                this.field("name");
+
+                data.forEach(function(item) {
+                    this.add(item);
+                }, this);
+            });
+
+            if(window.location.hash) {
+                if(window.location.hash.startsWith("#s=")) {
+                    loadSharedCharacter(window.location.hash.replace("#s=", ""));
+                } else {
+                    loadCharacter(window.location.hash.replace("#", ""));
+                }
+            }
+
+        });
+    };
+
+    var searchItem = function(e) {
+        searchtext = $(this).val();
+        if(searchtext.trim()) {
+            results = itemIndex.search(searchtext);
+            var $resultsBox = $(".magic-item-search-results");
+            $resultsBox.empty();
+
+            $.each(results, function(i, item) {
+                var $listItem = $("<li />").appendTo($resultsBox);
+                var $link = $("<a />").attr({ href: "#", value: items[item.ref].id }).addClass("search-result magic-item-search-result").html(items[item.ref].name).appendTo($listItem);
+            });
+        }
+    };
+
     var restoreCharacter = function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -551,19 +623,15 @@ var site = function() {
         .on("click", ".checkbox-icon", toggleCheckbox)
         .on("click", ".spell-list .level-header", toggleSpellSection)
         .on("change", ".character-name", setPageTitle)
+        .on("keyup", ".magic-item-search", searchItem)
+        .on("click", ".search-result", selectSearchResult)
     ;
 
     $(".input-list").each(function() {
         listData[$(this).attr("name")] = [];
     });
 
-    if(window.location.hash) {
-        if(window.location.hash.startsWith("#s=")) {
-            loadSharedCharacter(window.location.hash.replace("#s=", ""));
-        } else {
-            loadCharacter(window.location.hash.replace("#", ""));
-        }
-    }
+    loadItems();
 };
 
 $("document").ready(site);

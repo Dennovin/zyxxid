@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
     <script src="https://use.fontawesome.com/9f989bd7bb.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://unpkg.com/lunr/lunr.js"></script>
     <script src="js/jquery.filedownload.js"></script>
     <script src="js/site.js"></script>
     <meta name="google-signin-client_id" content="555306898992-seqocegdil3sqm4mv48tvq89r10cv33g.apps.googleusercontent.com" />
@@ -190,7 +191,7 @@
               <div class="title">Languages</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
-            <ul></ul>
+            <ul class="input-list-ul"></ul>
 
             <div class="add-item-form">
               <div class="input-row">
@@ -210,7 +211,7 @@
               <div class="title">Classes and Levels</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
-            <ul></ul>
+            <ul class="input-list-ul"></ul>
 
             <div class="add-item-form">
               <div class="input-row">
@@ -235,7 +236,7 @@
               <div class="title">Spellcasting Classes</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
-            <ul></ul>
+            <ul class="input-list-ul"></ul>
 
             <div class="add-item-form">
               <div class="help">Usually the same as your character class, unless you have gained the ability to cast spells as a different class.</div>
@@ -269,7 +270,7 @@
               <div class="title">Abilities</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
-            <ul></ul>
+            <ul class="input-list-ul"></ul>
 
             <div class="add-item-form">
               <div class="input-row">
@@ -294,7 +295,7 @@
               <div class="title">Traits, Ideals, Bonds, and Flaws</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
-            <ul></ul>
+            <ul class="input-list-ul"></ul>
 
             <div class="add-item-form">
               <div class="input-row">
@@ -393,7 +394,7 @@
               <div class="title">Attacks</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
-            <ul></ul>
+            <ul class="input-list-ul"></ul>
 
             <div class="add-item-form">
               <div class="input-row">
@@ -433,7 +434,7 @@
               <div class="title">Resources</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
-            <ul></ul>
+            <ul class="input-list-ul"></ul>
 
             <div class="add-item-form">
               <div class="input-row">
@@ -465,17 +466,11 @@
               <div class="title">Magic Items</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
-            <ul></ul>
+            <ul class="input-list-ul"></ul>
 
             <div class="add-item-form">
-              <div class="input-row">
-                <textarea name=""></textarea>
-              </div>
-
-              <div class="submit-row">
-                <button class="save">Save</button>
-                <button class="save-add">Save and Add Another</button>
-              </div>
+              <input type="text" name="magic_item_search" class="search-box magic-item-search" />
+              <ul class="search-results magic-item-search-results" />
             </div>
           </div>
 
@@ -484,7 +479,7 @@
               <div class="title">Other Equipment</div>
               <i class="fa fa-plus-square-o"></i>
             </div>
-            <ul></ul>
+            <ul class="input-list-ul"></ul>
 
             <div class="add-item-form">
               <div class="input-row">

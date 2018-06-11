@@ -10,6 +10,7 @@ import string
 from .apps import flask_app, flask_cache
 from .character import Character, PDF, Template, ShareLink, create_pdf
 from .config import Config
+from .item import Item
 from .spell import Spell
 
 loading_messages = [
@@ -229,6 +230,20 @@ def list_spells():
 def get_spell(spell_id):
     spell = Spell.fetch(spell_id)
     return json_response(spell.__dict__)
+
+@flask_app.route("/items", methods=["GET"])
+@flask_cache.cached(timeout=3600)
+def list_items():
+    item_names = Item.list_index("name")
+    items = [{"name": i[0], "id": i[1]} for i in item_names]
+
+    return json_response(items)
+
+@flask_app.route("/item/<item_id>", methods=["GET"])
+@flask_cache.cached(timeout=3600)
+def get_item(item_id):
+    item = Item.fetch(item_id)
+    return json_response(item.__dict__)
 
 @flask_app.route("/", methods=["GET"])
 @flask_cache.cached(timeout=3600)

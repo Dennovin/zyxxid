@@ -464,12 +464,12 @@ body.logged-in .top-nav a:hover {
     text-align: center;
 }
 
-.input-list ul {
+.input-list ul.input-list-ul {
     width: 40em;
     margin: 1px auto;
 }
 
-.input-list ul li {
+.input-list ul.input-list-ul li {
     display: flex;
     align-items: center;
     margin-bottom: 0.5em;
@@ -478,13 +478,30 @@ body.logged-in .top-nav a:hover {
     border-style: solid;
 }
 
-.input-list ul li:hover {
+.input-list ul.input-list-ul li:hover {
     border-color: var(--light-1);
 }
 
-.input-list ul li .caption {
+.input-list ul.input-list-ul li .caption {
     margin-left: 0.5em;
     cursor: pointer;
+}
+
+.input-list .search-box {
+    width: 20em;
+    padding: 2px 2em 2px 2px;
+}
+
+.input-list .search-results {
+    min-height: 20em;
+}
+
+.input-list .search-results a {
+}
+
+.input-list .search-results a:hover {
+    color: var(--dark-5);
+    text-decoration: underline;
 }
 
 .section.spellbook.active {
