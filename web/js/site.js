@@ -214,6 +214,7 @@ var site = function() {
             $(".overlay").removeClass("loading-character loading-pdf active");
             $(".character-list").removeClass("active");
             $(".overlay-window").removeClass("active ready");
+            $(".pdf-message").removeClass("failed");
         }
     };
 
