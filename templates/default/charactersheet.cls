@@ -302,7 +302,7 @@
       }
 
       \ifdefempty{\magicitems}{}{
-        \section{Magic Items}
+        \section*{Magic Items}
         \begin{itemize}[noitemsep]
           \small\magicitems
         \end{itemize}
