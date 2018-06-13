@@ -77,7 +77,7 @@ class PDF(database.RiakStorableFile):
             os.makedirs(output_dir)
 
         template = Template(template_name)
-        with open(os.devnull, "w") as devnull, tempfile.NamedTemporaryFile(suffix=".tex", dir=output_dir, delete=False) as tex_file:
+        with open(tempfile.NamedTemporaryFile(suffix=".tex", dir=output_dir, delete=False) as tex_file:
             pdf_filename = os.path.splitext(tex_file.name)[0] + ".pdf"
 
             for template_fn in template.files():
